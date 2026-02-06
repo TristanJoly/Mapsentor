@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo } from "react";
+import { useState, useMemo } from "react";
 import { ComposableMap, Geographies, Geography, ZoomableGroup } from "react-simple-maps";
 import { scaleLinear } from "d3-scale";
 import { DepartmentData, getMetricRange } from "@/lib/data";
@@ -14,14 +14,13 @@ interface FranceMapProps {
 }
 
 export const FranceMap = ({ data, selectedMetric, selectedDepartment, onDepartmentClick }: FranceMapProps) => {
-  const [tooltipContent, setTooltipContent] = useState("");
   const [position, setPosition] = useState({ coordinates: [2.5, 46.5] as [number, number], zoom: 1 });
 
   const colorScale = useMemo(() => {
     const [min, max] = getMetricRange(data, selectedMetric);
     return scaleLinear<string>()
-      .domain([min, (min + max) / 2, max])
-      .range(["hsl(220, 70%, 95%)", "hsl(221, 83%, 65%)", "hsl(262, 83%, 45%)"]);
+      .domain([min, (min + max) / 3, (min + max) * 2/3, max])
+      .range(["#FFF8DC", "#FFD580", "#FF8C42", "#C41E3A"]);
   }, [data, selectedMetric]);
 
   const getDataForCode = (code: string): DepartmentData | undefined => {
@@ -31,9 +30,9 @@ export const FranceMap = ({ data, selectedMetric, selectedDepartment, onDepartme
 
   const getFillColor = (code: string): string => {
     const deptData = getDataForCode(code);
-    if (!deptData) return "hsl(var(--muted))";
+    if (!deptData) return "#f5f5f5";
     const value = deptData[selectedMetric] as number;
-    if (isNaN(value) || value === 0) return "hsl(var(--muted))";
+    if (isNaN(value) || value === 0) return "#f5f5f5";
     return colorScale(value);
   };
 
@@ -68,7 +67,7 @@ export const FranceMap = ({ data, selectedMetric, selectedDepartment, onDepartme
                         <Geography
                           geography={geo}
                           fill={getFillColor(code)}
-                          stroke={isSelected ? "hsl(var(--primary))" : "hsl(var(--border))"}
+                          stroke={isSelected ? "#C41E3A" : "#e5e5e5"}
                           strokeWidth={isSelected ? 2 : 0.5}
                           style={{
                             default: {
@@ -76,22 +75,18 @@ export const FranceMap = ({ data, selectedMetric, selectedDepartment, onDepartme
                               transition: "all 0.2s",
                             },
                             hover: {
-                              fill: "hsl(221, 83%, 53%)",
-                              stroke: "hsl(var(--primary))",
+                              fill: "#FF8C42",
+                              stroke: "#C41E3A",
                               strokeWidth: 1.5,
                               outline: "none",
                               cursor: "pointer",
                             },
                             pressed: {
-                              fill: "hsl(262, 83%, 58%)",
+                              fill: "#C41E3A",
                               outline: "none",
                             },
                           }}
                           onClick={() => onDepartmentClick(code.padStart(2, '0'))}
-                          onMouseEnter={() => {
-                            setTooltipContent(deptData ? `${deptData.departement} (${code})` : geo.properties.nom);
-                          }}
-                          onMouseLeave={() => setTooltipContent("")}
                         />
                       </TooltipTrigger>
                       <TooltipContent className="bg-card border border-border shadow-elevated z-50">
@@ -137,15 +132,14 @@ export const FranceMap = ({ data, selectedMetric, selectedDepartment, onDepartme
       <div className="absolute bottom-4 right-4 glass p-3 rounded-xl shadow-soft">
         <p className="text-xs font-medium text-foreground mb-2">Intensité</p>
         <div className="flex items-center gap-0.5">
-          <div className="h-3 w-6 rounded-l-sm" style={{ background: "hsl(220, 70%, 95%)" }}></div>
-          <div className="h-3 w-6" style={{ background: "hsl(221, 83%, 75%)" }}></div>
-          <div className="h-3 w-6" style={{ background: "hsl(221, 83%, 65%)" }}></div>
-          <div className="h-3 w-6" style={{ background: "hsl(242, 83%, 55%)" }}></div>
-          <div className="h-3 w-6 rounded-r-sm" style={{ background: "hsl(262, 83%, 45%)" }}></div>
+          <div className="h-3 w-6 rounded-l-sm" style={{ background: "#FFF8DC" }}></div>
+          <div className="h-3 w-6" style={{ background: "#FFD580" }}></div>
+          <div className="h-3 w-6" style={{ background: "#FF8C42" }}></div>
+          <div className="h-3 w-6 rounded-r-sm" style={{ background: "#C41E3A" }}></div>
         </div>
         <div className="flex justify-between text-[10px] text-muted-foreground mt-1">
           <span>Faible</span>
-          <span>Élevé</span>
+          <span>Critique</span>
         </div>
       </div>
     </div>
