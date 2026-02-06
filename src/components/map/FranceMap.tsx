@@ -39,6 +39,61 @@ interface FranceMapProps {
   onDepartmentClick: (code: string) => void;
 }
 
+// Folium-style marker component
+const FoliumMarker = ({ 
+  alertCount, 
+  isSelected,
+  onClick 
+}: { 
+  alertCount: number; 
+  isSelected: boolean;
+  onClick: () => void;
+}) => {
+  const color = getWarningColor(alertCount);
+  const size = isSelected ? 1.3 : 1;
+  
+  return (
+    <g onClick={onClick} style={{ cursor: 'pointer' }} transform={`scale(${size})`}>
+      {/* Marker pin shape like Folium */}
+      <path
+        d="M12 0C7.58 0 4 3.58 4 8c0 5.76 7.11 11.38 7.42 11.62a1 1 0 0 0 1.16 0C12.89 19.38 20 13.76 20 8c0-4.42-3.58-8-8-8z"
+        fill={color}
+        stroke="#fff"
+        strokeWidth="1.5"
+        transform="translate(-12, -22)"
+      />
+      {/* Exclamation triangle icon inside */}
+      <g transform="translate(-12, -22)">
+        <path
+          d="M12 5.5l5.5 9.5H6.5L12 5.5z"
+          fill="none"
+          stroke="#fff"
+          strokeWidth="1"
+          strokeLinejoin="round"
+        />
+        <line x1="12" y1="9" x2="12" y2="11" stroke="#fff" strokeWidth="1.2" strokeLinecap="round" />
+        <circle cx="12" cy="13" r="0.6" fill="#fff" />
+      </g>
+      {/* Badge with count */}
+      <g transform="translate(4, -26)">
+        <circle r="6" fill="#fff" stroke={color} strokeWidth="1" />
+        <text
+          textAnchor="middle"
+          y={3}
+          style={{ 
+            fontFamily: "system-ui", 
+            fill: color, 
+            fontSize: 8,
+            fontWeight: "bold"
+          }}
+        >
+          {alertCount}
+        </text>
+      </g>
+    </g>
+  );
+};
+
 export const FranceMap = ({ data, selectedMetric, selectedDepartment, onDepartmentClick }: FranceMapProps) => {
   const [position, setPosition] = useState({ coordinates: [2.5, 46.5] as [number, number], zoom: 1 });
 
@@ -142,7 +197,7 @@ export const FranceMap = ({ data, selectedMetric, selectedDepartment, onDepartme
               }
             </Geographies>
 
-            {/* Alert Markers */}
+            {/* Folium-style Alert Markers */}
             {data.map(dept => {
               const alertCount = departmentAlerts[dept.code_departement] || 0;
               if (alertCount === 0) return null;
@@ -150,36 +205,18 @@ export const FranceMap = ({ data, selectedMetric, selectedDepartment, onDepartme
               const coords = DEPARTMENT_CENTERS[dept.code_departement];
               if (!coords) return null;
 
-              const markerColor = getWarningColor(alertCount);
               const isSelected = dept.code_departement === selectedDepartment;
 
               return (
                 <Marker 
                   key={`marker-${dept.code_departement}`} 
                   coordinates={coords}
-                  onClick={() => onDepartmentClick(dept.code_departement)}
                 >
-                  <g style={{ cursor: 'pointer' }}>
-                    <circle 
-                      r={isSelected ? 8 : 6} 
-                      fill={markerColor} 
-                      stroke="#fff" 
-                      strokeWidth={1.5}
-                      opacity={0.9}
-                    />
-                    <text
-                      textAnchor="middle"
-                      y={4}
-                      style={{ 
-                        fontFamily: "system-ui", 
-                        fill: "#fff", 
-                        fontSize: isSelected ? 9 : 7,
-                        fontWeight: "bold"
-                      }}
-                    >
-                      {alertCount}
-                    </text>
-                  </g>
+                  <FoliumMarker 
+                    alertCount={alertCount}
+                    isSelected={isSelected}
+                    onClick={() => onDepartmentClick(dept.code_departement)}
+                  />
                 </Marker>
               );
             })}
@@ -226,17 +263,17 @@ export const FranceMap = ({ data, selectedMetric, selectedDepartment, onDepartme
         {/* Alert Legend */}
         <div className="mt-3 pt-3 border-t border-border/50">
           <p className="text-xs font-medium text-foreground mb-2">Alertes</p>
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-3">
             <div className="flex items-center gap-1">
-              <div className="w-3 h-3 rounded-full" style={{ background: "#22c55e" }}></div>
-              <span className="text-[10px] text-muted-foreground">0</span>
-            </div>
-            <div className="flex items-center gap-1">
-              <div className="w-3 h-3 rounded-full" style={{ background: "#f59e0b" }}></div>
+              <svg width="12" height="16" viewBox="0 0 24 28">
+                <path d="M12 0C7.58 0 4 3.58 4 8c0 5.76 7.11 11.38 7.42 11.62a1 1 0 0 0 1.16 0C12.89 19.38 20 13.76 20 8c0-4.42-3.58-8-8-8z" fill="#f59e0b" stroke="#fff" strokeWidth="1"/>
+              </svg>
               <span className="text-[10px] text-muted-foreground">1-2</span>
             </div>
             <div className="flex items-center gap-1">
-              <div className="w-3 h-3 rounded-full" style={{ background: "#ef4444" }}></div>
+              <svg width="12" height="16" viewBox="0 0 24 28">
+                <path d="M12 0C7.58 0 4 3.58 4 8c0 5.76 7.11 11.38 7.42 11.62a1 1 0 0 0 1.16 0C12.89 19.38 20 13.76 20 8c0-4.42-3.58-8-8-8z" fill="#ef4444" stroke="#fff" strokeWidth="1"/>
+              </svg>
               <span className="text-[10px] text-muted-foreground">3+</span>
             </div>
           </div>

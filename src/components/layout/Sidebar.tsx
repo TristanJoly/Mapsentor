@@ -1,4 +1,6 @@
-import { MapPin, Database, Users, Github, Mail, ExternalLink } from "lucide-react";
+import { useState } from "react";
+import { MapPin, Database, Users, Github, Mail, ExternalLink, ChevronLeft, ChevronRight, Info } from "lucide-react";
+import { Button } from "@/components/ui/button";
 
 const sources = [
   { name: "Caisse des Dépôts - 75 ans+", url: "https://opendata.caissedesdepots.fr/explore/dataset/75-ans-et-plus-indicateurs-de-vieillissement-par-departement/information/" },
@@ -14,18 +16,65 @@ const team = [
   { name: "Tristan Joly", url: "https://www.linkedin.com/in/tristan-joly-10179034a/" },
 ];
 
-export const Sidebar = () => {
+interface SidebarProps {
+  collapsed?: boolean;
+  onToggle?: () => void;
+}
+
+export const Sidebar = ({ collapsed = false, onToggle }: SidebarProps) => {
+  if (collapsed) {
+    return (
+      <aside className="w-14 min-h-screen bg-card border-r border-border p-2 flex flex-col items-center">
+        <Button
+          variant="ghost"
+          size="icon"
+          onClick={onToggle}
+          className="mb-4"
+        >
+          <ChevronRight className="w-4 h-4" />
+        </Button>
+        <div className="w-10 h-10 rounded-xl gradient-bg flex items-center justify-center shadow-soft">
+          <MapPin className="w-5 h-5 text-white" />
+        </div>
+      </aside>
+    );
+  }
+
   return (
     <aside className="w-72 min-h-screen bg-card border-r border-border p-6 flex flex-col">
-      {/* Logo */}
-      <div className="mb-8">
-        <div className="flex items-center gap-3 mb-2">
+      {/* Header with toggle */}
+      <div className="flex items-center justify-between mb-4">
+        <div className="flex items-center gap-3">
           <div className="w-10 h-10 rounded-xl gradient-bg flex items-center justify-center shadow-soft">
             <MapPin className="w-5 h-5 text-white" />
           </div>
           <h1 className="text-xl font-bold gradient-text">Mapsentor</h1>
         </div>
-        <p className="text-sm text-muted-foreground">Indicateurs du vieillissement en France</p>
+        <Button
+          variant="ghost"
+          size="icon"
+          onClick={onToggle}
+          className="h-8 w-8"
+        >
+          <ChevronLeft className="w-4 h-4" />
+        </Button>
+      </div>
+
+      {/* Description du projet */}
+      <div className="mb-6 p-4 rounded-xl bg-gradient-to-br from-primary/5 to-accent/5 border border-primary/10">
+        <h3 className="flex items-center gap-2 text-sm font-semibold text-foreground mb-2">
+          <Info className="w-4 h-4 text-primary" />
+          À propos
+        </h3>
+        <p className="text-xs text-muted-foreground leading-relaxed">
+          <strong>Mapsentor</strong> est un tableau de bord interactif pour analyser les indicateurs du vieillissement en France. 
+          Explorez les données démographiques, sanitaires et sociales par département grâce à une carte interactive et des graphiques détaillés.
+        </p>
+        <div className="mt-3 flex flex-wrap gap-1">
+          <span className="px-2 py-0.5 text-[10px] font-medium rounded-full bg-primary/10 text-primary">96 départements</span>
+          <span className="px-2 py-0.5 text-[10px] font-medium rounded-full bg-accent/10 text-accent">Données 2024</span>
+          <span className="px-2 py-0.5 text-[10px] font-medium rounded-full bg-muted text-muted-foreground">Open Data</span>
+        </div>
       </div>
 
       {/* Sources */}

@@ -7,14 +7,16 @@ import { DepartmentInfo } from "@/components/map/DepartmentInfo";
 import { DepartmentAlerts } from "@/components/map/DepartmentAlerts";
 import { DepartmentCharts } from "@/components/charts/DepartmentCharts";
 import { loadDepartmentData, DepartmentData } from "@/lib/data";
-import { Loader2, BarChart3 } from "lucide-react";
+import { Loader2, BarChart3, Menu } from "lucide-react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Button } from "@/components/ui/button";
 
 const Index = () => {
   const [selectedMetric, setSelectedMetric] = useState("taux_pauvrete_75");
   const [selectedDepartment, setSelectedDepartment] = useState("01");
   const [data, setData] = useState<DepartmentData[]>([]);
   const [loading, setLoading] = useState(true);
+  const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
 
   useEffect(() => {
     loadDepartmentData().then(departmentData => {
@@ -40,18 +42,33 @@ const Index = () => {
   }
 
   return (
-    <div className="flex min-h-screen bg-background">
-      <Sidebar />
+    <div className="flex min-h-screen w-full bg-background">
+      <Sidebar 
+        collapsed={sidebarCollapsed} 
+        onToggle={() => setSidebarCollapsed(!sidebarCollapsed)} 
+      />
       
       <main className="flex-1 p-6 lg:p-8 overflow-auto">
         {/* Header */}
-        <div className="mb-6">
-          <h1 className="text-3xl font-bold text-foreground mb-2">
-            Carte de France
-          </h1>
-          <p className="text-muted-foreground">
-            Visualisez les indicateurs du vieillissement par département • {data.length} départements
-          </p>
+        <div className="mb-6 flex items-start gap-4">
+          {sidebarCollapsed && (
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={() => setSidebarCollapsed(false)}
+              className="shrink-0"
+            >
+              <Menu className="w-5 h-5" />
+            </Button>
+          )}
+          <div>
+            <h1 className="text-3xl font-bold text-foreground mb-2">
+              Carte de France
+            </h1>
+            <p className="text-muted-foreground">
+              Visualisez les indicateurs du vieillissement par département • {data.length} départements
+            </p>
+          </div>
         </div>
 
         {/* Controls */}
