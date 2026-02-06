@@ -1,17 +1,10 @@
 import { ChevronDown, TrendingUp } from "lucide-react";
+import { metrics } from "@/lib/data";
 
 interface MetricSelectorProps {
   value: string;
   onChange: (value: string) => void;
 }
-
-const metrics = [
-  { id: "60_75_plus_isoles", label: "Personnes isolées (60-75+ ans)", description: "Taux d'isolement social" },
-  { id: "part_75_plus", label: "Part des 75 ans et plus", description: "Pourcentage de la population" },
-  { id: "esperance_vie", label: "Espérance de vie", description: "À la naissance" },
-  { id: "taux_dependance", label: "Taux de dépendance", description: "GIR 1 à 4" },
-  { id: "equipements_ehpad", label: "Équipements EHPAD", description: "Places pour 1000 habitants" },
-];
 
 export const MetricSelector = ({ value, onChange }: MetricSelectorProps) => {
   const selectedMetric = metrics.find(m => m.id === value) || metrics[0];
