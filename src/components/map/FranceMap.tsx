@@ -1,10 +1,36 @@
 import { useState, useMemo } from "react";
-import { ComposableMap, Geographies, Geography, ZoomableGroup } from "react-simple-maps";
+import { ComposableMap, Geographies, Geography, ZoomableGroup, Marker } from "react-simple-maps";
 import { scaleLinear } from "d3-scale";
 import { DepartmentData, getMetricRange } from "@/lib/data";
+import { getAllDepartmentAlerts, getWarningColor } from "@/lib/alertConfig";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
+import { AlertTriangle } from "lucide-react";
 
 const GEO_URL = "https://raw.githubusercontent.com/gregoiredavid/france-geojson/master/departements-version-simplifiee.geojson";
+
+// Department centers for marker placement (approximate)
+const DEPARTMENT_CENTERS: { [key: string]: [number, number] } = {
+  "01": [5.4, 46.1], "02": [3.6, 49.5], "03": [3.2, 46.4], "04": [6.2, 44.1], "05": [6.3, 44.7],
+  "06": [7.1, 43.9], "07": [4.5, 44.8], "08": [4.6, 49.6], "09": [1.6, 42.9], "10": [4.1, 48.3],
+  "11": [2.4, 43.2], "12": [2.6, 44.3], "13": [5.1, 43.5], "14": [-0.4, 49.1], "15": [2.7, 45.0],
+  "16": [0.2, 45.7], "17": [-0.9, 45.8], "18": [2.4, 47.1], "19": [1.8, 45.4], "21": [4.9, 47.4],
+  "22": [-2.9, 48.5], "23": [2.1, 46.1], "24": [0.7, 45.1], "25": [6.3, 47.2], "26": [5.1, 44.7],
+  "27": [1.0, 49.1], "28": [1.5, 48.3], "29": [-4.1, 48.3], "30": [4.2, 44.0], "31": [1.4, 43.6],
+  "32": [0.6, 43.7], "33": [-0.6, 44.8], "34": [3.6, 43.6], "35": [-1.7, 48.1], "36": [1.6, 46.8],
+  "37": [0.7, 47.3], "38": [5.6, 45.3], "39": [5.7, 46.7], "40": [-0.8, 43.9], "41": [1.4, 47.6],
+  "42": [4.3, 45.7], "43": [3.8, 45.1], "44": [-1.7, 47.3], "45": [2.1, 47.9], "46": [1.6, 44.6],
+  "47": [0.5, 44.4], "48": [3.5, 44.5], "49": [-0.6, 47.4], "50": [-1.3, 49.1], "51": [4.2, 49.0],
+  "52": [5.2, 48.1], "53": [-0.8, 48.1], "54": [6.2, 48.7], "55": [5.4, 49.0], "56": [-2.8, 47.7],
+  "57": [6.6, 49.1], "58": [3.5, 47.1], "59": [3.2, 50.4], "60": [2.5, 49.4], "61": [0.1, 48.6],
+  "62": [2.3, 50.5], "63": [3.1, 45.8], "64": [-0.6, 43.3], "65": [0.1, 43.1], "66": [2.5, 42.6],
+  "67": [7.5, 48.6], "68": [7.2, 47.9], "69": [4.6, 45.9], "70": [6.1, 47.6], "71": [4.6, 46.6],
+  "72": [0.2, 47.9], "73": [6.4, 45.5], "74": [6.4, 46.0], "75": [2.35, 48.86], "76": [1.0, 49.6],
+  "77": [2.9, 48.6], "78": [1.9, 48.9], "79": [-0.3, 46.5], "80": [2.3, 49.9], "81": [2.2, 43.8],
+  "82": [1.3, 44.1], "83": [6.2, 43.5], "84": [5.2, 44.0], "85": [-1.3, 46.7], "86": [0.5, 46.6],
+  "87": [1.3, 45.9], "88": [6.4, 48.2], "89": [3.5, 47.8], "90": [6.9, 47.6], "91": [2.2, 48.5],
+  "92": [2.25, 48.85], "93": [2.45, 48.92], "94": [2.45, 48.78], "95": [2.1, 49.1],
+  "2A": [8.9, 41.9], "2B": [9.3, 42.4]
+};
 
 interface FranceMapProps {
   data: DepartmentData[];
@@ -22,6 +48,16 @@ export const FranceMap = ({ data, selectedMetric, selectedDepartment, onDepartme
       .domain([min, (min + max) / 3, (min + max) * 2/3, max])
       .range(["#FFF8DC", "#FFD580", "#FF8C42", "#C41E3A"]);
   }, [data, selectedMetric]);
+
+  // Calculate alerts for all departments
+  const departmentAlerts = useMemo(() => {
+    const alerts: { [key: string]: number } = {};
+    data.forEach(dept => {
+      const deptAlerts = getAllDepartmentAlerts(dept, data);
+      alerts[dept.code_departement] = deptAlerts.length;
+    });
+    return alerts;
+  }, [data]);
 
   const getDataForCode = (code: string): DepartmentData | undefined => {
     const normalizedCode = code.padStart(2, '0');
@@ -60,6 +96,7 @@ export const FranceMap = ({ data, selectedMetric, selectedDepartment, onDepartme
                   const code = geo.properties.code;
                   const isSelected = code === selectedDepartment || code.padStart(2, '0') === selectedDepartment;
                   const deptData = getDataForCode(code);
+                  const alertCount = departmentAlerts[code.padStart(2, '0')] || departmentAlerts[code] || 0;
                   
                   return (
                     <Tooltip key={geo.rsmKey}>
@@ -91,9 +128,11 @@ export const FranceMap = ({ data, selectedMetric, selectedDepartment, onDepartme
                       </TooltipTrigger>
                       <TooltipContent className="bg-card border border-border shadow-elevated z-50">
                         <p className="font-medium">{deptData?.departement || geo.properties.nom}</p>
-                        {deptData && (
-                          <p className="text-sm text-muted-foreground">
-                            Code: {code}
+                        <p className="text-sm text-muted-foreground">Code: {code}</p>
+                        {alertCount > 0 && (
+                          <p className="text-sm text-orange-600 flex items-center gap-1 mt-1">
+                            <AlertTriangle className="w-3 h-3" />
+                            {alertCount} alerte{alertCount > 1 ? 's' : ''}
                           </p>
                         )}
                       </TooltipContent>
@@ -102,6 +141,48 @@ export const FranceMap = ({ data, selectedMetric, selectedDepartment, onDepartme
                 })
               }
             </Geographies>
+
+            {/* Alert Markers */}
+            {data.map(dept => {
+              const alertCount = departmentAlerts[dept.code_departement] || 0;
+              if (alertCount === 0) return null;
+              
+              const coords = DEPARTMENT_CENTERS[dept.code_departement];
+              if (!coords) return null;
+
+              const markerColor = getWarningColor(alertCount);
+              const isSelected = dept.code_departement === selectedDepartment;
+
+              return (
+                <Marker 
+                  key={`marker-${dept.code_departement}`} 
+                  coordinates={coords}
+                  onClick={() => onDepartmentClick(dept.code_departement)}
+                >
+                  <g style={{ cursor: 'pointer' }}>
+                    <circle 
+                      r={isSelected ? 8 : 6} 
+                      fill={markerColor} 
+                      stroke="#fff" 
+                      strokeWidth={1.5}
+                      opacity={0.9}
+                    />
+                    <text
+                      textAnchor="middle"
+                      y={4}
+                      style={{ 
+                        fontFamily: "system-ui", 
+                        fill: "#fff", 
+                        fontSize: isSelected ? 9 : 7,
+                        fontWeight: "bold"
+                      }}
+                    >
+                      {alertCount}
+                    </text>
+                  </g>
+                </Marker>
+              );
+            })}
           </ZoomableGroup>
         </ComposableMap>
       </TooltipProvider>
@@ -140,6 +221,25 @@ export const FranceMap = ({ data, selectedMetric, selectedDepartment, onDepartme
         <div className="flex justify-between text-[10px] text-muted-foreground mt-1">
           <span>Faible</span>
           <span>Critique</span>
+        </div>
+        
+        {/* Alert Legend */}
+        <div className="mt-3 pt-3 border-t border-border/50">
+          <p className="text-xs font-medium text-foreground mb-2">Alertes</p>
+          <div className="flex items-center gap-2">
+            <div className="flex items-center gap-1">
+              <div className="w-3 h-3 rounded-full" style={{ background: "#22c55e" }}></div>
+              <span className="text-[10px] text-muted-foreground">0</span>
+            </div>
+            <div className="flex items-center gap-1">
+              <div className="w-3 h-3 rounded-full" style={{ background: "#f59e0b" }}></div>
+              <span className="text-[10px] text-muted-foreground">1-2</span>
+            </div>
+            <div className="flex items-center gap-1">
+              <div className="w-3 h-3 rounded-full" style={{ background: "#ef4444" }}></div>
+              <span className="text-[10px] text-muted-foreground">3+</span>
+            </div>
+          </div>
         </div>
       </div>
     </div>

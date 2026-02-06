@@ -8,6 +8,7 @@ export interface DepartmentData {
   part_60_plus: number;
   part_75_plus: number;
   taux_pauvrete_75: number;
+  taux_pauvrete_60: number;
   niveau_vie_median: number;
   revenu_median_60_74: number;
   revenu_median_75_plus: number;
@@ -21,7 +22,89 @@ export interface DepartmentData {
   esperance_vie: number;
   access_med_generalistes: number;
   region: string;
-  [key: string]: string | number;
+  // Demographic breakdown
+  femmes_60_74_ans: number;
+  femmes_75_plus: number;
+  hommes_60_74_ans: number;
+  hommes_75_plus: number;
+  total_seniors: number;
+  // Social profile 60-74
+  menage_peu_diplome_60_74: number;
+  menage_immigre_60_74: number;
+  proprietaires_60_74: number;
+  sans_voiture_60_74: number;
+  // Social profile 75+
+  proprietaires_75_plus: number;
+  sans_voiture_75_plus: number;
+  // Health indicators
+  mal_chro_oui: number;
+  handicap_oui: number;
+  lfphysiques_oui: number;
+  vue_difficulte: number;
+  auditif_difficulte: number;
+  etat_sante_mauvais: number;
+  // Services
+  aide_menagere_personnes_agees: number;
+  apl_sapa: number;
+  apl_ehpa: number;
+  // Vaccination
+  grippe_65_plus: number;
+  covid_65_plus: number;
+  // Fragilité numérique
+  score_fragilite_numerique: number;
+  // ASPA
+  aspa_effectif_2024: number;
+  aspa_effectif_2013: number;
+  aspa_effectif_2014: number;
+  aspa_effectif_2015: number;
+  aspa_effectif_2016: number;
+  aspa_effectif_2017: number;
+  aspa_effectif_2018: number;
+  aspa_effectif_2019: number;
+  aspa_effectif_2020: number;
+  aspa_effectif_2021: number;
+  aspa_effectif_2022: number;
+  aspa_effectif_2023: number;
+  // LIVIA projections
+  vol_glob_s1_f_2025: number;
+  vol_glob_s1_f_2030: number;
+  vol_glob_s1_f_2035: number;
+  vol_glob_s1_f_2040: number;
+  vol_glob_s1_f_2045: number;
+  vol_glob_s1_f_2050: number;
+  vol_glob_s1_h_2025: number;
+  vol_glob_s1_h_2030: number;
+  vol_glob_s1_h_2035: number;
+  vol_glob_s1_h_2040: number;
+  vol_glob_s1_h_2045: number;
+  vol_glob_s1_h_2050: number;
+  vol_glob_s2_f_2025: number;
+  vol_glob_s2_f_2030: number;
+  vol_glob_s2_f_2035: number;
+  vol_glob_s2_f_2040: number;
+  vol_glob_s2_f_2045: number;
+  vol_glob_s2_f_2050: number;
+  vol_glob_s2_h_2025: number;
+  vol_glob_s2_h_2030: number;
+  vol_glob_s2_h_2035: number;
+  vol_glob_s2_h_2040: number;
+  vol_glob_s2_h_2045: number;
+  vol_glob_s2_h_2050: number;
+  vol_glob_s3_f_2025: number;
+  vol_glob_s3_f_2030: number;
+  vol_glob_s3_f_2035: number;
+  vol_glob_s3_f_2040: number;
+  vol_glob_s3_f_2045: number;
+  vol_glob_s3_f_2050: number;
+  vol_glob_s3_h_2025: number;
+  vol_glob_s3_h_2030: number;
+  vol_glob_s3_h_2035: number;
+  vol_glob_s3_h_2040: number;
+  vol_glob_s3_h_2045: number;
+  vol_glob_s3_h_2050: number;
+  // Maladies 65+
+  maladies_65_plus: { [key: string]: number };
+  [key: string]: string | number | { [key: string]: number };
 }
 
 export const metrics = [
@@ -50,28 +133,127 @@ export const loadDepartmentData = async (): Promise<DepartmentData[]> => {
       transformHeader: (header) => header.trim(),
     });
 
-    cachedData = result.data.map((row: any) => ({
-      code_departement: String(row['code_departement'] || row['Code département'] || '').trim(),
-      departement: row['departement'] || row['Département'] || '',
-      population: parseFloat(row['Population']) || 0,
-      part_femmes: parseFloat(row['Part des femmes (en %)']) || 0,
-      part_60_plus: parseFloat(row['Part des 60 ans ou plus (en %)']) || 0,
-      part_75_plus: parseFloat(row['dont part des 75 ans ou plus (en %)']) || 0,
-      taux_pauvrete_75: parseFloat(row['Taux de pauvrete pour plus de 75 ans']) || 0,
-      niveau_vie_median: parseFloat(row['Niveau de vie médian des ménages (en euros)']) || 0,
-      revenu_median_60_74: parseFloat(row['revenu_median_60_74']) || 0,
-      revenu_median_75_plus: parseFloat(row['revenu_median_75_plus']) || 0,
-      isoles_60_74: parseFloat(row['60_74_isoles']) || 0,
-      isoles_75_plus: parseFloat(row['75_plus_isoles']) || 0,
-      femmes_60_74_isolees: parseFloat(row['femmes_60_74_isolees']) || 0,
-      femmes_75_plus_isolees: parseFloat(row['femmes_75_plus_isolees']) || 0,
-      taux_ehpad_75_plus: parseFloat(row['Taux_EHPAD_75_plus']) || 0,
-      ehpad_nb_etab: parseFloat(row['EHPAD_nb_etab']) || 0,
-      ehpad_nb_lits: parseFloat(row['EHPAD_nb_lits']) || 0,
-      esperance_vie: parseFloat(row['esp']) || 0,
-      access_med_generalistes: parseFloat(row['access_med_generalistes']) || 0,
-      region: row[Object.keys(row).pop() || ''] || '',
-    })) as DepartmentData[];
+    cachedData = result.data.map((row: any) => {
+      // Extract maladies 65+ data
+      const maladies_65_plus: { [key: string]: number } = {};
+      Object.keys(row).forEach(key => {
+        if (key.startsWith('≥ 65 ans -') && !key.includes('Total')) {
+          const maladieName = key.replace('≥ 65 ans - ', '');
+          maladies_65_plus[maladieName] = parseFloat(row[key]) || 0;
+        }
+      });
+
+      return {
+        code_departement: String(row['code_departement'] || row['Code département'] || '').trim(),
+        departement: row['departement'] || row['Département'] || '',
+        population: parseFloat(row['Population']) || 0,
+        part_femmes: parseFloat(row['Part des femmes (en %)']) || 0,
+        part_60_plus: parseFloat(row['Part des 60 ans ou plus (en %)']) || 0,
+        part_75_plus: parseFloat(row['dont part des 75 ans ou plus (en %)']) || 0,
+        taux_pauvrete_75: parseFloat(row['Taux de pauvrete pour plus de 75 ans']) || 0,
+        taux_pauvrete_60: parseFloat(row['taux de pauvreté au seuil de 60%']) || 0,
+        niveau_vie_median: parseFloat(row['Niveau de vie médian des ménages (en euros)']) || 0,
+        revenu_median_60_74: parseFloat(row['revenu_median_60_74']) || 0,
+        revenu_median_75_plus: parseFloat(row['revenu_median_75_plus']) || 0,
+        isoles_60_74: parseFloat(row['60_74_isoles']) || 0,
+        isoles_75_plus: parseFloat(row['75_plus_isoles']) || 0,
+        femmes_60_74_isolees: parseFloat(row['femmes_60_74_isolees']) || 0,
+        femmes_75_plus_isolees: parseFloat(row['femmes_75_plus_isolees']) || 0,
+        taux_ehpad_75_plus: parseFloat(row['Taux_EHPAD_75_plus']) || 0,
+        ehpad_nb_etab: parseFloat(row['EHPAD_nb_etab']) || 0,
+        ehpad_nb_lits: parseFloat(row['EHPAD_nb_lits']) || 0,
+        esperance_vie: parseFloat(row['esp']) || 0,
+        access_med_generalistes: parseFloat(row['access_med_generalistes']) || 0,
+        region: row[Object.keys(row).pop() || ''] || '',
+        // Demographics
+        femmes_60_74_ans: parseFloat(row['Femmes_60_74_ans']) || 0,
+        femmes_75_plus: parseFloat(row['Femmes_75_ans_et_plus']) || 0,
+        hommes_60_74_ans: parseFloat(row['Hommes_60_74_ans']) || 0,
+        hommes_75_plus: parseFloat(row['Hommes_75_ans_et_plus']) || 0,
+        total_seniors: (parseFloat(row['Femmes_60_74_ans']) || 0) + 
+                       (parseFloat(row['Femmes_75_ans_et_plus']) || 0) +
+                       (parseFloat(row['Hommes_60_74_ans']) || 0) +
+                       (parseFloat(row['Hommes_75_ans_et_plus']) || 0),
+        // Social profile 60-74
+        menage_peu_diplome_60_74: parseFloat(row['60_74_menage_peu_diplome']) || 0,
+        menage_immigre_60_74: parseFloat(row['60_74_menage_immigre']) || 0,
+        proprietaires_60_74: parseFloat(row['60_74_proprietaires']) || 0,
+        sans_voiture_60_74: parseFloat(row['60_74_sans_voiture']) || 0,
+        // Social profile 75+
+        proprietaires_75_plus: parseFloat(row['75_plus_proprietaires']) || 0,
+        sans_voiture_75_plus: parseFloat(row['75_plus_sans_voiture']) || 0,
+        // Health
+        mal_chro_oui: parseFloat(row['MAL_CHRO_Oui']) || 0,
+        handicap_oui: parseFloat(row['HANDICAP_Oui']) || 0,
+        lfphysiques_oui: parseFloat(row['LFPHYSIQUES_Oui']) || 0,
+        vue_difficulte: parseFloat(row['VUE_1 - Beaucoup de difficultés ou ne peut pas du tout']) || 0,
+        auditif_difficulte: parseFloat(row['AUDITIF_1 - Beaucoup de difficultés ou ne peut pas du tout']) || 0,
+        etat_sante_mauvais: parseFloat(row['ETAT_SANT_4 - Mauvais ou très mauvais']) || 0,
+        // Services
+        aide_menagere_personnes_agees: parseFloat(row['aide_menagere_personnes_agees']) || 0,
+        apl_sapa: parseFloat(row['APL_SAPA']) || 0,
+        apl_ehpa: parseFloat(row['APL_EHPA']) || 0,
+        // Vaccination
+        grippe_65_plus: parseFloat(row['Grippe 65 ans et plus']) || 0,
+        covid_65_plus: parseFloat(row['Covid-19 65 ans et plus']) || 0,
+        // Fragilité numérique
+        score_fragilite_numerique: parseFloat(row[' Score de fragilité numérique senior']) || 0,
+        // ASPA
+        aspa_effectif_2024: parseFloat(row['aspa_effectif_2024']) || 0,
+        aspa_effectif_2013: parseFloat(row['aspa_effectif_2013']) || 0,
+        aspa_effectif_2014: parseFloat(row['aspa_effectif_2014']) || 0,
+        aspa_effectif_2015: parseFloat(row['aspa_effectif_2015']) || 0,
+        aspa_effectif_2016: parseFloat(row['aspa_effectif_2016']) || 0,
+        aspa_effectif_2017: parseFloat(row['aspa_effectif_2017']) || 0,
+        aspa_effectif_2018: parseFloat(row['aspa_effectif_2018']) || 0,
+        aspa_effectif_2019: parseFloat(row['aspa_effectif_2019']) || 0,
+        aspa_effectif_2020: parseFloat(row['aspa_effectif_2020']) || 0,
+        aspa_effectif_2021: parseFloat(row['aspa_effectif_2021']) || 0,
+        aspa_effectif_2022: parseFloat(row['aspa_effectif_2022']) || 0,
+        aspa_effectif_2023: parseFloat(row['aspa_effectif_2023']) || 0,
+        // LIVIA S1
+        vol_glob_s1_f_2025: parseFloat(row['vol_GLOB_s1_F_2025']) || 0,
+        vol_glob_s1_f_2030: parseFloat(row['vol_GLOB_s1_F_2030']) || 0,
+        vol_glob_s1_f_2035: parseFloat(row['vol_GLOB_s1_F_2035']) || 0,
+        vol_glob_s1_f_2040: parseFloat(row['vol_GLOB_s1_F_2040']) || 0,
+        vol_glob_s1_f_2045: parseFloat(row['vol_GLOB_s1_F_2045']) || 0,
+        vol_glob_s1_f_2050: parseFloat(row['vol_GLOB_s1_F_2050']) || 0,
+        vol_glob_s1_h_2025: parseFloat(row['vol_GLOB_s1_H_2025']) || 0,
+        vol_glob_s1_h_2030: parseFloat(row['vol_GLOB_s1_H_2030']) || 0,
+        vol_glob_s1_h_2035: parseFloat(row['vol_GLOB_s1_H_2035']) || 0,
+        vol_glob_s1_h_2040: parseFloat(row['vol_GLOB_s1_H_2040']) || 0,
+        vol_glob_s1_h_2045: parseFloat(row['vol_GLOB_s1_H_2045']) || 0,
+        vol_glob_s1_h_2050: parseFloat(row['vol_GLOB_s1_H_2050']) || 0,
+        // LIVIA S2
+        vol_glob_s2_f_2025: parseFloat(row['vol_GLOB_s2_F_2025']) || 0,
+        vol_glob_s2_f_2030: parseFloat(row['vol_GLOB_s2_F_2030']) || 0,
+        vol_glob_s2_f_2035: parseFloat(row['vol_GLOB_s2_F_2035']) || 0,
+        vol_glob_s2_f_2040: parseFloat(row['vol_GLOB_s2_F_2040']) || 0,
+        vol_glob_s2_f_2045: parseFloat(row['vol_GLOB_s2_F_2045']) || 0,
+        vol_glob_s2_f_2050: parseFloat(row['vol_GLOB_s2_F_2050']) || 0,
+        vol_glob_s2_h_2025: parseFloat(row['vol_GLOB_s2_H_2025']) || 0,
+        vol_glob_s2_h_2030: parseFloat(row['vol_GLOB_s2_H_2030']) || 0,
+        vol_glob_s2_h_2035: parseFloat(row['vol_GLOB_s2_H_2035']) || 0,
+        vol_glob_s2_h_2040: parseFloat(row['vol_GLOB_s2_H_2040']) || 0,
+        vol_glob_s2_h_2045: parseFloat(row['vol_GLOB_s2_H_2045']) || 0,
+        vol_glob_s2_h_2050: parseFloat(row['vol_GLOB_s2_H_2050']) || 0,
+        // LIVIA S3
+        vol_glob_s3_f_2025: parseFloat(row['vol_GLOB_s3_F_2025']) || 0,
+        vol_glob_s3_f_2030: parseFloat(row['vol_GLOB_s3_F_2030']) || 0,
+        vol_glob_s3_f_2035: parseFloat(row['vol_GLOB_s3_F_2035']) || 0,
+        vol_glob_s3_f_2040: parseFloat(row['vol_GLOB_s3_F_2040']) || 0,
+        vol_glob_s3_f_2045: parseFloat(row['vol_GLOB_s3_F_2045']) || 0,
+        vol_glob_s3_f_2050: parseFloat(row['vol_GLOB_s3_F_2050']) || 0,
+        vol_glob_s3_h_2025: parseFloat(row['vol_GLOB_s3_H_2025']) || 0,
+        vol_glob_s3_h_2030: parseFloat(row['vol_GLOB_s3_H_2030']) || 0,
+        vol_glob_s3_h_2035: parseFloat(row['vol_GLOB_s3_H_2035']) || 0,
+        vol_glob_s3_h_2040: parseFloat(row['vol_GLOB_s3_H_2040']) || 0,
+        vol_glob_s3_h_2045: parseFloat(row['vol_GLOB_s3_H_2045']) || 0,
+        vol_glob_s3_h_2050: parseFloat(row['vol_GLOB_s3_H_2050']) || 0,
+        // Maladies 65+
+        maladies_65_plus,
+      };
+    }) as DepartmentData[];
 
     return cachedData;
   } catch (error) {
@@ -100,4 +282,10 @@ export const formatValue = (value: number, metricId: string): string => {
     return new Intl.NumberFormat('fr-FR').format(Math.round(value));
   }
   return value.toFixed(1);
+};
+
+export const getAverage = (data: DepartmentData[], field: keyof DepartmentData): number => {
+  const values = data.map(d => d[field] as number).filter(v => !isNaN(v) && v > 0);
+  if (values.length === 0) return 0;
+  return values.reduce((a, b) => a + b, 0) / values.length;
 };
