@@ -115,14 +115,14 @@ const Part60PlusChart = ({ department }: { department: DepartmentData }) => {
       <h4 className="text-sm font-semibold text-foreground mb-4">
         Part des 60 ans ou plus
       </h4>
-      <ResponsiveContainer width="100%" height={200}>
+      <ResponsiveContainer width="100%" height={180}>
         <PieChart>
           <Pie
             data={data}
             cx="50%"
             cy="50%"
-            innerRadius={40}
-            outerRadius={70}
+            innerRadius={30}
+            outerRadius={55}
             dataKey="value"
             label={({ name }) => name}
             labelLine={false}
@@ -274,7 +274,7 @@ const FragiliteNumeriqueChart = ({ department }: { department: DepartmentData })
         Fragilité numérique des seniors
       </h4>
       <div className="relative">
-        <ResponsiveContainer width="100%" height={160}>
+        <ResponsiveContainer width="100%" height={140}>
           <PieChart>
             <Pie
               data={gaugeData}
@@ -282,8 +282,8 @@ const FragiliteNumeriqueChart = ({ department }: { department: DepartmentData })
               cy="100%"
               startAngle={180}
               endAngle={0}
-              innerRadius={60}
-              outerRadius={80}
+              innerRadius={50}
+              outerRadius={65}
               dataKey="value"
               stroke="none"
             >
@@ -509,14 +509,14 @@ const IsolementSocialChart = ({ department }: { department: DepartmentData }) =>
       <h4 className="text-sm font-semibold text-foreground mb-4">
         Isolement social des +60 ans
       </h4>
-      <ResponsiveContainer width="100%" height={280}>
+      <ResponsiveContainer width="100%" height={240}>
         <PieChart>
           <Pie
             data={outerData}
             cx="50%"
             cy="50%"
-            outerRadius={80}
-            innerRadius={50}
+            outerRadius={65}
+            innerRadius={40}
             dataKey="value"
             label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}
             labelLine={false}
@@ -528,8 +528,8 @@ const IsolementSocialChart = ({ department }: { department: DepartmentData }) =>
             data={innerData}
             cx="50%"
             cy="50%"
-            outerRadius={45}
-            innerRadius={25}
+            outerRadius={35}
+            innerRadius={18}
             dataKey="value"
           >
             <Cell fill={COLORS.quaternary} />
@@ -567,14 +567,14 @@ const LogementChart = ({ department }: { department: DepartmentData }) => {
       <h4 className="text-sm font-semibold text-foreground mb-4">
         Propriétaires vs Locataires (+60 ans)
       </h4>
-      <ResponsiveContainer width="100%" height={200}>
+      <ResponsiveContainer width="100%" height={180}>
         <PieChart>
           <Pie
             data={data}
             cx="50%"
             cy="50%"
-            innerRadius={40}
-            outerRadius={70}
+            innerRadius={30}
+            outerRadius={55}
             dataKey="value"
             label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}
             labelLine={false}

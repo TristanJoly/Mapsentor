@@ -108,14 +108,9 @@ export interface DepartmentData {
 }
 
 export const metrics = [
-  { id: "taux_pauvrete_75", label: "Taux de pauvreté 75+", unit: "%", description: "Taux de pauvreté pour les plus de 75 ans" },
-  { id: "part_75_plus", label: "Part des 75 ans et plus", unit: "%", description: "Pourcentage de la population de 75 ans et plus" },
-  { id: "isoles_75_plus", label: "Personnes isolées 75+", unit: "", description: "Nombre de personnes isolées de 75 ans et plus" },
-  { id: "isoles_60_74", label: "Personnes isolées 60-74", unit: "", description: "Nombre de personnes isolées entre 60 et 74 ans" },
-  { id: "taux_ehpad_75_plus", label: "Taux EHPAD 75+", unit: "%", description: "Taux d'entrée en EHPAD pour les 75+" },
-  { id: "niveau_vie_median", label: "Niveau de vie médian", unit: "€", description: "Niveau de vie médian des ménages" },
-  { id: "access_med_generalistes", label: "Accès médecins", unit: "", description: "Accessibilité aux médecins généralistes" },
-  { id: "esperance_vie", label: "Espérance de vie", unit: "ans", description: "Espérance de vie à la naissance" },
+  { id: "isoles_60_74", label: "Seniors isolés (60-74 ans)", unit: "", description: "Nombre de personnes isolées entre 60 et 74 ans" },
+  { id: "taux_pauvrete_75", label: "Précarité des seniors", unit: "%", description: "Taux de pauvreté pour les plus de 75 ans" },
+  { id: "mal_chro_oui", label: "Polypathologie", unit: "%", description: "Part des seniors atteints de maladies chroniques" },
 ];
 
 let cachedData: DepartmentData[] | null = null;
