@@ -39,7 +39,7 @@ interface FranceMapProps {
   onDepartmentClick: (code: string) => void;
 }
 
-// Folium-style marker component
+// Folium-style location pin marker component
 const FoliumMarker = ({ 
   alertCount, 
   isSelected,
@@ -50,46 +50,52 @@ const FoliumMarker = ({
   onClick: () => void;
 }) => {
   const color = getWarningColor(alertCount);
-  const size = isSelected ? 1.3 : 1;
+  const size = isSelected ? 1.2 : 1;
   
   return (
     <g onClick={onClick} style={{ cursor: 'pointer' }} transform={`scale(${size})`}>
-      {/* Marker pin shape like Folium */}
-      <path
-        d="M12 0C7.58 0 4 3.58 4 8c0 5.76 7.11 11.38 7.42 11.62a1 1 0 0 0 1.16 0C12.89 19.38 20 13.76 20 8c0-4.42-3.58-8-8-8z"
-        fill={color}
-        stroke="#fff"
-        strokeWidth="1.5"
-        transform="translate(-12, -22)"
-      />
-      {/* Exclamation triangle icon inside */}
-      <g transform="translate(-12, -22)">
+      {/* Main pin shape - classic Folium style */}
+      <g transform="translate(-14, -36)">
+        {/* Outer pin shape with gradient effect */}
         <path
-          d="M12 5.5l5.5 9.5H6.5L12 5.5z"
-          fill="none"
+          d="M14 0C6.268 0 0 6.268 0 14c0 10.5 14 22 14 22s14-11.5 14-22C28 6.268 21.732 0 14 0z"
+          fill={color}
           stroke="#fff"
-          strokeWidth="1"
-          strokeLinejoin="round"
+          strokeWidth="2"
         />
-        <line x1="12" y1="9" x2="12" y2="11" stroke="#fff" strokeWidth="1.2" strokeLinecap="round" />
-        <circle cx="12" cy="13" r="0.6" fill="#fff" />
+        {/* Inner circle background */}
+        <circle cx="14" cy="12" r="8" fill="#fff" opacity="0.95" />
+        {/* Alert triangle icon */}
+        <g transform="translate(14, 12)">
+          <path
+            d="M0 -5L4.5 4H-4.5L0 -5z"
+            fill={color}
+            stroke={color}
+            strokeWidth="0.5"
+            strokeLinejoin="round"
+          />
+          <line x1="0" y1="-2" x2="0" y2="0.5" stroke="#fff" strokeWidth="1.5" strokeLinecap="round" />
+          <circle cx="0" cy="2" r="0.8" fill="#fff" />
+        </g>
       </g>
-      {/* Badge with count */}
-      <g transform="translate(4, -26)">
-        <circle r="6" fill="#fff" stroke={color} strokeWidth="1" />
-        <text
-          textAnchor="middle"
-          y={3}
-          style={{ 
-            fontFamily: "system-ui", 
-            fill: color, 
-            fontSize: 8,
-            fontWeight: "bold"
-          }}
-        >
-          {alertCount}
-        </text>
-      </g>
+      {/* Badge with count - positioned at top right */}
+      {alertCount > 1 && (
+        <g transform="translate(6, -38)">
+          <circle r="7" fill="#fff" stroke={color} strokeWidth="1.5" />
+          <text
+            textAnchor="middle"
+            y={4}
+            style={{ 
+              fontFamily: "system-ui", 
+              fill: color, 
+              fontSize: 10,
+              fontWeight: "bold"
+            }}
+          >
+            {alertCount}
+          </text>
+        </g>
+      )}
     </g>
   );
 };
@@ -142,7 +148,7 @@ export const FranceMap = ({ data, selectedMetric, selectedDepartment, onDepartme
             center={position.coordinates}
             zoom={position.zoom}
             onMoveEnd={({ coordinates, zoom }) => setPosition({ coordinates: coordinates as [number, number], zoom })}
-            minZoom={1}
+            minZoom={0.5}
             maxZoom={8}
           >
             <Geographies geography={GEO_URL}>
@@ -233,7 +239,7 @@ export const FranceMap = ({ data, selectedMetric, selectedDepartment, onDepartme
           +
         </button>
         <button
-          onClick={() => setPosition(prev => ({ ...prev, zoom: Math.max(prev.zoom / 1.5, 1) }))}
+          onClick={() => setPosition(prev => ({ ...prev, zoom: Math.max(prev.zoom / 1.5, 0.5) }))}
           className="w-8 h-8 rounded-lg bg-card border border-border shadow-soft flex items-center justify-center text-foreground hover:bg-muted transition-colors"
         >
           −
