@@ -3,7 +3,7 @@ import {
   PieChart, Pie, Cell, Legend, LineChart, Line, RadarChart, Radar, 
   PolarGrid, PolarAngleAxis, PolarRadiusAxis 
 } from "recharts";
-import { DepartmentData, formatValue, getAverage } from "@/lib/data";
+import { DepartmentData, getAverage } from "@/lib/data";
 
 interface DepartmentChartsProps {
   department: DepartmentData | undefined;
@@ -11,13 +11,19 @@ interface DepartmentChartsProps {
   selectedMetric: string;
 }
 
+// Palette de couleurs harmonisée (tons chauds beige-orange-rouge, sans vert)
 const COLORS = {
-  primary: "#778873",
-  secondary: "#A1BC98",
-  tertiary: "#D2DCB6",
-  accent: "#9BB07C",
-  background: "#F1F3E0"
+  primary: "#C41E3A",      // Rouge carmin
+  secondary: "#FF8C42",    // Orange
+  tertiary: "#FFD580",     // Orange clair / doré
+  quaternary: "#8B4513",   // Brun
+  accent: "#D2691E",       // Chocolat
+  light: "#FFF8DC",        // Beige clair
+  muted: "#DEB887",        // Beige sable
+  dark: "#A0522D",         // Sienna
 };
+
+const CHART_PALETTE = [COLORS.primary, COLORS.secondary, COLORS.tertiary, COLORS.quaternary, COLORS.accent];
 
 // Chart 1: Top 5 maladies ≥65 ans
 const Top5MaladiesChart = ({ department }: { department: DepartmentData }) => {
@@ -54,7 +60,7 @@ const Top5MaladiesChart = ({ department }: { department: DepartmentData }) => {
               fontSize: '12px'
             }}
           />
-          <Bar dataKey="value" fill={COLORS.primary} radius={[0, 4, 4, 0]} />
+          <Bar dataKey="value" fill={COLORS.secondary} radius={[0, 4, 4, 0]} />
         </BarChart>
       </ResponsiveContainer>
     </div>
@@ -86,7 +92,7 @@ const RadarSocialChart = ({ department }: { department: DepartmentData }) => {
             dataKey="value"
             stroke={COLORS.primary}
             fill={COLORS.secondary}
-            fillOpacity={0.6}
+            fillOpacity={0.5}
           />
         </RadarChart>
       </ResponsiveContainer>
@@ -122,7 +128,7 @@ const Part60PlusChart = ({ department }: { department: DepartmentData }) => {
             labelLine={false}
           >
             <Cell fill={COLORS.primary} />
-            <Cell fill={COLORS.tertiary} />
+            <Cell fill={COLORS.light} />
           </Pie>
           <Tooltip 
             contentStyle={{ 
@@ -170,13 +176,13 @@ const RadarSanteChart = ({ department, allData }: { department: DepartmentData; 
             dataKey="departement"
             stroke={COLORS.primary}
             fill={COLORS.secondary}
-            fillOpacity={0.6}
+            fillOpacity={0.5}
           />
           <Radar
             name="France"
             dataKey="france"
-            stroke="#999"
-            fill="#ddd"
+            stroke={COLORS.muted}
+            fill={COLORS.light}
             fillOpacity={0.3}
           />
           <Legend wrapperStyle={{ fontSize: '10px' }} />
@@ -234,8 +240,8 @@ const SansVoitureChart = ({ department }: { department: DepartmentData }) => {
             }}
           />
           <Bar dataKey="value" radius={[4, 4, 0, 0]}>
-            <Cell fill={COLORS.accent} />
-            <Cell fill={COLORS.primary} />
+            <Cell fill={COLORS.tertiary} />
+            <Cell fill={COLORS.secondary} />
           </Bar>
         </BarChart>
       </ResponsiveContainer>
@@ -243,37 +249,60 @@ const SansVoitureChart = ({ department }: { department: DepartmentData }) => {
   );
 };
 
-// Chart 7: Fragilité numérique (gauge-like)
+// Chart 7: Fragilité numérique (semi-circular gauge)
 const FragiliteNumeriqueChart = ({ department }: { department: DepartmentData }) => {
   const score = department.score_fragilite_numerique || 0;
   
+  // Données pour le graphique en demi-cercle
+  const percentage = (score / 10) * 100;
+  const remaining = 100 - percentage;
+  
   const getColor = (s: number) => {
-    if (s <= 3.3) return "#7FB069"; // vert
-    if (s <= 6.6) return "#F4D35E"; // jaune
-    return "#EE6352"; // rouge
+    if (s <= 3.3) return COLORS.tertiary; // faible
+    if (s <= 6.6) return COLORS.secondary; // moyen
+    return COLORS.primary; // élevé
   };
+
+  const gaugeData = [
+    { name: "Score", value: percentage },
+    { name: "Restant", value: remaining },
+  ];
 
   return (
     <div className="p-4 rounded-xl bg-card border border-border shadow-card">
-      <h4 className="text-sm font-semibold text-foreground mb-4">
+      <h4 className="text-sm font-semibold text-foreground mb-2">
         Fragilité numérique des seniors
       </h4>
-      <div className="flex flex-col items-center">
-        <div className="relative w-40 h-20 overflow-hidden">
-          <div className="absolute inset-0 rounded-t-full bg-gradient-to-r from-green-500 via-yellow-500 to-red-500"></div>
-          <div 
-            className="absolute bottom-0 left-1/2 w-1 h-16 bg-foreground origin-bottom"
-            style={{ 
-              transform: `translateX(-50%) rotate(${(score / 10) * 180 - 90}deg)`,
-              transition: 'transform 0.5s ease-out'
-            }}
-          >
-            <div className="absolute -top-1 -left-1 w-3 h-3 rounded-full bg-foreground"></div>
+      <div className="relative">
+        <ResponsiveContainer width="100%" height={160}>
+          <PieChart>
+            <Pie
+              data={gaugeData}
+              cx="50%"
+              cy="100%"
+              startAngle={180}
+              endAngle={0}
+              innerRadius={60}
+              outerRadius={80}
+              dataKey="value"
+              stroke="none"
+            >
+              <Cell fill={getColor(score)} />
+              <Cell fill="hsl(var(--muted))" />
+            </Pie>
+          </PieChart>
+        </ResponsiveContainer>
+        <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 text-center">
+          <div className="text-3xl font-bold" style={{ color: getColor(score) }}>
+            {score.toFixed(1)}
           </div>
+          <div className="text-xs text-muted-foreground">/10</div>
         </div>
-        <div className="text-3xl font-bold mt-2" style={{ color: getColor(score) }}>
-          {score.toFixed(1)}/10
-        </div>
+      </div>
+      <div className="flex justify-between text-[10px] text-muted-foreground mt-2 px-4">
+        <span>Faible</span>
+        <span>Moyen</span>
+        <span>Élevé</span>
       </div>
     </div>
   );
@@ -308,7 +337,7 @@ const LiviaProjectionsChart = ({ department }: { department: DepartmentData }) =
             }}
           />
           <Line type="monotone" dataKey="femmes" stroke={COLORS.primary} strokeWidth={2} name="Femmes" dot />
-          <Line type="monotone" dataKey="hommes" stroke={COLORS.accent} strokeWidth={2} strokeDasharray="5 5" name="Hommes" dot />
+          <Line type="monotone" dataKey="hommes" stroke={COLORS.secondary} strokeWidth={2} strokeDasharray="5 5" name="Hommes" dot />
           <Legend wrapperStyle={{ fontSize: '10px' }} />
         </LineChart>
       </ResponsiveContainer>
@@ -344,7 +373,7 @@ const AspaEvolutionChart = ({ department }: { department: DepartmentData }) => {
             }}
             formatter={(value: number) => value.toLocaleString('fr-FR')}
           />
-          <Line type="monotone" dataKey="value" stroke="#2E86AB" strokeWidth={2} dot />
+          <Line type="monotone" dataKey="value" stroke={COLORS.quaternary} strokeWidth={2} dot />
         </LineChart>
       </ResponsiveContainer>
     </div>
@@ -492,8 +521,8 @@ const IsolementSocialChart = ({ department }: { department: DepartmentData }) =>
             label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}
             labelLine={false}
           >
-            <Cell fill="#4C78A8" />
-            <Cell fill="#F58518" />
+            <Cell fill={COLORS.muted} />
+            <Cell fill={COLORS.primary} />
           </Pie>
           <Pie
             data={innerData}
@@ -503,8 +532,8 @@ const IsolementSocialChart = ({ department }: { department: DepartmentData }) =>
             innerRadius={25}
             dataKey="value"
           >
-            <Cell fill="#1F77B4" />
-            <Cell fill="#FF7F0E" />
+            <Cell fill={COLORS.quaternary} />
+            <Cell fill={COLORS.secondary} />
           </Pie>
           <Tooltip 
             formatter={(value: number) => value.toLocaleString('fr-FR')}
@@ -550,8 +579,8 @@ const LogementChart = ({ department }: { department: DepartmentData }) => {
             label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}
             labelLine={false}
           >
-            <Cell fill="#2E86AB" />
-            <Cell fill="#F6C85F" />
+            <Cell fill={COLORS.quaternary} />
+            <Cell fill={COLORS.tertiary} />
           </Pie>
           <Tooltip 
             formatter={(value: number) => value.toLocaleString('fr-FR')}
@@ -606,8 +635,8 @@ const RevenusChart = ({ department, allData }: { department: DepartmentData; all
               fontSize: '12px'
             }}
           />
-          <Bar dataKey="departement" fill="#1f77b4" name="Département" />
-          <Bar dataKey="moyenne" fill="#ff7f0e" name="Moyenne nationale" />
+          <Bar dataKey="departement" fill={COLORS.primary} name="Département" />
+          <Bar dataKey="moyenne" fill={COLORS.secondary} name="Moyenne nationale" />
           <Legend wrapperStyle={{ fontSize: '10px' }} />
         </BarChart>
       </ResponsiveContainer>
