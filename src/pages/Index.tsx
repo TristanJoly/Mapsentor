@@ -6,8 +6,9 @@ import { FranceMap } from "@/components/map/FranceMap";
 import { DepartmentInfo } from "@/components/map/DepartmentInfo";
 import { DepartmentAlerts } from "@/components/map/DepartmentAlerts";
 import { DepartmentCharts } from "@/components/charts/DepartmentCharts";
+import { DepartmentComparison } from "@/components/comparison/DepartmentComparison";
 import { loadDepartmentData, DepartmentData } from "@/lib/data";
-import { Loader2, BarChart3, Menu } from "lucide-react";
+import { Loader2, BarChart3, Menu, GitCompare, Map } from "lucide-react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
 
@@ -63,7 +64,7 @@ const Index = () => {
           )}
           <div>
             <h1 className="text-3xl font-bold text-foreground mb-2">
-              Carte de France
+              Mapsentor
             </h1>
             <p className="text-muted-foreground">
               Visualisez les indicateurs du vieillissement par département • {data.length} départements
@@ -71,31 +72,36 @@ const Index = () => {
           </div>
         </div>
 
-        {/* Controls */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+        {/* Metric Selector - visible on all tabs */}
+        <div className="mb-6">
           <MetricSelector value={selectedMetric} onChange={setSelectedMetric} />
-          <DepartmentSelector 
-            value={selectedDepartment} 
-            onChange={setSelectedDepartment}
-            departments={data}
-          />
         </div>
 
         <Tabs defaultValue="map" className="space-y-6">
           <TabsList className="bg-muted/50">
             <TabsTrigger value="map" className="gap-2">
-              <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                <path d="M12 22s-8-4.5-8-11.8A8 8 0 0 1 12 2a8 8 0 0 1 8 8.2c0 7.3-8 11.8-8 11.8z"/>
-              </svg>
+              <Map className="w-4 h-4" />
               Carte
             </TabsTrigger>
             <TabsTrigger value="charts" className="gap-2">
               <BarChart3 className="w-4 h-4" />
               Graphiques
             </TabsTrigger>
+            <TabsTrigger value="compare" className="gap-2">
+              <GitCompare className="w-4 h-4" />
+              Comparaison
+            </TabsTrigger>
           </TabsList>
 
+          {/* Onglet Carte */}
           <TabsContent value="map" className="space-y-6">
+            {/* Department Selector */}
+            <DepartmentSelector 
+              value={selectedDepartment} 
+              onChange={setSelectedDepartment}
+              departments={data}
+            />
+
             {/* Department Info + Alerts */}
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
               <div className="lg:col-span-2">
@@ -107,7 +113,7 @@ const Index = () => {
             </div>
 
             {/* Map */}
-            <div className="h-[calc(100vh-550px)] min-h-[400px]">
+            <div className="h-[calc(100vh-600px)] min-h-[400px]">
               <FranceMap 
                 data={data}
                 selectedMetric={selectedMetric}
@@ -117,7 +123,15 @@ const Index = () => {
             </div>
           </TabsContent>
 
+          {/* Onglet Graphiques */}
           <TabsContent value="charts" className="space-y-6">
+            {/* Department Selector */}
+            <DepartmentSelector 
+              value={selectedDepartment} 
+              onChange={setSelectedDepartment}
+              departments={data}
+            />
+
             {/* Department Info */}
             <DepartmentInfo department={selectedDeptData} allData={data} />
 
@@ -132,6 +146,14 @@ const Index = () => {
             <div className="max-w-md">
               <DepartmentAlerts department={selectedDeptData} allData={data} />
             </div>
+          </TabsContent>
+
+          {/* Onglet Comparaison */}
+          <TabsContent value="compare" className="space-y-6">
+            <DepartmentComparison 
+              allData={data}
+              selectedMetric={selectedMetric}
+            />
           </TabsContent>
         </Tabs>
       </main>
