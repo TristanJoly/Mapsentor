@@ -1,11 +1,12 @@
-import { Users, TrendingUp, Home, Activity, Euro, Heart, UserX } from "lucide-react";
+import { Users, TrendingUp, Home, Activity, Euro, Heart, UserX, AlertTriangle } from "lucide-react";
 import { DepartmentData, formatValue } from "@/lib/data";
 
 interface DepartmentInfoProps {
   department: DepartmentData | undefined;
+  allData: DepartmentData[];
 }
 
-export const DepartmentInfo = ({ department }: DepartmentInfoProps) => {
+export const DepartmentInfo = ({ department, allData }: DepartmentInfoProps) => {
   if (!department) {
     return (
       <div className="p-5 rounded-xl bg-card border border-border shadow-card">
@@ -13,6 +14,20 @@ export const DepartmentInfo = ({ department }: DepartmentInfoProps) => {
       </div>
     );
   }
+
+  // Calculate national averages
+  const avgPauvrete = allData.reduce((sum, d) => sum + d.taux_pauvrete_75, 0) / allData.length;
+  const avgIsoles = allData.reduce((sum, d) => sum + d.isoles_75_plus, 0) / allData.length;
+
+  const getComparisonBadge = (value: number, avg: number, isLowerBetter: boolean = true) => {
+    const diff = ((value - avg) / avg) * 100;
+    const isGood = isLowerBetter ? diff < -10 : diff > 10;
+    const isBad = isLowerBetter ? diff > 10 : diff < -10;
+    
+    if (isGood) return <span className="text-[10px] px-1.5 py-0.5 rounded-full bg-green-100 text-green-700">↓ {Math.abs(diff).toFixed(0)}%</span>;
+    if (isBad) return <span className="text-[10px] px-1.5 py-0.5 rounded-full bg-red-100 text-red-700">↑ {Math.abs(diff).toFixed(0)}%</span>;
+    return <span className="text-[10px] px-1.5 py-0.5 rounded-full bg-gray-100 text-gray-600">≈ moy.</span>;
+  };
 
   const stats = [
     {
@@ -35,6 +50,7 @@ export const DepartmentInfo = ({ department }: DepartmentInfoProps) => {
       icon: UserX,
       color: "text-orange-500",
       bg: "bg-orange-500/10",
+      comparison: getComparisonBadge(department.isoles_75_plus, avgIsoles, true),
     },
     {
       label: "Pauvreté 75+",
@@ -42,6 +58,7 @@ export const DepartmentInfo = ({ department }: DepartmentInfoProps) => {
       icon: TrendingUp,
       color: "text-rose-500",
       bg: "bg-rose-500/10",
+      comparison: getComparisonBadge(department.taux_pauvrete_75, avgPauvrete, true),
     },
     {
       label: "Niveau vie médian",
@@ -73,14 +90,25 @@ export const DepartmentInfo = ({ department }: DepartmentInfoProps) => {
     },
   ];
 
+  const isCritical = department.taux_pauvrete_75 > 25 || department.isoles_75_plus > avgIsoles * 1.5;
+
   return (
-    <div className="p-5 rounded-xl bg-card border border-border shadow-card">
+    <div className={`p-5 rounded-xl bg-card border shadow-card ${isCritical ? 'border-red-300' : 'border-border'}`}>
       <div className="flex items-center gap-3 mb-4">
-        <div className="w-12 h-12 rounded-xl gradient-bg flex items-center justify-center text-white font-bold text-sm shadow-soft">
+        <div className="w-12 h-12 rounded-xl flex items-center justify-center text-white font-bold text-sm shadow-soft" 
+          style={{ background: 'linear-gradient(135deg, #FF8C42, #C41E3A)' }}>
           {department.code_departement}
         </div>
-        <div>
-          <h3 className="font-semibold text-foreground text-lg">{department.departement}</h3>
+        <div className="flex-1">
+          <div className="flex items-center gap-2">
+            <h3 className="font-semibold text-foreground text-lg">{department.departement}</h3>
+            {isCritical && (
+              <span className="flex items-center gap-1 text-xs px-2 py-0.5 rounded-full bg-red-100 text-red-700">
+                <AlertTriangle className="w-3 h-3" />
+                Attention
+              </span>
+            )}
+          </div>
           <p className="text-xs text-muted-foreground">{department.region}</p>
         </div>
       </div>
@@ -94,7 +122,10 @@ export const DepartmentInfo = ({ department }: DepartmentInfoProps) => {
               </div>
               <span className="text-xs text-muted-foreground truncate">{stat.label}</span>
             </div>
-            <p className="text-sm font-semibold text-foreground">{stat.value}</p>
+            <div className="flex items-center gap-2">
+              <p className="text-sm font-semibold text-foreground">{stat.value}</p>
+              {stat.comparison}
+            </div>
           </div>
         ))}
       </div>
