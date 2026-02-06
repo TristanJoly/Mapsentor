@@ -1,4 +1,4 @@
-import { Users, TrendingUp, Home, Activity, Euro, Heart, UserX, AlertTriangle } from "lucide-react";
+import { Users, TrendingUp, Home, Euro, Heart, UserX } from "lucide-react";
 import { DepartmentData, formatValue } from "@/lib/data";
 
 interface DepartmentInfoProps {
@@ -40,17 +40,9 @@ export const DepartmentInfo = ({ department, allData }: DepartmentInfoProps) => 
     {
       label: "Part 75+",
       value: `${department.part_75_plus.toFixed(1)}%`,
-      icon: Activity,
+      icon: Users,
       color: "text-emerald-500",
       bg: "bg-emerald-500/10",
-    },
-    {
-      label: "Isolés 75+",
-      value: formatValue(department.isoles_75_plus, "isoles_75_plus"),
-      icon: UserX,
-      color: "text-orange-500",
-      bg: "bg-orange-500/10",
-      comparison: getComparisonBadge(department.isoles_75_plus, avgIsoles, true),
     },
     {
       label: "Pauvreté 75+",
@@ -81,39 +73,22 @@ export const DepartmentInfo = ({ department, allData }: DepartmentInfoProps) => 
       color: "text-pink-500",
       bg: "bg-pink-500/10",
     },
-    {
-      label: "Accès médecins",
-      value: department.access_med_generalistes ? department.access_med_generalistes.toFixed(0) : 'N/A',
-      icon: Activity,
-      color: "text-cyan-500",
-      bg: "bg-cyan-500/10",
-    },
   ];
 
-  const isCritical = department.taux_pauvrete_75 > 25 || department.isoles_75_plus > avgIsoles * 1.5;
-
   return (
-    <div className={`p-5 rounded-xl bg-card border shadow-card ${isCritical ? 'border-red-300' : 'border-border'}`}>
+    <div className="p-5 rounded-xl bg-card border border-border shadow-card">
       <div className="flex items-center gap-3 mb-4">
         <div className="w-12 h-12 rounded-xl flex items-center justify-center text-white font-bold text-sm shadow-soft" 
           style={{ background: 'linear-gradient(135deg, #FF8C42, #C41E3A)' }}>
           {department.code_departement}
         </div>
         <div className="flex-1">
-          <div className="flex items-center gap-2">
-            <h3 className="font-semibold text-foreground text-lg">{department.departement}</h3>
-            {isCritical && (
-              <span className="flex items-center gap-1 text-xs px-2 py-0.5 rounded-full bg-red-100 text-red-700">
-                <AlertTriangle className="w-3 h-3" />
-                Attention
-              </span>
-            )}
-          </div>
+          <h3 className="font-semibold text-foreground text-lg">{department.departement}</h3>
           <p className="text-xs text-muted-foreground">{department.region}</p>
         </div>
       </div>
 
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+      <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
         {stats.map((stat, i) => (
           <div key={i} className="p-3 rounded-lg bg-muted/50 hover:bg-muted transition-colors">
             <div className="flex items-center gap-2 mb-1">

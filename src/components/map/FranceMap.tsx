@@ -148,7 +148,7 @@ export const FranceMap = ({ data, selectedMetric, selectedDepartment, onDepartme
             center={position.coordinates}
             zoom={position.zoom}
             onMoveEnd={({ coordinates, zoom }) => setPosition({ coordinates: coordinates as [number, number], zoom })}
-            minZoom={0.5}
+            minZoom={0.3}
             maxZoom={8}
           >
             <Geographies geography={GEO_URL}>
@@ -239,7 +239,7 @@ export const FranceMap = ({ data, selectedMetric, selectedDepartment, onDepartme
           +
         </button>
         <button
-          onClick={() => setPosition(prev => ({ ...prev, zoom: Math.max(prev.zoom / 1.5, 0.5) }))}
+          onClick={() => setPosition(prev => ({ ...prev, zoom: Math.max(prev.zoom / 1.5, 0.3) }))}
           className="w-8 h-8 rounded-lg bg-card border border-border shadow-soft flex items-center justify-center text-foreground hover:bg-muted transition-colors"
         >
           −
