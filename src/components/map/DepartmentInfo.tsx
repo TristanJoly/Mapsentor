@@ -54,7 +54,7 @@ export const DepartmentInfo = ({ department, allData }: DepartmentInfoProps) => 
     },
     {
       label: "Niveau vie médian",
-      value: formatValue(department.niveau_vie_median, "niveau_vie_median"),
+      value: `${Math.round(department.niveau_vie_median / 12).toLocaleString('fr-FR')} €/mois`,
       icon: Euro,
       color: "text-blue-500",
       bg: "bg-blue-500/10",
