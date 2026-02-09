@@ -128,6 +128,30 @@ export const loadDepartmentData = async (): Promise<DepartmentData[]> => {
       transformHeader: (header) => header.trim(),
     });
 
+    // Helper function to find column value with flexible matching
+    const findColumnValue = (row: any, possibleNames: string[]): string => {
+      for (const name of possibleNames) {
+        // Try exact match first
+        if (row[name] !== undefined) return row[name];
+        // Try with leading space
+        if (row[` ${name}`] !== undefined) return row[` ${name}`];
+        // Try trimmed version
+        const trimmedName = name.trim();
+        if (row[trimmedName] !== undefined) return row[trimmedName];
+      }
+      // Fallback: search through all keys
+      for (const key of Object.keys(row)) {
+        const normalizedKey = key.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").trim();
+        for (const name of possibleNames) {
+          const normalizedName = name.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").trim();
+          if (normalizedKey.includes(normalizedName) || normalizedName.includes(normalizedKey)) {
+            return row[key];
+          }
+        }
+      }
+      return '';
+    };
+
     cachedData = result.data.map((row: any) => {
       // Extract maladies 65+ data
       const maladies_65_plus: { [key: string]: number } = {};
@@ -191,8 +215,8 @@ export const loadDepartmentData = async (): Promise<DepartmentData[]> => {
         // Vaccination
         grippe_65_plus: parseFloat(row['Grippe 65 ans et plus']) || 0,
         covid_65_plus: parseFloat(row['Covid-19 65 ans et plus']) || 0,
-        // Fragilité numérique
-        score_fragilite_numerique: parseFloat(row[' Score de fragilité numérique senior']) || 0,
+        // Fragilité numérique - headers are trimmed so no leading space
+        score_fragilite_numerique: parseFloat(row['Score de fragilité numérique senior']) || 0,
         // ASPA
         aspa_effectif_2024: parseFloat(row['aspa_effectif_2024']) || 0,
         aspa_effectif_2013: parseFloat(row['aspa_effectif_2013']) || 0,
