@@ -1,4 +1,4 @@
-import { Users, TrendingUp, Euro, Heart, Activity, TrendingDown } from "lucide-react";
+import { Users, TrendingUp, Euro, Heart, Activity, ArrowUp, ArrowDown, Minus } from "lucide-react";
 import { DepartmentData, getAverage } from "@/lib/data";
 
 interface DepartmentInfoProps {
@@ -27,10 +27,10 @@ export const DepartmentInfo = ({ department, allData }: DepartmentInfoProps) => 
     }
   });
 
-  // Part 65+ (on utilise part_60_plus comme approximation)
+  // Part 65+
   const part65Plus = department.part_60_plus;
 
-  // Taux pauvreté 65+ (on utilise taux_pauvrete_60)
+  // Taux pauvreté 65+
   const tauxPauvrete65 = department.taux_pauvrete_60;
   const diffPauvrete = tauxPauvrete65 - avgPauvrete65;
 
@@ -40,107 +40,96 @@ export const DepartmentInfo = ({ department, allData }: DepartmentInfoProps) => 
   // Espérance de vie
   const esperanceVie = department.esperance_vie;
 
-  // Comparison badge with clearer text
-  const getPauvreteComparison = () => {
-    if (diffPauvrete > 1) {
-      return (
-        <div className="flex items-center gap-1 text-[10px] px-2 py-0.5 rounded-full bg-rose-100 text-rose-700">
-          <TrendingUp className="w-3 h-3" />
-          <span>+{diffPauvrete.toFixed(1)} pts vs France</span>
-        </div>
-      );
-    } else if (diffPauvrete < -1) {
-      return (
-        <div className="flex items-center gap-1 text-[10px] px-2 py-0.5 rounded-full bg-amber-100 text-amber-700">
-          <TrendingDown className="w-3 h-3" />
-          <span>{diffPauvrete.toFixed(1)} pts vs France</span>
-        </div>
-      );
-    }
-    return (
-      <div className="text-[10px] px-2 py-0.5 rounded-full bg-orange-100 text-orange-600">
-        ≈ moyenne nationale
-      </div>
-    );
-  };
-
-  const stats = [
-    {
-      label: "Part 65+",
-      value: `${part65Plus.toFixed(1)}%`,
-      subtitle: "de la population",
-      icon: Users,
-      color: "text-orange-500",
-      bg: "bg-orange-500/10",
-    },
-    {
-      label: "Pauvreté 65+",
-      value: `${tauxPauvrete65.toFixed(1)}%`,
-      subtitle: `moy. France : ${avgPauvrete65.toFixed(1)}%`,
-      icon: TrendingUp,
-      color: "text-rose-500",
-      bg: "bg-rose-500/10",
-      comparison: getPauvreteComparison(),
-    },
-    {
-      label: "Niveau vie médian",
-      value: `${niveauVieMensuel.toLocaleString('fr-FR')} €`,
-      subtitle: "par mois",
-      icon: Euro,
-      color: "text-amber-600",
-      bg: "bg-amber-600/10",
-    },
-    {
-      label: "Espérance vie",
-      value: esperanceVie ? `${esperanceVie.toFixed(1)} ans` : 'N/A',
-      subtitle: "âge moyen au décès",
-      icon: Heart,
-      color: "text-rose-500",
-      bg: "bg-rose-500/10",
-    },
-    {
-      label: "Pathologie n°1",
-      value: topMaladie.name.length > 16 ? topMaladie.name.substring(0, 16) + "…" : topMaladie.name,
-      subtitle: `${topMaladie.value.toFixed(1)}% des 65+`,
-      fullName: topMaladie.name,
-      icon: Activity,
-      color: "text-primary",
-      bg: "bg-primary/10",
-    },
-  ];
-
   return (
     <div className="p-5 rounded-xl bg-card border border-border shadow-card">
-      <div className="flex items-center gap-3 mb-4">
-        <div className="w-12 h-12 rounded-xl flex items-center justify-center text-white font-bold text-sm shadow-soft" 
+      {/* Header */}
+      <div className="flex items-center gap-3 mb-5">
+        <div className="w-14 h-14 rounded-xl flex items-center justify-center text-white font-bold text-lg shadow-soft" 
           style={{ background: 'linear-gradient(135deg, #FF8C42, #C41E3A)' }}>
           {department.code_departement}
         </div>
         <div className="flex-1">
-          <h3 className="font-semibold text-foreground text-lg">{department.departement}</h3>
-          <p className="text-xs text-muted-foreground">{department.region}</p>
+          <h3 className="font-semibold text-foreground text-xl">{department.departement}</h3>
+          <p className="text-sm text-muted-foreground">{department.region}</p>
         </div>
       </div>
 
-      <h4 className="text-sm font-semibold mb-3" style={{ color: '#FF8C42' }}>Chiffres clés</h4>
-      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3">
-        {stats.map((stat, i) => (
-          <div key={i} className="p-3 rounded-lg bg-muted/50 hover:bg-muted transition-colors group" title={stat.fullName || stat.label}>
-            <div className="flex items-center gap-2 mb-1">
-              <div className={`w-6 h-6 rounded-md ${stat.bg} flex items-center justify-center`}>
-                <stat.icon className={`w-3.5 h-3.5 ${stat.color}`} />
-              </div>
-              <span className="text-xs text-muted-foreground truncate">{stat.label}</span>
-            </div>
-            <p className="text-sm font-semibold text-foreground truncate">{stat.value}</p>
-            {stat.subtitle && (
-              <p className="text-[10px] text-muted-foreground mt-0.5">{stat.subtitle}</p>
-            )}
-            {stat.comparison && (
-              <div className="mt-1.5">{stat.comparison}</div>
-            )}
+      <h4 className="text-base font-semibold mb-4" style={{ color: '#FF8C42' }}>Chiffres clés</h4>
+      
+      {/* Grid avec cartes plus grandes et lisibles */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
+        
+        {/* Part 65+ */}
+        <div className="p-4 rounded-xl bg-gradient-to-br from-orange-50 to-orange-100/50 border border-orange-200/50">
+          <div className="flex items-center gap-2 mb-2">
+            <Users className="w-5 h-5 text-orange-600" />
+            <span className="text-sm font-medium text-orange-800">Part 65+</span>
           </div>
-        ))}
+          <p className="text-2xl font-bold text-orange-700">{part65Plus.toFixed(1)}%</p>
+          <p className="text-xs text-orange-600/80 mt-1">de la population</p>
+        </div>
+
+        {/* Pauvreté 65+ */}
+        <div className="p-4 rounded-xl bg-gradient-to-br from-rose-50 to-rose-100/50 border border-rose-200/50">
+          <div className="flex items-center gap-2 mb-2">
+            <TrendingUp className="w-5 h-5 text-rose-600" />
+            <span className="text-sm font-medium text-rose-800">Pauvreté 65+</span>
+          </div>
+          <p className="text-2xl font-bold text-rose-700">{tauxPauvrete65.toFixed(1)}%</p>
+          <div className="flex items-center gap-1.5 mt-2">
+            {diffPauvrete > 1 ? (
+              <>
+                <ArrowUp className="w-4 h-4 text-rose-600" />
+                <span className="text-xs font-medium text-rose-600">+{diffPauvrete.toFixed(1)} pts</span>
+              </>
+            ) : diffPauvrete < -1 ? (
+              <>
+                <ArrowDown className="w-4 h-4 text-emerald-600" />
+                <span className="text-xs font-medium text-emerald-600">{diffPauvrete.toFixed(1)} pts</span>
+              </>
+            ) : (
+              <>
+                <Minus className="w-4 h-4 text-orange-500" />
+                <span className="text-xs font-medium text-orange-500">≈ moyenne</span>
+              </>
+            )}
+            <span className="text-xs text-rose-500/70">vs France ({avgPauvrete65.toFixed(1)}%)</span>
+          </div>
+        </div>
+
+        {/* Niveau de vie */}
+        <div className="p-4 rounded-xl bg-gradient-to-br from-amber-50 to-amber-100/50 border border-amber-200/50">
+          <div className="flex items-center gap-2 mb-2">
+            <Euro className="w-5 h-5 text-amber-600" />
+            <span className="text-sm font-medium text-amber-800">Niveau de vie</span>
+          </div>
+          <p className="text-2xl font-bold text-amber-700">{niveauVieMensuel.toLocaleString('fr-FR')} €</p>
+          <p className="text-xs text-amber-600/80 mt-1">médian / mois</p>
+        </div>
+
+        {/* Espérance de vie */}
+        <div className="p-4 rounded-xl bg-gradient-to-br from-rose-50 to-pink-100/50 border border-rose-200/50">
+          <div className="flex items-center gap-2 mb-2">
+            <Heart className="w-5 h-5 text-rose-500" />
+            <span className="text-sm font-medium text-rose-700">Espérance de vie</span>
+          </div>
+          <p className="text-2xl font-bold text-rose-600">
+            {esperanceVie ? `${esperanceVie.toFixed(1)} ans` : 'N/A'}
+          </p>
+          <p className="text-xs text-rose-500/80 mt-1">âge moyen au décès</p>
+        </div>
+
+        {/* Pathologie principale */}
+        <div className="p-4 rounded-xl bg-gradient-to-br from-primary/5 to-primary/10 border border-primary/20">
+          <div className="flex items-center gap-2 mb-2">
+            <Activity className="w-5 h-5 text-primary" />
+            <span className="text-sm font-medium text-primary/90">Pathologie n°1</span>
+          </div>
+          <p className="text-lg font-bold text-primary leading-tight" title={topMaladie.name}>
+            {topMaladie.name.length > 20 ? topMaladie.name.substring(0, 20) + "…" : topMaladie.name}
+          </p>
+          <p className="text-sm font-semibold text-primary/70 mt-1">{topMaladie.value.toFixed(1)}% des 65+</p>
+        </div>
       </div>
     </div>
   );
