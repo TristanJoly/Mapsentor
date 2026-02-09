@@ -1,4 +1,4 @@
-import { ChevronDown, TrendingUp } from "lucide-react";
+import { Users, Euro, Heart } from "lucide-react";
 import { metrics } from "@/lib/data";
 
 interface MetricSelectorProps {
@@ -7,34 +7,42 @@ interface MetricSelectorProps {
 }
 
 export const MetricSelector = ({ value, onChange }: MetricSelectorProps) => {
-  const selectedMetric = metrics.find(m => m.id === value) || metrics[0];
+  const metricButtons = metrics.map(metric => {
+    let icon;
+    let colorClass;
+    
+    if (metric.id === "isoles_60_74") {
+      icon = <Users className="w-4 h-4" />;
+      colorClass = "text-orange-500";
+    } else if (metric.id === "taux_pauvrete_75") {
+      icon = <Euro className="w-4 h-4" />;
+      colorClass = "text-amber-600";
+    } else {
+      icon = <Heart className="w-4 h-4" />;
+      colorClass = "text-rose-500";
+    }
+
+    const isActive = value === metric.id;
+
+    return (
+      <button
+        key={metric.id}
+        onClick={() => onChange(metric.id)}
+        className={`flex items-center gap-2 px-4 py-2.5 rounded-lg transition-all text-sm font-medium ${
+          isActive 
+            ? "bg-primary text-primary-foreground shadow-md" 
+            : "bg-muted/50 hover:bg-muted text-muted-foreground hover:text-foreground"
+        }`}
+      >
+        <span className={isActive ? "text-primary-foreground" : colorClass}>{icon}</span>
+        <span className="hidden sm:inline">{metric.label}</span>
+      </button>
+    );
+  });
 
   return (
-    <div className="metric-card">
-      <div className="flex items-center gap-2 mb-3">
-        <div className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center">
-          <TrendingUp className="w-4 h-4 text-primary" />
-        </div>
-        <div>
-          <h3 className="text-sm font-semibold text-foreground">Métrique</h3>
-          <p className="text-xs text-muted-foreground">Indicateur à visualiser</p>
-        </div>
-      </div>
-      <div className="relative">
-        <select
-          value={value}
-          onChange={(e) => onChange(e.target.value)}
-          className="select-modern appearance-none cursor-pointer pr-10"
-        >
-          {metrics.map((metric) => (
-            <option key={metric.id} value={metric.id}>
-              {metric.label}
-            </option>
-          ))}
-        </select>
-        <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground pointer-events-none" />
-      </div>
-      <p className="mt-2 text-xs text-muted-foreground">{selectedMetric.description}</p>
+    <div className="flex flex-wrap gap-2 justify-center">
+      {metricButtons}
     </div>
   );
 };

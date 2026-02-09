@@ -48,7 +48,6 @@ const Top5MaladiesChart = ({ department }: { department: DepartmentData }) => {
       </div>
     );
   }
-  // Deduplicate by using a Map with truncated name as key, keeping highest value
   const maladieEntries = Object.entries(maladies)
     .filter(([_, value]) => value > 0)
     .sort((a, b) => b[1] - a[1])
@@ -134,14 +133,6 @@ const RadarSanteChart = ({ department, allData }: { department: DepartmentData; 
   );
 };
 
-const EsperanceVieChart = ({ department }: { department: DepartmentData }) => (
-  <div className="p-4 rounded-xl bg-card border border-border shadow-card flex flex-col items-center justify-center h-[200px]">
-    <h4 className="text-sm font-semibold text-foreground mb-4">Espérance de vie</h4>
-    <div className="text-5xl font-bold" style={{ color: COLORS.primary }}>{department.esperance_vie.toFixed(1)}</div>
-    <div className="text-sm text-muted-foreground mt-2">ans</div>
-  </div>
-);
-
 const VaccinationChart = ({ department, allData }: { department: DepartmentData; allData: DepartmentData[] }) => {
   const regionData = allData.filter(d => d.region === department.region);
   const data = [
@@ -160,31 +151,6 @@ const VaccinationChart = ({ department, allData }: { department: DepartmentData;
           <Bar dataKey="departement" fill={COLORS.primary} name="Département" />
           <Bar dataKey="region" fill={COLORS.secondary} name="Région" />
           <Bar dataKey="france" fill={COLORS.tertiary} name="France" />
-          <Legend wrapperStyle={{ fontSize: '10px' }} />
-        </BarChart>
-      </ResponsiveContainer>
-    </div>
-  );
-};
-
-const LimitationsChart = ({ department, allData }: { department: DepartmentData; allData: DepartmentData[] }) => {
-  const data = [
-    { name: "Vue", departement: department.vue_difficulte, france: getAverage(allData, 'vue_difficulte') },
-    { name: "Audition", departement: department.auditif_difficulte, france: getAverage(allData, 'auditif_difficulte') },
-    { name: "Physiques", departement: department.lfphysiques_oui, france: getAverage(allData, 'lfphysiques_oui') },
-    { name: "Handicap", departement: department.handicap_oui, france: getAverage(allData, 'handicap_oui') },
-  ];
-  return (
-    <div className="p-4 rounded-xl bg-card border border-border shadow-card">
-      <h4 className="text-sm font-semibold text-foreground mb-4">Limitations fonctionnelles</h4>
-      <ResponsiveContainer width="100%" height={220}>
-        <BarChart data={data}>
-          <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
-          <XAxis dataKey="name" tick={{ fontSize: 9 }} />
-          <YAxis tick={{ fontSize: 10 }} />
-          <Tooltip formatter={(value: number) => `${value.toFixed(1)}%`} contentStyle={{ background: 'hsl(var(--card))', border: '1px solid hsl(var(--border))', borderRadius: '8px', fontSize: '12px' }} />
-          <Bar dataKey="departement" fill={COLORS.primary} name="Département" />
-          <Bar dataKey="france" fill={COLORS.muted} name="France" />
           <Legend wrapperStyle={{ fontSize: '10px' }} />
         </BarChart>
       </ResponsiveContainer>
@@ -227,56 +193,167 @@ const ServicesMedicoSociauxChart = ({ department, allData }: { department: Depar
   );
 };
 
-// ============ GRAPHIQUES SOCIAUX ============
-
-const RadarSocialChart = ({ department }: { department: DepartmentData }) => {
+// Capacité EHPAD - maintenant dans Médical
+const EhpadCapaciteChart = ({ department, allData }: { department: DepartmentData; allData: DepartmentData[] }) => {
+  const regionData = allData.filter(d => d.region === department.region);
   const data = [
-    { subject: "Peu diplômés", value: department.menage_peu_diplome_60_74 },
-    { subject: "Immigrés", value: department.menage_immigre_60_74 },
-    { subject: "Propriétaires", value: department.proprietaires_60_74 },
-    { subject: "Femmes isolées", value: department.femmes_60_74_isolees },
-    { subject: "Sans voiture", value: department.sans_voiture_60_74 },
+    { name: "Lits EHPAD", departement: department.ehpad_nb_lits, region: Math.round(getAverage(regionData, 'ehpad_nb_lits')), france: Math.round(getAverage(allData, 'ehpad_nb_lits')) },
   ];
   return (
     <div className="p-4 rounded-xl bg-card border border-border shadow-card">
-      <h4 className="text-sm font-semibold text-foreground mb-4">Profil social 60–74 ans</h4>
+      <h4 className="text-sm font-semibold text-foreground mb-4">Capacité EHPAD</h4>
+      <ResponsiveContainer width="100%" height={200}>
+        <BarChart data={data}>
+          <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
+          <XAxis dataKey="name" tick={{ fontSize: 10 }} />
+          <YAxis tick={{ fontSize: 10 }} />
+          <Tooltip formatter={(value: number) => value.toLocaleString('fr-FR')} contentStyle={{ background: 'hsl(var(--card))', border: '1px solid hsl(var(--border))', borderRadius: '8px', fontSize: '12px' }} />
+          <Bar dataKey="departement" fill={COLORS.primary} name="Département" />
+          <Bar dataKey="region" fill={COLORS.secondary} name="Région" />
+          <Bar dataKey="france" fill={COLORS.tertiary} name="France" />
+          <Legend wrapperStyle={{ fontSize: '10px' }} />
+        </BarChart>
+      </ResponsiveContainer>
+    </div>
+  );
+};
+
+// Prévisions LIVIA - maintenant dans Médical
+const LiviaProjectionsChart = ({ department }: { department: DepartmentData }) => {
+  const annees = [2025, 2030, 2035, 2040, 2045, 2050];
+  const data = annees.map(annee => ({
+    annee,
+    femmes: department[`vol_glob_s1_f_${annee}` as keyof DepartmentData] as number || 0,
+    hommes: department[`vol_glob_s1_h_${annee}` as keyof DepartmentData] as number || 0,
+  }));
+  return (
+    <div className="p-4 rounded-xl bg-card border border-border shadow-card">
+      <h4 className="text-sm font-semibold text-foreground mb-4">Prévisions LIVIA (perte d'autonomie)</h4>
+      <ResponsiveContainer width="100%" height={250}>
+        <LineChart data={data}>
+          <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
+          <XAxis dataKey="annee" tick={{ fontSize: 10 }} />
+          <YAxis tick={{ fontSize: 10 }} />
+          <Tooltip contentStyle={{ background: 'hsl(var(--card))', border: '1px solid hsl(var(--border))', borderRadius: '8px', fontSize: '12px' }} />
+          <Line type="monotone" dataKey="femmes" stroke={COLORS.primary} strokeWidth={2} name="Femmes" dot />
+          <Line type="monotone" dataKey="hommes" stroke={COLORS.secondary} strokeWidth={2} strokeDasharray="5 5" name="Hommes" dot />
+          <Legend wrapperStyle={{ fontSize: '10px' }} />
+        </LineChart>
+      </ResponsiveContainer>
+    </div>
+  );
+};
+
+// Offre VS Besoin (nouveau graphique)
+const OffreVsBesoinChart = ({ department, allData }: { department: DepartmentData; allData: DepartmentData[] }) => {
+  // Besoin = population 75+ * taux EHPAD théorique
+  // Offre = lits EHPAD
+  const besoin75 = department.femmes_75_plus + department.hommes_75_plus;
+  const offreLits = department.ehpad_nb_lits;
+  const tauxCouverture = besoin75 > 0 ? (offreLits / besoin75) * 100 : 0;
+  
+  const avgTaux = allData.reduce((sum, d) => {
+    const b = d.femmes_75_plus + d.hommes_75_plus;
+    return sum + (b > 0 ? (d.ehpad_nb_lits / b) * 100 : 0);
+  }, 0) / allData.length;
+
+  const data = [
+    { name: "Département", value: tauxCouverture },
+    { name: "Moy. France", value: avgTaux },
+  ];
+
+  return (
+    <div className="p-4 rounded-xl bg-card border border-border shadow-card">
+      <h4 className="text-sm font-semibold text-foreground mb-4">Offre vs Besoin (lits / 75+)</h4>
+      <ResponsiveContainer width="100%" height={200}>
+        <BarChart data={data}>
+          <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
+          <XAxis dataKey="name" tick={{ fontSize: 10 }} />
+          <YAxis tick={{ fontSize: 10 }} unit="%" />
+          <Tooltip formatter={(value: number) => `${value.toFixed(1)}%`} contentStyle={{ background: 'hsl(var(--card))', border: '1px solid hsl(var(--border))', borderRadius: '8px', fontSize: '12px' }} />
+          <Bar dataKey="value" radius={[4, 4, 0, 0]}>
+            <Cell fill={COLORS.primary} />
+            <Cell fill={COLORS.muted} />
+          </Bar>
+        </BarChart>
+      </ResponsiveContainer>
+    </div>
+  );
+};
+
+// ============ GRAPHIQUES SOCIAUX ============
+
+const RadarSocialChart = ({ department, allData }: { department: DepartmentData; allData: DepartmentData[] }) => {
+  // Toutes les données en % avec comparaison nationale
+  const total_60_74 = department.femmes_60_74_ans + department.hommes_60_74_ans;
+  
+  const calcPercent = (value: number, total: number) => total > 0 ? (value / total) * 100 : 0;
+  
+  const avgTotal = allData.reduce((s, d) => s + d.femmes_60_74_ans + d.hommes_60_74_ans, 0) / allData.length;
+  
+  const data = [
+    { 
+      subject: "Peu diplômés", 
+      departement: calcPercent(department.menage_peu_diplome_60_74, total_60_74),
+      france: calcPercent(getAverage(allData, 'menage_peu_diplome_60_74'), avgTotal)
+    },
+    { 
+      subject: "Immigrés", 
+      departement: calcPercent(department.menage_immigre_60_74, total_60_74),
+      france: calcPercent(getAverage(allData, 'menage_immigre_60_74'), avgTotal)
+    },
+    { 
+      subject: "Propriétaires", 
+      departement: calcPercent(department.proprietaires_60_74, total_60_74),
+      france: calcPercent(getAverage(allData, 'proprietaires_60_74'), avgTotal)
+    },
+    { 
+      subject: "Femmes isolées", 
+      departement: calcPercent(department.femmes_60_74_isolees, total_60_74),
+      france: calcPercent(getAverage(allData, 'femmes_60_74_isolees'), avgTotal)
+    },
+    { 
+      subject: "Sans voiture", 
+      departement: calcPercent(department.sans_voiture_60_74, total_60_74),
+      france: calcPercent(getAverage(allData, 'sans_voiture_60_74'), avgTotal)
+    },
+  ];
+  
+  return (
+    <div className="p-4 rounded-xl bg-card border border-border shadow-card">
+      <h4 className="text-sm font-semibold text-foreground mb-4">Profil social 60–74 ans (%)</h4>
       <ResponsiveContainer width="100%" height={250}>
         <RadarChart data={data}>
           <PolarGrid stroke="hsl(var(--border))" />
           <PolarAngleAxis dataKey="subject" tick={{ fontSize: 9 }} />
           <PolarRadiusAxis tick={{ fontSize: 8 }} />
-          <Radar name={department.departement} dataKey="value" stroke={COLORS.primary} fill={COLORS.secondary} fillOpacity={0.5} />
+          <Radar name={department.departement} dataKey="departement" stroke={COLORS.primary} fill={COLORS.secondary} fillOpacity={0.5} />
+          <Radar name="France" dataKey="france" stroke={COLORS.muted} fill={COLORS.light} fillOpacity={0.3} />
+          <Legend wrapperStyle={{ fontSize: '10px' }} />
         </RadarChart>
       </ResponsiveContainer>
     </div>
   );
 };
 
-const Part60PlusChart = ({ department }: { department: DepartmentData }) => {
-  const part60 = department.part_60_plus;
-  const data = [{ name: `60+ (${part60.toFixed(1)}%)`, value: part60 }, { name: "Autres", value: Math.max(0, 100 - part60) }];
-  return (
-    <div className="p-4 rounded-xl bg-card border border-border shadow-card">
-      <h4 className="text-sm font-semibold text-foreground mb-4">Part des 60 ans ou plus</h4>
-      <ResponsiveContainer width="100%" height={180}>
-        <PieChart>
-          <Pie data={data} cx="50%" cy="50%" innerRadius={30} outerRadius={55} dataKey="value" label={({ name }) => name} labelLine={false}>
-            <Cell fill={COLORS.primary} />
-            <Cell fill={COLORS.light} />
-          </Pie>
-          <Tooltip contentStyle={{ background: 'hsl(var(--card))', border: '1px solid hsl(var(--border))', borderRadius: '8px', fontSize: '12px' }} />
-        </PieChart>
-      </ResponsiveContainer>
-    </div>
-  );
-};
-
-const SansVoitureChart = ({ department }: { department: DepartmentData }) => {
+const SansVoitureChart = ({ department, allData }: { department: DepartmentData; allData: DepartmentData[] }) => {
   const total_60_74 = department.femmes_60_74_ans + department.hommes_60_74_ans;
   const total_75_plus = department.femmes_75_plus + department.hommes_75_plus;
+  
+  const avgTotal6074 = allData.reduce((s, d) => s + d.femmes_60_74_ans + d.hommes_60_74_ans, 0) / allData.length;
+  const avgTotal75 = allData.reduce((s, d) => s + d.femmes_75_plus + d.hommes_75_plus, 0) / allData.length;
+  
   const data = [
-    { name: "60–74 ans", value: total_60_74 > 0 ? (department.sans_voiture_60_74 / total_60_74) * 100 : 0 },
-    { name: "75+ ans", value: total_75_plus > 0 ? (department.sans_voiture_75_plus / total_75_plus) * 100 : 0 },
+    { 
+      name: "60–74 ans", 
+      departement: total_60_74 > 0 ? (department.sans_voiture_60_74 / total_60_74) * 100 : 0,
+      france: avgTotal6074 > 0 ? (getAverage(allData, 'sans_voiture_60_74') / avgTotal6074) * 100 : 0
+    },
+    { 
+      name: "75+ ans", 
+      departement: total_75_plus > 0 ? (department.sans_voiture_75_plus / total_75_plus) * 100 : 0,
+      france: avgTotal75 > 0 ? (getAverage(allData, 'sans_voiture_75_plus') / avgTotal75) * 100 : 0
+    },
   ];
   return (
     <div className="p-4 rounded-xl bg-card border border-border shadow-card">
@@ -287,10 +364,9 @@ const SansVoitureChart = ({ department }: { department: DepartmentData }) => {
           <XAxis dataKey="name" tick={{ fontSize: 10 }} />
           <YAxis tick={{ fontSize: 10 }} domain={[0, 100]} />
           <Tooltip formatter={(value: number) => `${value.toFixed(1)}%`} contentStyle={{ background: 'hsl(var(--card))', border: '1px solid hsl(var(--border))', borderRadius: '8px', fontSize: '12px' }} />
-          <Bar dataKey="value" radius={[4, 4, 0, 0]}>
-            <Cell fill={COLORS.tertiary} />
-            <Cell fill={COLORS.secondary} />
-          </Bar>
+          <Bar dataKey="departement" fill={COLORS.primary} name="Département" />
+          <Bar dataKey="france" fill={COLORS.muted} name="Moy. France" />
+          <Legend wrapperStyle={{ fontSize: '10px' }} />
         </BarChart>
       </ResponsiveContainer>
     </div>
@@ -350,28 +426,6 @@ const IsolementSocialChart = ({ department }: { department: DepartmentData }) =>
   );
 };
 
-const LogementChart = ({ department }: { department: DepartmentData }) => {
-  const proprietaires = department.proprietaires_60_74 + department.proprietaires_75_plus;
-  const total = department.total_seniors;
-  const data = [{ name: "Propriétaires", value: proprietaires }, { name: "Locataires", value: Math.max(0, total - proprietaires) }];
-  return (
-    <div className="p-4 rounded-xl bg-card border border-border shadow-card">
-      <h4 className="text-sm font-semibold text-foreground mb-4">Propriétaires vs Locataires</h4>
-      <ResponsiveContainer width="100%" height={180}>
-        <PieChart>
-          <Pie data={data} cx="50%" cy="50%" innerRadius={30} outerRadius={55} dataKey="value" label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`} labelLine={false}>
-            <Cell fill={COLORS.quaternary} />
-            <Cell fill={COLORS.tertiary} />
-          </Pie>
-          <Tooltip formatter={(value: number) => value.toLocaleString('fr-FR')} contentStyle={{ background: 'hsl(var(--card))', border: '1px solid hsl(var(--border))', borderRadius: '8px', fontSize: '12px' }} />
-          <Legend wrapperStyle={{ fontSize: '10px' }} />
-        </PieChart>
-      </ResponsiveContainer>
-    </div>
-  );
-};
-
-// Nouveaux graphiques sociaux
 const IsolementParAgeChart = ({ department, allData }: { department: DepartmentData; allData: DepartmentData[] }) => {
   const data = [
     { name: "60-74 ans", departement: department.isoles_60_74, france: getAverage(allData, 'isoles_60_74') },
@@ -426,7 +480,6 @@ const DemographieSeniorsChart = ({ department }: { department: DepartmentData })
 // ============ GRAPHIQUES ÉCONOMIQUES ============
 
 const RevenusChart = ({ department, allData }: { department: DepartmentData; allData: DepartmentData[] }) => {
-  // Les revenus dans le CSV sont en centaines d'euros annuels, donc on divise par 100 puis par 12 pour obtenir €/mois
   const data = [
     { name: "60-74 ans", departement: Math.round(department.revenu_median_60_74 / 100 / 12), moyenne: Math.round(getAverage(allData, 'revenu_median_60_74') / 100 / 12) },
     { name: "75+ ans", departement: Math.round(department.revenu_median_75_plus / 100 / 12), moyenne: Math.round(getAverage(allData, 'revenu_median_75_plus') / 100 / 12) },
@@ -449,26 +502,23 @@ const RevenusChart = ({ department, allData }: { department: DepartmentData; all
   );
 };
 
-const LiviaProjectionsChart = ({ department }: { department: DepartmentData }) => {
-  const annees = [2025, 2030, 2035, 2040, 2045, 2050];
-  const data = annees.map(annee => ({
-    annee,
-    femmes: department[`vol_glob_s1_f_${annee}` as keyof DepartmentData] as number || 0,
-    hommes: department[`vol_glob_s1_h_${annee}` as keyof DepartmentData] as number || 0,
-  }));
+// Propriétaires vs Locataires - maintenant dans Économique
+const LogementChart = ({ department }: { department: DepartmentData }) => {
+  const proprietaires = department.proprietaires_60_74 + department.proprietaires_75_plus;
+  const total = department.total_seniors;
+  const data = [{ name: "Propriétaires", value: proprietaires }, { name: "Locataires", value: Math.max(0, total - proprietaires) }];
   return (
     <div className="p-4 rounded-xl bg-card border border-border shadow-card">
-      <h4 className="text-sm font-semibold text-foreground mb-4">Prévisions LIVIA</h4>
-      <ResponsiveContainer width="100%" height={250}>
-        <LineChart data={data}>
-          <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
-          <XAxis dataKey="annee" tick={{ fontSize: 10 }} />
-          <YAxis tick={{ fontSize: 10 }} />
-          <Tooltip contentStyle={{ background: 'hsl(var(--card))', border: '1px solid hsl(var(--border))', borderRadius: '8px', fontSize: '12px' }} />
-          <Line type="monotone" dataKey="femmes" stroke={COLORS.primary} strokeWidth={2} name="Femmes" dot />
-          <Line type="monotone" dataKey="hommes" stroke={COLORS.secondary} strokeWidth={2} strokeDasharray="5 5" name="Hommes" dot />
+      <h4 className="text-sm font-semibold text-foreground mb-4">Propriétaires vs Locataires</h4>
+      <ResponsiveContainer width="100%" height={180}>
+        <PieChart>
+          <Pie data={data} cx="50%" cy="50%" innerRadius={30} outerRadius={55} dataKey="value" label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`} labelLine={false}>
+            <Cell fill={COLORS.quaternary} />
+            <Cell fill={COLORS.tertiary} />
+          </Pie>
+          <Tooltip formatter={(value: number) => value.toLocaleString('fr-FR')} contentStyle={{ background: 'hsl(var(--card))', border: '1px solid hsl(var(--border))', borderRadius: '8px', fontSize: '12px' }} />
           <Legend wrapperStyle={{ fontSize: '10px' }} />
-        </LineChart>
+        </PieChart>
       </ResponsiveContainer>
     </div>
   );
@@ -493,56 +543,15 @@ const AspaEvolutionChart = ({ department }: { department: DepartmentData }) => {
   );
 };
 
-const PauvreteCompareChart = ({ department, allData }: { department: DepartmentData; allData: DepartmentData[] }) => {
+// Graphiques APL (nouveaux)
+const AplSapaChart = ({ department, allData }: { department: DepartmentData; allData: DepartmentData[] }) => {
   const regionData = allData.filter(d => d.region === department.region);
   const data = [
-    { name: "Pauvreté 60%", departement: department.taux_pauvrete_60, region: getAverage(regionData, 'taux_pauvrete_60'), france: getAverage(allData, 'taux_pauvrete_60') },
-    { name: "Pauvreté 75+", departement: department.taux_pauvrete_75, region: getAverage(regionData, 'taux_pauvrete_75'), france: getAverage(allData, 'taux_pauvrete_75') },
+    { name: "APL SAPA", departement: department.apl_sapa, region: getAverage(regionData, 'apl_sapa'), france: getAverage(allData, 'apl_sapa') },
   ];
   return (
     <div className="p-4 rounded-xl bg-card border border-border shadow-card">
-      <h4 className="text-sm font-semibold text-foreground mb-4">Taux de pauvreté comparé</h4>
-      <ResponsiveContainer width="100%" height={220}>
-        <BarChart data={data}>
-          <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
-          <XAxis dataKey="name" tick={{ fontSize: 9 }} />
-          <YAxis tick={{ fontSize: 10 }} />
-          <Tooltip formatter={(value: number) => `${value.toFixed(1)}%`} contentStyle={{ background: 'hsl(var(--card))', border: '1px solid hsl(var(--border))', borderRadius: '8px', fontSize: '12px' }} />
-          <Bar dataKey="departement" fill={COLORS.primary} name="Département" />
-          <Bar dataKey="region" fill={COLORS.secondary} name="Région" />
-          <Bar dataKey="france" fill={COLORS.tertiary} name="France" />
-          <Legend wrapperStyle={{ fontSize: '10px' }} />
-        </BarChart>
-      </ResponsiveContainer>
-    </div>
-  );
-};
-
-const NiveauVieChart = ({ department, allData }: { department: DepartmentData; allData: DepartmentData[] }) => {
-  const avgNiveauVie = getAverage(allData, 'niveau_vie_median') / 12;
-  const deptNiveauVie = department.niveau_vie_median / 12;
-  const diff = ((deptNiveauVie - avgNiveauVie) / avgNiveauVie) * 100;
-  return (
-    <div className="p-4 rounded-xl bg-card border border-border shadow-card flex flex-col items-center justify-center h-[200px]">
-      <h4 className="text-sm font-semibold text-foreground mb-4">Niveau de vie médian</h4>
-      <div className="text-4xl font-bold" style={{ color: COLORS.primary }}>{Math.round(deptNiveauVie).toLocaleString('fr-FR')} €</div>
-      <div className="text-sm text-muted-foreground mt-1">/mois</div>
-      <div className={`text-xs mt-2 px-2 py-1 rounded-full ${diff >= 0 ? 'bg-orange-100 text-orange-700' : 'bg-red-100 text-red-700'}`}>
-        {diff >= 0 ? '+' : ''}{diff.toFixed(1)}% vs moyenne
-      </div>
-    </div>
-  );
-};
-
-// Nouveaux graphiques économiques
-const EhpadCapaciteChart = ({ department, allData }: { department: DepartmentData; allData: DepartmentData[] }) => {
-  const regionData = allData.filter(d => d.region === department.region);
-  const data = [
-    { name: "Lits EHPAD", departement: department.ehpad_nb_lits, region: Math.round(getAverage(regionData, 'ehpad_nb_lits')), france: Math.round(getAverage(allData, 'ehpad_nb_lits')) },
-  ];
-  return (
-    <div className="p-4 rounded-xl bg-card border border-border shadow-card">
-      <h4 className="text-sm font-semibold text-foreground mb-4">Capacité EHPAD</h4>
+      <h4 className="text-sm font-semibold text-foreground mb-4">APL Services d'aide (SAPA)</h4>
       <ResponsiveContainer width="100%" height={200}>
         <BarChart data={data}>
           <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
@@ -559,23 +568,23 @@ const EhpadCapaciteChart = ({ department, allData }: { department: DepartmentDat
   );
 };
 
-const AidesAllocationsChart = ({ department, allData }: { department: DepartmentData; allData: DepartmentData[] }) => {
+const AplEhpaChart = ({ department, allData }: { department: DepartmentData; allData: DepartmentData[] }) => {
+  const regionData = allData.filter(d => d.region === department.region);
   const data = [
-    { name: "Aide ménagère", departement: department.aide_menagere_personnes_agees, france: getAverage(allData, 'aide_menagere_personnes_agees') },
-    { name: "APL SAPA", departement: department.apl_sapa, france: getAverage(allData, 'apl_sapa') },
-    { name: "APL EHPA", departement: department.apl_ehpa, france: getAverage(allData, 'apl_ehpa') },
+    { name: "APL EHPA", departement: department.apl_ehpa, region: getAverage(regionData, 'apl_ehpa'), france: getAverage(allData, 'apl_ehpa') },
   ];
   return (
     <div className="p-4 rounded-xl bg-card border border-border shadow-card">
-      <h4 className="text-sm font-semibold text-foreground mb-4">Aides et allocations</h4>
+      <h4 className="text-sm font-semibold text-foreground mb-4">APL Établissements (EHPA)</h4>
       <ResponsiveContainer width="100%" height={200}>
         <BarChart data={data}>
           <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
-          <XAxis dataKey="name" tick={{ fontSize: 9 }} />
+          <XAxis dataKey="name" tick={{ fontSize: 10 }} />
           <YAxis tick={{ fontSize: 10 }} />
           <Tooltip formatter={(value: number) => value.toLocaleString('fr-FR')} contentStyle={{ background: 'hsl(var(--card))', border: '1px solid hsl(var(--border))', borderRadius: '8px', fontSize: '12px' }} />
           <Bar dataKey="departement" fill={COLORS.primary} name="Département" />
-          <Bar dataKey="france" fill={COLORS.muted} name="Moy. France" />
+          <Bar dataKey="region" fill={COLORS.secondary} name="Région" />
+          <Bar dataKey="france" fill={COLORS.tertiary} name="France" />
           <Legend wrapperStyle={{ fontSize: '10px' }} />
         </BarChart>
       </ResponsiveContainer>
@@ -615,6 +624,11 @@ export const DepartmentCharts = ({ department, allData, selectedMetric }: Depart
             <VaccinationChart department={department} allData={allData} />
             <ServicesMedicoSociauxChart department={department} allData={allData} />
           </div>
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+            <EhpadCapaciteChart department={department} allData={allData} />
+            <OffreVsBesoinChart department={department} allData={allData} />
+          </div>
+          <LiviaProjectionsChart department={department} />
           {category === "medical" && <Top10MaladiesCompareChart department={department} allData={allData} />}
         </div>
       )}
@@ -624,18 +638,17 @@ export const DepartmentCharts = ({ department, allData, selectedMetric }: Depart
         <div className="space-y-4">
           {category === "all" && <h3 className="text-lg font-semibold text-foreground flex items-center gap-2"><Users className="w-5 h-5 text-secondary" />Indicateurs sociaux</h3>}
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-            <RadarSocialChart department={department} />
+            <RadarSocialChart department={department} allData={allData} />
             <IsolementSocialChart department={department} />
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <FragiliteNumeriqueChart department={department} />
-            <LogementChart department={department} />
+            <SansVoitureChart department={department} allData={allData} />
           </div>
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-            <SansVoitureChart department={department} />
             <IsolementParAgeChart department={department} allData={allData} />
+            <DemographieSeniorsChart department={department} />
           </div>
-          <DemographieSeniorsChart department={department} />
         </div>
       )}
 
@@ -645,12 +658,13 @@ export const DepartmentCharts = ({ department, allData, selectedMetric }: Depart
           {category === "all" && <h3 className="text-lg font-semibold text-foreground flex items-center gap-2"><Euro className="w-5 h-5" style={{ color: COLORS.quaternary }} />Indicateurs économiques</h3>}
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
             <RevenusChart department={department} allData={allData} />
-            <EhpadCapaciteChart department={department} allData={allData} />
+            <LogementChart department={department} />
           </div>
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-            <LiviaProjectionsChart department={department} />
-            <AspaEvolutionChart department={department} />
+            <AplSapaChart department={department} allData={allData} />
+            <AplEhpaChart department={department} allData={allData} />
           </div>
+          <AspaEvolutionChart department={department} />
         </div>
       )}
     </div>
