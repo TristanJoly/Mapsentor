@@ -72,10 +72,7 @@ const Index = () => {
           </div>
         </div>
 
-        {/* Metric Selector - visible on all tabs */}
-        <div className="mb-6">
-          <MetricSelector value={selectedMetric} onChange={setSelectedMetric} />
-        </div>
+        {/* Tabs */}
 
         <Tabs defaultValue="map" className="space-y-6">
           <TabsList className="bg-muted/50">
@@ -101,6 +98,12 @@ const Index = () => {
               onChange={setSelectedDepartment}
               departments={data}
             />
+
+            {/* Metric Selector - juste au-dessus de la carte */}
+            <div className="p-4 rounded-xl bg-card border border-border shadow-card">
+              <h4 className="text-sm font-semibold text-foreground mb-3" style={{ color: '#FF8C42' }}>Choix de la métrique</h4>
+              <MetricSelector value={selectedMetric} onChange={setSelectedMetric} />
+            </div>
 
             {/* Department Info + Alerts */}
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
