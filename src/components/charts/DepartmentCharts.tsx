@@ -48,15 +48,20 @@ const Top5MaladiesChart = ({ department }: { department: DepartmentData }) => {
       </div>
     );
   }
-  const data = Object.entries(maladies)
+  // Deduplicate by using a Map with truncated name as key, keeping highest value
+  const maladieEntries = Object.entries(maladies)
     .filter(([_, value]) => value > 0)
     .sort((a, b) => b[1] - a[1])
-    .slice(0, 5)
-    .map(([name, value]) => ({ name: name.substring(0, 25), value }));
+    .slice(0, 5);
+  
+  const data = maladieEntries.map(([name, value], index) => ({ 
+    name: `${index + 1}. ${name.substring(0, 22)}`, 
+    value 
+  }));
 
   return (
     <div className="p-4 rounded-xl bg-card border border-border shadow-card">
-      <h4 className="text-sm font-semibold text-foreground mb-4">Top 5 maladies ≥ 65 ans</h4>
+      <h4 className="text-sm font-semibold text-foreground mb-4">Prévalence des 5 maladies les plus fréquentes</h4>
       <ResponsiveContainer width="100%" height={250}>
         <BarChart data={data} layout="vertical">
           <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
@@ -114,7 +119,7 @@ const RadarSanteChart = ({ department, allData }: { department: DepartmentData; 
 
   return (
     <div className="p-4 rounded-xl bg-card border border-border shadow-card">
-      <h4 className="text-sm font-semibold text-foreground mb-4">Radar santé – difficultés</h4>
+      <h4 className="text-sm font-semibold text-foreground mb-4">Zoom sur l'état de santé</h4>
       <ResponsiveContainer width="100%" height={280}>
         <RadarChart data={data}>
           <PolarGrid stroke="hsl(var(--border))" />
@@ -206,7 +211,7 @@ const ServicesMedicoSociauxChart = ({ department, allData }: { department: Depar
 
   return (
     <div className="p-4 rounded-xl bg-card border border-border shadow-card">
-      <h4 className="text-sm font-semibold text-foreground mb-4">Offre médico-sociale (indice, 1 = moy. nationale)</h4>
+      <h4 className="text-sm font-semibold text-foreground mb-4">Offre médico-sociale</h4>
       <ResponsiveContainer width="100%" height={250}>
         <BarChart data={data}>
           <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
@@ -374,7 +379,7 @@ const IsolementParAgeChart = ({ department, allData }: { department: DepartmentD
   ];
   return (
     <div className="p-4 rounded-xl bg-card border border-border shadow-card">
-      <h4 className="text-sm font-semibold text-foreground mb-4">Personnes isolées par tranche d'âge</h4>
+      <h4 className="text-sm font-semibold text-foreground mb-4">Seniors vivant seuls par tranche d'âge</h4>
       <ResponsiveContainer width="100%" height={200}>
         <BarChart data={data}>
           <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
@@ -421,9 +426,10 @@ const DemographieSeniorsChart = ({ department }: { department: DepartmentData })
 // ============ GRAPHIQUES ÉCONOMIQUES ============
 
 const RevenusChart = ({ department, allData }: { department: DepartmentData; allData: DepartmentData[] }) => {
+  // Les revenus dans le CSV sont en centaines d'euros annuels, donc on divise par 100 puis par 12 pour obtenir €/mois
   const data = [
-    { name: "60-74 ans", departement: Math.round(department.revenu_median_60_74 / 12), moyenne: Math.round(getAverage(allData, 'revenu_median_60_74') / 12) },
-    { name: "75+ ans", departement: Math.round(department.revenu_median_75_plus / 12), moyenne: Math.round(getAverage(allData, 'revenu_median_75_plus') / 12) },
+    { name: "60-74 ans", departement: Math.round(department.revenu_median_60_74 / 100 / 12), moyenne: Math.round(getAverage(allData, 'revenu_median_60_74') / 100 / 12) },
+    { name: "75+ ans", departement: Math.round(department.revenu_median_75_plus / 100 / 12), moyenne: Math.round(getAverage(allData, 'revenu_median_75_plus') / 100 / 12) },
   ];
   return (
     <div className="p-4 rounded-xl bg-card border border-border shadow-card">
@@ -532,8 +538,7 @@ const NiveauVieChart = ({ department, allData }: { department: DepartmentData; a
 const EhpadCapaciteChart = ({ department, allData }: { department: DepartmentData; allData: DepartmentData[] }) => {
   const regionData = allData.filter(d => d.region === department.region);
   const data = [
-    { name: "Établissements", departement: department.ehpad_nb_etab, region: Math.round(getAverage(regionData, 'ehpad_nb_etab')), france: Math.round(getAverage(allData, 'ehpad_nb_etab')) },
-    { name: "Lits", departement: department.ehpad_nb_lits, region: Math.round(getAverage(regionData, 'ehpad_nb_lits')), france: Math.round(getAverage(allData, 'ehpad_nb_lits')) },
+    { name: "Lits EHPAD", departement: department.ehpad_nb_lits, region: Math.round(getAverage(regionData, 'ehpad_nb_lits')), france: Math.round(getAverage(allData, 'ehpad_nb_lits')) },
   ];
   return (
     <div className="p-4 rounded-xl bg-card border border-border shadow-card">
@@ -607,10 +612,6 @@ export const DepartmentCharts = ({ department, allData, selectedMetric }: Depart
             <RadarSanteChart department={department} allData={allData} />
           </div>
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-            <EsperanceVieChart department={department} />
-            <LimitationsChart department={department} allData={allData} />
-          </div>
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
             <VaccinationChart department={department} allData={allData} />
             <ServicesMedicoSociauxChart department={department} allData={allData} />
           </div>
@@ -626,8 +627,7 @@ export const DepartmentCharts = ({ department, allData, selectedMetric }: Depart
             <RadarSocialChart department={department} />
             <IsolementSocialChart department={department} />
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <Part60PlusChart department={department} />
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <FragiliteNumeriqueChart department={department} />
             <LogementChart department={department} />
           </div>
@@ -643,14 +643,9 @@ export const DepartmentCharts = ({ department, allData, selectedMetric }: Depart
       {(category === "all" || category === "economic") && (
         <div className="space-y-4">
           {category === "all" && <h3 className="text-lg font-semibold text-foreground flex items-center gap-2"><Euro className="w-5 h-5" style={{ color: COLORS.quaternary }} />Indicateurs économiques</h3>}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            <NiveauVieChart department={department} allData={allData} />
-            <RevenusChart department={department} allData={allData} />
-            <PauvreteCompareChart department={department} allData={allData} />
-          </div>
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+            <RevenusChart department={department} allData={allData} />
             <EhpadCapaciteChart department={department} allData={allData} />
-            <AidesAllocationsChart department={department} allData={allData} />
           </div>
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
             <LiviaProjectionsChart department={department} />

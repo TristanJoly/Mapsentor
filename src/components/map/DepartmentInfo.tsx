@@ -88,6 +88,7 @@ export const DepartmentInfo = ({ department, allData }: DepartmentInfoProps) => 
         </div>
       </div>
 
+      <h4 className="text-sm font-semibold mb-3" style={{ color: '#FF8C42' }}>Chiffres clés</h4>
       <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
         {stats.map((stat, i) => (
           <div key={i} className="p-3 rounded-lg bg-muted/50 hover:bg-muted transition-colors">
