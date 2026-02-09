@@ -108,9 +108,9 @@ export interface DepartmentData {
 }
 
 export const metrics = [
-  { id: "isoles_60_74", label: "Seniors isolés (60-74 ans)", unit: "", description: "Nombre de personnes isolées entre 60 et 74 ans" },
-  { id: "taux_pauvrete_75", label: "Précarité des seniors", unit: "%", description: "Taux de pauvreté pour les plus de 75 ans" },
-  { id: "mal_chro_oui", label: "Polypathologie", unit: "%", description: "Part des seniors atteints de maladies chroniques" },
+  { id: "isoles_60_74", label: "Vulnérabilité sociale (seniors isolés)", unit: "", description: "Nombre de personnes isolées entre 60 et 74 ans" },
+  { id: "taux_pauvrete_75", label: "Vulnérabilité économique (seniors démunis)", unit: "%", description: "Taux de pauvreté pour les plus de 75 ans" },
+  { id: "mal_chro_oui", label: "Vulnérabilité sanitaire (seniors malades)", unit: "%", description: "Part des seniors atteints de maladies chroniques" },
 ];
 
 let cachedData: DepartmentData[] | null = null;
