@@ -174,7 +174,7 @@ export const loadDepartmentData = async (): Promise<DepartmentData[]> => {
         part_60_plus: parseFloat(row['Part des 60 ans ou plus (en %)']) || 0,
         part_75_plus: parseFloat(row['dont part des 75 ans ou plus (en %)']) || 0,
         taux_pauvrete_75: parseFloat(row['Taux de pauvrete pour plus de 75 ans']) || 0,
-        taux_pauvrete_60: parseFloat(row['taux de pauvreté au seuil de 60%']) || 0,
+        taux_pauvrete_60: (() => { const effectif = parseFloat(row['taux de pauvreté au seuil de 60%']) || 0; return total65Plus > 0 ? (effectif / total65Plus) * 100 : effectif; })(),
         niveau_vie_median: parseFloat(row['Niveau de vie médian des ménages (en euros)']) || 0,
         revenu_median_60_74: parseFloat(row['revenu_median_60_74']) || 0,
         revenu_median_75_plus: parseFloat(row['revenu_median_75_plus']) || 0,
