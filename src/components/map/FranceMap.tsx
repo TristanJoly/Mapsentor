@@ -103,12 +103,14 @@ const FoliumMarker = ({
 export const FranceMap = ({ data, selectedMetric, selectedDepartment, onDepartmentClick }: FranceMapProps) => {
   const [position, setPosition] = useState({ coordinates: [2.5, 46.5] as [number, number], zoom: 1 });
 
+  const metricRange = useMemo(() => getMetricRange(data, selectedMetric), [data, selectedMetric]);
+
   const colorScale = useMemo(() => {
-    const [min, max] = getMetricRange(data, selectedMetric);
+    const [min, max] = metricRange;
     return scaleLinear<string>()
       .domain([min, (min + max) / 3, (min + max) * 2/3, max])
       .range(["#FFF8DC", "#FFD580", "#FF8C42", "#C41E3A"]);
-  }, [data, selectedMetric]);
+  }, [metricRange]);
 
   // Calculate alerts for all departments
   const departmentAlerts = useMemo(() => {
@@ -261,9 +263,17 @@ export const FranceMap = ({ data, selectedMetric, selectedDepartment, onDepartme
           <div className="h-3 w-6" style={{ background: "#FF8C42" }}></div>
           <div className="h-3 w-6 rounded-r-sm" style={{ background: "#C41E3A" }}></div>
         </div>
-        <div className="flex justify-between text-[10px] text-muted-foreground mt-1">
-          <span>Faible</span>
-          <span>Critique</span>
+        {/* Tick values under the scale */}
+        <div className="flex justify-between text-[9px] text-muted-foreground mt-0.5 w-[96px]">
+          {(() => {
+            const [min, max] = metricRange;
+            const steps = [min, (min + max) / 3, (min + max) * 2 / 3, max];
+            return steps.map((v, i) => (
+              <span key={i} className="text-center" style={{ width: 24 }}>
+                {v > 1000 ? `${Math.round(v / 1000)}k` : v % 1 === 0 ? Math.round(v) : v.toFixed(1)}
+              </span>
+            ));
+          })()}
         </div>
         
         {/* Alert Legend */}
