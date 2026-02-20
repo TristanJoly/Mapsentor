@@ -154,11 +154,15 @@ export const loadDepartmentData = async (): Promise<DepartmentData[]> => {
 
     cachedData = result.data.map((row: any) => {
       // Extract maladies 65+ data
+      // Les valeurs brutes sont des effectifs → on divise par le total 65+ pour obtenir un %
+      const total65Plus = parseFloat(row['≥ 65 ans - Total'] || row['total_65_plus'] || '0') || 0;
       const maladies_65_plus: { [key: string]: number } = {};
       Object.keys(row).forEach(key => {
         if (key.startsWith('≥ 65 ans -') && !key.includes('Total') && !key.toLowerCase().includes('traitement')) {
           const maladieName = key.replace('≥ 65 ans - ', '');
-          maladies_65_plus[maladieName] = parseFloat(row[key]) || 0;
+          const effectif = parseFloat(row[key]) || 0;
+          // Convertir en % de la population 65+ du département
+          maladies_65_plus[maladieName] = total65Plus > 0 ? (effectif / total65Plus) * 100 : effectif;
         }
       });
 
