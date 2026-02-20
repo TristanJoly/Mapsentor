@@ -156,7 +156,7 @@ export const loadDepartmentData = async (): Promise<DepartmentData[]> => {
       // Extract maladies 65+ data
       const maladies_65_plus: { [key: string]: number } = {};
       Object.keys(row).forEach(key => {
-        if (key.startsWith('≥ 65 ans -') && !key.includes('Total')) {
+        if (key.startsWith('≥ 65 ans -') && !key.includes('Total') && !key.toLowerCase().includes('traitement')) {
           const maladieName = key.replace('≥ 65 ans - ', '');
           maladies_65_plus[maladieName] = parseFloat(row[key]) || 0;
         }
