@@ -625,6 +625,10 @@ export const DepartmentCharts = ({ department, allData, selectedMetric }: Depart
             <ServicesMedicoSociauxChart department={department} allData={allData} />
           </div>
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+            <AplSapaChart department={department} allData={allData} />
+            <AplEhpaChart department={department} allData={allData} />
+          </div>
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
             <EhpadCapaciteChart department={department} allData={allData} />
             <OffreVsBesoinChart department={department} allData={allData} />
           </div>
@@ -659,10 +663,6 @@ export const DepartmentCharts = ({ department, allData, selectedMetric }: Depart
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
             <RevenusChart department={department} allData={allData} />
             <LogementChart department={department} />
-          </div>
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-            <AplSapaChart department={department} allData={allData} />
-            <AplEhpaChart department={department} allData={allData} />
           </div>
           <AspaEvolutionChart department={department} />
         </div>
