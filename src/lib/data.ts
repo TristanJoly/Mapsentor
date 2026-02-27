@@ -1,4 +1,5 @@
 import Papa from 'papaparse';
+import { normalizeMaladies } from './pathologyConfig';
 
 export interface DepartmentData {
   code_departement: string;
@@ -161,10 +162,10 @@ export const loadDepartmentData = async (): Promise<DepartmentData[]> => {
       const totalFemmes = parseFloat(row['Femmes - Total'] || '0') || 0;
       const totalHommes = parseFloat(row['Hommes - Total'] || '0') || 0;
       
-      const extractMaladies = (prefix: string, total: number): { [key: string]: number } => {
+      const extractMaladiesRaw = (prefix: string, total: number): { [key: string]: number } => {
         const result: { [key: string]: number } = {};
         Object.keys(row).forEach(key => {
-          if (key.startsWith(prefix) && !key.includes('Total') && !key.toLowerCase().includes('traitement')) {
+          if (key.startsWith(prefix) && !key.includes('Total')) {
             const maladieName = key.replace(prefix, '');
             const effectif = parseFloat(row[key]) || 0;
             result[maladieName] = total > 0 ? (effectif / total) * 100 : effectif;
@@ -173,9 +174,9 @@ export const loadDepartmentData = async (): Promise<DepartmentData[]> => {
         return result;
       };
       
-      const maladies_65_plus = extractMaladies('≥ 65 ans - ', total65Plus);
-      const maladies_femmes = extractMaladies('Femmes - ', totalFemmes);
-      const maladies_hommes = extractMaladies('Hommes - ', totalHommes);
+      const maladies_65_plus = normalizeMaladies(extractMaladiesRaw('≥ 65 ans - ', total65Plus));
+      const maladies_femmes = normalizeMaladies(extractMaladiesRaw('Femmes - ', totalFemmes));
+      const maladies_hommes = normalizeMaladies(extractMaladiesRaw('Hommes - ', totalHommes));
 
       return {
         code_departement: String(row['code_departement'] || row['Code département'] || '').trim(),
