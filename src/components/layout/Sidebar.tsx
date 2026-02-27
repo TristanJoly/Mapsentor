@@ -24,15 +24,7 @@ interface SidebarProps {
 export const Sidebar = ({ collapsed = false, onToggle }: SidebarProps) => {
   if (collapsed) {
     return (
-      <aside className="w-14 min-h-screen bg-card border-r border-border p-2 flex flex-col items-center">
-        <Button
-          variant="ghost"
-          size="icon"
-          onClick={onToggle}
-          className="mb-4"
-        >
-          <ChevronRight className="w-4 h-4" />
-        </Button>
+      <aside className="w-14 min-h-screen bg-card border-r border-border p-2 flex flex-col items-center pt-4">
         <div className="w-10 h-10 rounded-xl gradient-bg flex items-center justify-center shadow-soft">
           <MapPin className="w-5 h-5 text-white" />
         </div>

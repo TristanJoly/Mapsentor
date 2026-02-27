@@ -33,11 +33,11 @@ interface DepartmentChartsProps {
 const COLORS = {
   primary: "#C41E3A",
   secondary: "#FF8C42",
-  tertiary: "#FFD580",
+  tertiary: "#E6A030",
   quaternary: "#8B4513",
   accent: "#D2691E",
-  light: "#FFF8DC",
-  muted: "#DEB887",
+  light: "#FFE8B0",
+  muted: "#B8860B",
   dark: "#A0522D",
 };
 
@@ -132,7 +132,7 @@ const Top10MaladiesCompareChart = ({ department, allData }: { department: Depart
           <Bar dataKey="departement" fill={COLORS.primary} name="Département" />
           <Bar dataKey="region" fill={COLORS.secondary} name="Région" />
           <Bar dataKey="france" fill={COLORS.tertiary} name="France" />
-          <Legend wrapperStyle={{ fontSize: '10px' }} />
+          <Legend wrapperStyle={{ fontSize: '11px', color: '#333' }} />
         </BarChart>
       </ResponsiveContainer>
     </div>
@@ -158,9 +158,9 @@ const RadarSanteChart = ({ department, allData }: { department: DepartmentData; 
           <PolarGrid stroke="hsl(var(--border))" />
           <PolarAngleAxis dataKey="subject" tick={{ fontSize: 8 }} />
           <PolarRadiusAxis tick={{ fontSize: 8 }} />
-          <Radar name={department.departement} dataKey="departement" stroke={COLORS.primary} fill={COLORS.secondary} fillOpacity={0.5} />
-          <Radar name="France" dataKey="france" stroke={COLORS.muted} fill={COLORS.light} fillOpacity={0.3} />
-          <Legend wrapperStyle={{ fontSize: '10px' }} />
+          <Radar name="France" dataKey="france" stroke={COLORS.muted} fill={COLORS.muted} fillOpacity={0.25} strokeWidth={2} />
+          <Radar name={department.departement} dataKey="departement" stroke={COLORS.primary} fill={COLORS.secondary} fillOpacity={0.5} strokeWidth={2} />
+          <Legend wrapperStyle={{ fontSize: '11px', color: '#333' }} />
         </RadarChart>
       </ResponsiveContainer>
     </div>
@@ -185,7 +185,7 @@ const VaccinationChart = ({ department, allData }: { department: DepartmentData;
           <Bar dataKey="departement" fill={COLORS.primary} name="Département" />
           <Bar dataKey="region" fill={COLORS.secondary} name="Région" />
           <Bar dataKey="france" fill={COLORS.tertiary} name="France" />
-          <Legend wrapperStyle={{ fontSize: '10px' }} />
+          <Legend wrapperStyle={{ fontSize: '11px', color: '#333' }} />
         </BarChart>
       </ResponsiveContainer>
     </div>
@@ -220,7 +220,7 @@ const ServicesMedicoSociauxChart = ({ department, allData }: { department: Depar
           <Tooltip formatter={(value: number) => value.toFixed(2)} contentStyle={{ background: 'hsl(var(--card))', border: '1px solid hsl(var(--border))', borderRadius: '8px', fontSize: '12px' }} />
           <Bar dataKey="departement" fill={COLORS.primary} name="Département" />
           <Bar dataKey="region" fill={COLORS.secondary} name="Région" />
-          <Legend wrapperStyle={{ fontSize: '10px' }} />
+          <Legend wrapperStyle={{ fontSize: '11px', color: '#333' }} />
         </BarChart>
       </ResponsiveContainer>
     </div>
@@ -245,7 +245,7 @@ const EhpadCapaciteChart = ({ department, allData }: { department: DepartmentDat
           <Bar dataKey="departement" fill={COLORS.primary} name="Département" />
           <Bar dataKey="region" fill={COLORS.secondary} name="Région" />
           <Bar dataKey="france" fill={COLORS.tertiary} name="France" />
-          <Legend wrapperStyle={{ fontSize: '10px' }} />
+          <Legend wrapperStyle={{ fontSize: '11px', color: '#333' }} />
         </BarChart>
       </ResponsiveContainer>
     </div>
@@ -271,7 +271,7 @@ const LiviaProjectionsChart = ({ department }: { department: DepartmentData }) =
           <Tooltip contentStyle={{ background: 'hsl(var(--card))', border: '1px solid hsl(var(--border))', borderRadius: '8px', fontSize: '12px' }} />
           <Line type="monotone" dataKey="femmes" stroke={COLORS.primary} strokeWidth={2} name="Femmes" dot />
           <Line type="monotone" dataKey="hommes" stroke={COLORS.secondary} strokeWidth={2} strokeDasharray="5 5" name="Hommes" dot />
-          <Legend wrapperStyle={{ fontSize: '10px' }} />
+          <Legend wrapperStyle={{ fontSize: '11px', color: '#333' }} />
         </LineChart>
       </ResponsiveContainer>
     </div>
@@ -361,9 +361,9 @@ const RadarSocialChart = ({ department, allData }: { department: DepartmentData;
           <PolarGrid stroke="hsl(var(--border))" />
           <PolarAngleAxis dataKey="subject" tick={{ fontSize: 9 }} />
           <PolarRadiusAxis tick={{ fontSize: 8 }} />
-          <Radar name={department.departement} dataKey="departement" stroke={COLORS.primary} fill={COLORS.secondary} fillOpacity={0.5} />
-          <Radar name="France" dataKey="france" stroke={COLORS.muted} fill={COLORS.light} fillOpacity={0.3} />
-          <Legend wrapperStyle={{ fontSize: '10px' }} />
+          <Radar name="France" dataKey="france" stroke={COLORS.muted} fill={COLORS.muted} fillOpacity={0.25} strokeWidth={2} />
+          <Radar name={department.departement} dataKey="departement" stroke={COLORS.primary} fill={COLORS.secondary} fillOpacity={0.5} strokeWidth={2} />
+          <Legend wrapperStyle={{ fontSize: '11px', color: '#333' }} />
         </RadarChart>
       </ResponsiveContainer>
     </div>
@@ -400,7 +400,7 @@ const SansVoitureChart = ({ department, allData }: { department: DepartmentData;
           <Tooltip formatter={(value: number) => `${value.toFixed(1)}%`} contentStyle={{ background: 'hsl(var(--card))', border: '1px solid hsl(var(--border))', borderRadius: '8px', fontSize: '12px' }} />
           <Bar dataKey="departement" fill={COLORS.primary} name="Département" />
           <Bar dataKey="france" fill={COLORS.muted} name="Moy. France" />
-          <Legend wrapperStyle={{ fontSize: '10px' }} />
+          <Legend wrapperStyle={{ fontSize: '11px', color: '#333' }} />
         </BarChart>
       </ResponsiveContainer>
     </div>
@@ -444,7 +444,7 @@ const IsolementSocialChart = ({ department }: { department: DepartmentData }) =>
       <h4 className="text-sm font-semibold text-foreground mb-4 flex items-center gap-1">Isolement social +60 ans<ChartInfoButton text="Anneau extérieur : part des seniors isolés vs non-isolés. Anneau intérieur : répartition hommes/femmes parmi les isolés." /></h4>
       <ResponsiveContainer width="100%" height={240}>
         <PieChart>
-          <Pie data={outerData} cx="50%" cy="50%" outerRadius={65} innerRadius={40} dataKey="value" label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`} labelLine={false}>
+          <Pie data={outerData} cx="50%" cy="50%" outerRadius={65} innerRadius={40} dataKey="value" label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`} labelLine={false} style={{ fontSize: '10px', fill: '#222' }}>
             <Cell fill={COLORS.muted} />
             <Cell fill={COLORS.primary} />
           </Pie>
@@ -453,7 +453,7 @@ const IsolementSocialChart = ({ department }: { department: DepartmentData }) =>
             <Cell fill={COLORS.secondary} />
           </Pie>
           <Tooltip formatter={(value: number) => value.toLocaleString('fr-FR')} contentStyle={{ background: 'hsl(var(--card))', border: '1px solid hsl(var(--border))', borderRadius: '8px', fontSize: '12px' }} />
-          <Legend wrapperStyle={{ fontSize: '10px' }} />
+          <Legend wrapperStyle={{ fontSize: '11px', color: '#333' }} />
         </PieChart>
       </ResponsiveContainer>
     </div>
@@ -476,7 +476,7 @@ const IsolementParAgeChart = ({ department, allData }: { department: DepartmentD
           <Tooltip formatter={(value: number) => value.toLocaleString('fr-FR')} contentStyle={{ background: 'hsl(var(--card))', border: '1px solid hsl(var(--border))', borderRadius: '8px', fontSize: '12px' }} />
           <Bar dataKey="departement" fill={COLORS.primary} name="Département" />
           <Bar dataKey="france" fill={COLORS.muted} name="Moy. France" />
-          <Legend wrapperStyle={{ fontSize: '10px' }} />
+          <Legend wrapperStyle={{ fontSize: '11px', color: '#333' }} />
         </BarChart>
       </ResponsiveContainer>
     </div>
@@ -529,7 +529,7 @@ const RevenusChart = ({ department, allData }: { department: DepartmentData; all
           <Tooltip formatter={(value: number) => `${value.toLocaleString('fr-FR')} €/mois`} contentStyle={{ background: 'hsl(var(--card))', border: '1px solid hsl(var(--border))', borderRadius: '8px', fontSize: '12px' }} />
           <Bar dataKey="departement" fill={COLORS.primary} name="Département" />
           <Bar dataKey="moyenne" fill={COLORS.secondary} name="Moyenne nationale" />
-          <Legend wrapperStyle={{ fontSize: '10px' }} />
+          <Legend wrapperStyle={{ fontSize: '11px', color: '#333' }} />
         </BarChart>
       </ResponsiveContainer>
     </div>
@@ -546,12 +546,12 @@ const LogementChart = ({ department }: { department: DepartmentData }) => {
       <h4 className="text-sm font-semibold text-foreground mb-4 flex items-center gap-1">Propriétaires vs Locataires<ChartInfoButton text="Répartition des seniors entre propriétaires et locataires. Un taux élevé de propriétaires peut indiquer un meilleur ancrage territorial." /></h4>
       <ResponsiveContainer width="100%" height={180}>
         <PieChart>
-          <Pie data={data} cx="50%" cy="50%" innerRadius={30} outerRadius={55} dataKey="value" label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`} labelLine={false}>
+          <Pie data={data} cx="50%" cy="50%" innerRadius={30} outerRadius={55} dataKey="value" label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`} labelLine={false} style={{ fontSize: '10px', fill: '#222' }}>
             <Cell fill={COLORS.quaternary} />
             <Cell fill={COLORS.tertiary} />
           </Pie>
           <Tooltip formatter={(value: number) => value.toLocaleString('fr-FR')} contentStyle={{ background: 'hsl(var(--card))', border: '1px solid hsl(var(--border))', borderRadius: '8px', fontSize: '12px' }} />
-          <Legend wrapperStyle={{ fontSize: '10px' }} />
+          <Legend wrapperStyle={{ fontSize: '11px', color: '#333' }} />
         </PieChart>
       </ResponsiveContainer>
     </div>
@@ -595,7 +595,7 @@ const AplSapaChart = ({ department, allData }: { department: DepartmentData; all
           <Bar dataKey="departement" fill={COLORS.primary} name="Département" />
           <Bar dataKey="region" fill={COLORS.secondary} name="Région" />
           <Bar dataKey="france" fill={COLORS.tertiary} name="France" />
-          <Legend wrapperStyle={{ fontSize: '10px' }} />
+          <Legend wrapperStyle={{ fontSize: '11px', color: '#333' }} />
         </BarChart>
       </ResponsiveContainer>
     </div>
@@ -619,7 +619,7 @@ const AplEhpaChart = ({ department, allData }: { department: DepartmentData; all
           <Bar dataKey="departement" fill={COLORS.primary} name="Département" />
           <Bar dataKey="region" fill={COLORS.secondary} name="Région" />
           <Bar dataKey="france" fill={COLORS.tertiary} name="France" />
-          <Legend wrapperStyle={{ fontSize: '10px' }} />
+          <Legend wrapperStyle={{ fontSize: '11px', color: '#333' }} />
         </BarChart>
       </ResponsiveContainer>
     </div>
@@ -662,7 +662,7 @@ const PathologiesGenreChart = ({ department }: { department: DepartmentData }) =
           />
           <Bar dataKey="femmes" fill={COLORS.primary} name="Femmes" />
           <Bar dataKey="hommes" fill={COLORS.secondary} name="Hommes" />
-          <Legend wrapperStyle={{ fontSize: '10px' }} />
+          <Legend wrapperStyle={{ fontSize: '11px', color: '#333' }} />
         </BarChart>
       </ResponsiveContainer>
     </div>
