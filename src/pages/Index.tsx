@@ -157,9 +157,7 @@ const Index = () => {
             />
 
             {/* Alerts */}
-            <div className="max-w-md">
-              <DepartmentAlerts department={selectedDeptData} allData={data} />
-            </div>
+            <DepartmentAlerts department={selectedDeptData} allData={data} />
           </TabsContent>
 
           {/* Onglet Comparaison */}
