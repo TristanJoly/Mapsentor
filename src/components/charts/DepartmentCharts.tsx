@@ -7,9 +7,22 @@ import {
 import { DepartmentData, getAverage } from "@/lib/data";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Tooltip as UITooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
-import { Heart, Users, Euro, Activity, HelpCircle, Settings2, ChevronDown, ChevronUp, Check } from "lucide-react";
+import { Heart, Users, Euro, Activity, HelpCircle, Settings2, ChevronDown, ChevronUp, Check, Info } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+
+const ChartInfoButton = ({ text }: { text: string }) => (
+  <TooltipProvider>
+    <UITooltip>
+      <TooltipTrigger asChild>
+        <Info className="w-3.5 h-3.5 text-muted-foreground/50 cursor-help shrink-0 ml-auto" />
+      </TooltipTrigger>
+      <TooltipContent side="top" className="max-w-[280px] text-xs leading-relaxed">
+        <p>{text}</p>
+      </TooltipContent>
+    </UITooltip>
+  </TooltipProvider>
+);
 
 interface DepartmentChartsProps {
   department: DepartmentData | undefined;
@@ -81,7 +94,7 @@ const Top5MaladiesChart = ({ department }: { department: DepartmentData }) => {
 
   return (
     <div className="p-4 rounded-xl bg-card border border-border shadow-card">
-      <h4 className="text-sm font-semibold text-foreground mb-4 flex items-center">Prévalence des 5 maladies les plus fréquentes <AmeliSource /></h4>
+      <h4 className="text-sm font-semibold text-foreground mb-4 flex items-center gap-1">Prévalence des 5 maladies les plus fréquentes <AmeliSource /><ChartInfoButton text="Barres horizontales : plus la barre est longue, plus la maladie est fréquente chez les 65+. La valeur est exprimée en % de la population senior du département." /></h4>
       <ResponsiveContainer width="100%" height={250}>
         <BarChart data={data} layout="vertical">
           <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
@@ -109,7 +122,7 @@ const Top10MaladiesCompareChart = ({ department, allData }: { department: Depart
 
   return (
     <div className="p-4 rounded-xl bg-card border border-border shadow-card">
-      <h4 className="text-sm font-semibold text-foreground mb-4 flex items-center">Top 10 pathologies ≥ 65 ans – Comparaison <AmeliSource /></h4>
+      <h4 className="text-sm font-semibold text-foreground mb-4 flex items-center gap-1">Top 10 pathologies ≥ 65 ans – Comparaison <AmeliSource /><ChartInfoButton text="Compare la prévalence des 10 maladies les plus fréquentes entre le département (rouge), la région (orange) et la moyenne nationale (jaune). Plus la barre est longue, plus la pathologie est répandue." /></h4>
       <ResponsiveContainer width="100%" height={400}>
         <BarChart data={data} layout="vertical">
           <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
@@ -139,7 +152,7 @@ const RadarSanteChart = ({ department, allData }: { department: DepartmentData; 
 
   return (
     <div className="p-4 rounded-xl bg-card border border-border shadow-card">
-      <h4 className="text-sm font-semibold text-foreground mb-4 flex items-center">Zoom sur l'état de santé <AmeliSource /></h4>
+      <h4 className="text-sm font-semibold text-foreground mb-4 flex items-center gap-1">Zoom sur l'état de santé <AmeliSource /><ChartInfoButton text="Radar : chaque axe représente un indicateur de santé. Plus le tracé est étendu, plus la situation est préoccupante. Le tracé clair représente la moyenne nationale pour comparaison." /></h4>
       <ResponsiveContainer width="100%" height={280}>
         <RadarChart data={data}>
           <PolarGrid stroke="hsl(var(--border))" />
@@ -162,7 +175,7 @@ const VaccinationChart = ({ department, allData }: { department: DepartmentData;
   ];
   return (
     <div className="p-4 rounded-xl bg-card border border-border shadow-card">
-      <h4 className="text-sm font-semibold text-foreground mb-4">Vaccination / prévention</h4>
+      <h4 className="text-sm font-semibold text-foreground mb-4 flex items-center gap-1">Vaccination / prévention<ChartInfoButton text="Taux de vaccination Covid et Grippe chez les 65+. Compare le département à la moyenne régionale et nationale. Un taux élevé indique une meilleure couverture vaccinale." /></h4>
       <ResponsiveContainer width="100%" height={250}>
         <BarChart data={data}>
           <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
@@ -198,7 +211,7 @@ const ServicesMedicoSociauxChart = ({ department, allData }: { department: Depar
 
   return (
     <div className="p-4 rounded-xl bg-card border border-border shadow-card">
-      <h4 className="text-sm font-semibold text-foreground mb-4">Offre médico-sociale</h4>
+      <h4 className="text-sm font-semibold text-foreground mb-4 flex items-center gap-1">Offre médico-sociale<ChartInfoButton text="Indice comparatif : une valeur de 1 = moyenne nationale. Au-dessus de 1 = offre supérieure à la moyenne, en dessous = offre inférieure." /></h4>
       <ResponsiveContainer width="100%" height={250}>
         <BarChart data={data}>
           <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
@@ -222,7 +235,7 @@ const EhpadCapaciteChart = ({ department, allData }: { department: DepartmentDat
   ];
   return (
     <div className="p-4 rounded-xl bg-card border border-border shadow-card">
-      <h4 className="text-sm font-semibold text-foreground mb-4">Capacité EHPAD</h4>
+      <h4 className="text-sm font-semibold text-foreground mb-4 flex items-center gap-1">Capacité EHPAD<ChartInfoButton text="Nombre total de lits en EHPAD. Comparez avec la région et la moyenne nationale pour évaluer la capacité d'accueil relative." /></h4>
       <ResponsiveContainer width="100%" height={200}>
         <BarChart data={data}>
           <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
@@ -249,7 +262,7 @@ const LiviaProjectionsChart = ({ department }: { department: DepartmentData }) =
   }));
   return (
     <div className="p-4 rounded-xl bg-card border border-border shadow-card">
-      <h4 className="text-sm font-semibold text-foreground mb-4">Prévisions LIVIA (perte d'autonomie)</h4>
+      <h4 className="text-sm font-semibold text-foreground mb-4 flex items-center gap-1">Prévisions LIVIA (perte d'autonomie)<ChartInfoButton text="Projections du nombre de personnes en perte d'autonomie à horizon 2050 (scénario 1). Les courbes montrent l'évolution par genre." /></h4>
       <ResponsiveContainer width="100%" height={250}>
         <LineChart data={data}>
           <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
@@ -285,7 +298,7 @@ const OffreVsBesoinChart = ({ department, allData }: { department: DepartmentDat
 
   return (
     <div className="p-4 rounded-xl bg-card border border-border shadow-card">
-      <h4 className="text-sm font-semibold text-foreground mb-4">Offre vs Besoin (lits / 75+)</h4>
+      <h4 className="text-sm font-semibold text-foreground mb-4 flex items-center gap-1">Offre vs Besoin (lits / 75+)<ChartInfoButton text="Ratio entre le nombre de lits EHPAD et la population 75+. Plus le % est élevé, meilleure est la couverture. Comparez avec la moyenne nationale." /></h4>
       <ResponsiveContainer width="100%" height={200}>
         <BarChart data={data}>
           <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
@@ -342,7 +355,7 @@ const RadarSocialChart = ({ department, allData }: { department: DepartmentData;
   
   return (
     <div className="p-4 rounded-xl bg-card border border-border shadow-card">
-      <h4 className="text-sm font-semibold text-foreground mb-4">Profil social 60–74 ans (%)</h4>
+      <h4 className="text-sm font-semibold text-foreground mb-4 flex items-center gap-1">Profil social 60–74 ans (%)<ChartInfoButton text="Radar social : chaque axe montre un indicateur en % des 60-74 ans. Le tracé clair = moyenne France. Permet d'identifier les particularités sociales du département." /></h4>
       <ResponsiveContainer width="100%" height={250}>
         <RadarChart data={data}>
           <PolarGrid stroke="hsl(var(--border))" />
@@ -378,7 +391,7 @@ const SansVoitureChart = ({ department, allData }: { department: DepartmentData;
   ];
   return (
     <div className="p-4 rounded-xl bg-card border border-border shadow-card">
-      <h4 className="text-sm font-semibold text-foreground mb-4">Sans voiture par âge</h4>
+      <h4 className="text-sm font-semibold text-foreground mb-4 flex items-center gap-1">Sans voiture par âge<ChartInfoButton text="Part des seniors sans voiture par tranche d'âge. Comparez avec la moyenne nationale pour évaluer la dépendance aux transports alternatifs." /></h4>
       <ResponsiveContainer width="100%" height={200}>
         <BarChart data={data}>
           <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
@@ -401,7 +414,7 @@ const FragiliteNumeriqueChart = ({ department }: { department: DepartmentData })
   const gaugeData = [{ name: "Score", value: percentage }, { name: "Restant", value: 100 - percentage }];
   return (
     <div className="p-4 rounded-xl bg-card border border-border shadow-card">
-      <h4 className="text-sm font-semibold text-foreground mb-2">Fragilité numérique</h4>
+      <h4 className="text-sm font-semibold text-foreground mb-2 flex items-center gap-1">Fragilité numérique<ChartInfoButton text="Score de 0 à 10 : plus le score est élevé, plus la population est vulnérable face au numérique (faible accès, peu d'usages)." /></h4>
       <div className="relative">
         <ResponsiveContainer width="100%" height={140}>
           <PieChart>
@@ -428,7 +441,7 @@ const IsolementSocialChart = ({ department }: { department: DepartmentData }) =>
   const innerData = [{ name: "Hommes isolés", value: Math.max(0, isoles - femmesIsolees) }, { name: "Femmes isolées", value: femmesIsolees }];
   return (
     <div className="p-4 rounded-xl bg-card border border-border shadow-card">
-      <h4 className="text-sm font-semibold text-foreground mb-4">Isolement social +60 ans</h4>
+      <h4 className="text-sm font-semibold text-foreground mb-4 flex items-center gap-1">Isolement social +60 ans<ChartInfoButton text="Anneau extérieur : part des seniors isolés vs non-isolés. Anneau intérieur : répartition hommes/femmes parmi les isolés." /></h4>
       <ResponsiveContainer width="100%" height={240}>
         <PieChart>
           <Pie data={outerData} cx="50%" cy="50%" outerRadius={65} innerRadius={40} dataKey="value" label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`} labelLine={false}>
@@ -454,7 +467,7 @@ const IsolementParAgeChart = ({ department, allData }: { department: DepartmentD
   ];
   return (
     <div className="p-4 rounded-xl bg-card border border-border shadow-card">
-      <h4 className="text-sm font-semibold text-foreground mb-4">Seniors vivant seuls par tranche d'âge</h4>
+      <h4 className="text-sm font-semibold text-foreground mb-4 flex items-center gap-1">Seniors vivant seuls par tranche d'âge<ChartInfoButton text="Nombre de seniors vivant seuls, ventilé par tranche d'âge. Comparez avec la moyenne française pour situer le département." /></h4>
       <ResponsiveContainer width="100%" height={200}>
         <BarChart data={data}>
           <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
@@ -479,7 +492,7 @@ const DemographieSeniorsChart = ({ department }: { department: DepartmentData })
   ];
   return (
     <div className="p-4 rounded-xl bg-card border border-border shadow-card">
-      <h4 className="text-sm font-semibold text-foreground mb-4">Répartition démographique seniors</h4>
+      <h4 className="text-sm font-semibold text-foreground mb-4 flex items-center gap-1">Répartition démographique seniors<ChartInfoButton text="Effectifs de la population senior répartis par genre et tranche d'âge (60-74 ans et 75+). Permet de visualiser la pyramide des âges locale." /></h4>
       <ResponsiveContainer width="100%" height={200}>
         <BarChart data={data}>
           <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
@@ -507,7 +520,7 @@ const RevenusChart = ({ department, allData }: { department: DepartmentData; all
   ];
   return (
     <div className="p-4 rounded-xl bg-card border border-border shadow-card">
-      <h4 className="text-sm font-semibold text-foreground mb-4">Revenu médian (€/mois)</h4>
+      <h4 className="text-sm font-semibold text-foreground mb-4 flex items-center gap-1">Revenu médian (€/mois)<ChartInfoButton text="Revenu médian mensuel par tranche d'âge. La moitié de la population gagne plus, l'autre moitié moins. Comparez avec la moyenne nationale." /></h4>
       <ResponsiveContainer width="100%" height={200}>
         <BarChart data={data}>
           <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
@@ -530,7 +543,7 @@ const LogementChart = ({ department }: { department: DepartmentData }) => {
   const data = [{ name: "Propriétaires", value: proprietaires }, { name: "Locataires", value: Math.max(0, total - proprietaires) }];
   return (
     <div className="p-4 rounded-xl bg-card border border-border shadow-card">
-      <h4 className="text-sm font-semibold text-foreground mb-4">Propriétaires vs Locataires</h4>
+      <h4 className="text-sm font-semibold text-foreground mb-4 flex items-center gap-1">Propriétaires vs Locataires<ChartInfoButton text="Répartition des seniors entre propriétaires et locataires. Un taux élevé de propriétaires peut indiquer un meilleur ancrage territorial." /></h4>
       <ResponsiveContainer width="100%" height={180}>
         <PieChart>
           <Pie data={data} cx="50%" cy="50%" innerRadius={30} outerRadius={55} dataKey="value" label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`} labelLine={false}>
@@ -550,7 +563,7 @@ const AspaEvolutionChart = ({ department }: { department: DepartmentData }) => {
   const data = annees.map(annee => ({ annee, value: department[`aspa_effectif_${annee}` as keyof DepartmentData] as number || 0 }));
   return (
     <div className="p-4 rounded-xl bg-card border border-border shadow-card">
-      <h4 className="text-sm font-semibold text-foreground mb-4">Évolution bénéficiaires ASPA</h4>
+      <h4 className="text-sm font-semibold text-foreground mb-4 flex items-center gap-1">Évolution bénéficiaires ASPA<ChartInfoButton text="Nombre de bénéficiaires de l'Allocation de Solidarité aux Personnes Âgées au fil des années. Une hausse peut indiquer une précarisation croissante." /></h4>
       <ResponsiveContainer width="100%" height={250}>
         <LineChart data={data}>
           <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
@@ -572,7 +585,7 @@ const AplSapaChart = ({ department, allData }: { department: DepartmentData; all
   ];
   return (
     <div className="p-4 rounded-xl bg-card border border-border shadow-card">
-      <h4 className="text-sm font-semibold text-foreground mb-4">APL Services d'aide (SAPA)</h4>
+      <h4 className="text-sm font-semibold text-foreground mb-4 flex items-center gap-1">APL Services d'aide (SAPA)<ChartInfoButton text="Accessibilité potentielle localisée aux services d'aide à domicile. Compare le département à la région et la moyenne nationale." /></h4>
       <ResponsiveContainer width="100%" height={200}>
         <BarChart data={data}>
           <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
@@ -596,7 +609,7 @@ const AplEhpaChart = ({ department, allData }: { department: DepartmentData; all
   ];
   return (
     <div className="p-4 rounded-xl bg-card border border-border shadow-card">
-      <h4 className="text-sm font-semibold text-foreground mb-4">APL Établissements (EHPA)</h4>
+      <h4 className="text-sm font-semibold text-foreground mb-4 flex items-center gap-1">APL Établissements (EHPA)<ChartInfoButton text="Accessibilité potentielle localisée aux établissements d'hébergement. Compare le département à la région et la moyenne nationale." /></h4>
       <ResponsiveContainer width="100%" height={200}>
         <BarChart data={data}>
           <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
@@ -636,7 +649,7 @@ const PathologiesGenreChart = ({ department }: { department: DepartmentData }) =
 
   return (
     <div className="p-4 rounded-xl bg-card border border-border shadow-card">
-      <h4 className="text-sm font-semibold text-foreground mb-4 flex items-center">Pathologies par genre (top 8) <AmeliSource /></h4>
+      <h4 className="text-sm font-semibold text-foreground mb-4 flex items-center gap-1">Pathologies par genre (top 8) <AmeliSource /><ChartInfoButton text="Compare la prévalence des 8 maladies les plus courantes entre femmes et hommes. Permet d'identifier les disparités de santé par genre." /></h4>
       <ResponsiveContainer width="100%" height={350}>
         <BarChart data={data} layout="vertical">
           <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />

@@ -1,6 +1,30 @@
-import { Users, TrendingUp, Euro, Heart, Activity, ArrowUp, ArrowDown, Minus, HelpCircle } from "lucide-react";
+import { Users, TrendingUp, Euro, Heart, Activity, ArrowUp, ArrowDown, Minus, HelpCircle, Trophy } from "lucide-react";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { DepartmentData, getAverage } from "@/lib/data";
+
+const getRanking = (allData: DepartmentData[], code: string, key: keyof DepartmentData, ascending = false) => {
+  const sorted = [...allData]
+    .filter(d => (d[key] as number) > 0)
+    .sort((a, b) => ascending 
+      ? (a[key] as number) - (b[key] as number) 
+      : (b[key] as number) - (a[key] as number)
+    );
+  const rank = sorted.findIndex(d => d.code_departement === code) + 1;
+  return { rank, total: sorted.length };
+};
+
+const RankBadge = ({ rank, total }: { rank: number; total: number }) => {
+  const isTop = rank <= 10;
+  const isBottom = rank > total - 10;
+  return (
+    <div className={`flex items-center gap-1 mt-1`}>
+      <Trophy className={`w-3 h-3 ${isTop ? 'text-amber-500' : isBottom ? 'text-rose-400' : 'text-muted-foreground/50'}`} />
+      <span className={`text-[10px] font-medium ${isTop ? 'text-amber-600' : isBottom ? 'text-rose-500' : 'text-muted-foreground/70'}`}>
+        {rank}<sup>e</sup>/{total}
+      </span>
+    </div>
+  );
+};
 
 interface DepartmentInfoProps {
   department: DepartmentData | undefined;
@@ -67,6 +91,12 @@ export const DepartmentInfo = ({ department, allData }: DepartmentInfoProps) => 
   const avgNiveauVieMensuel = Math.round(avgNiveauVie / 12);
   const esperanceVie = department.esperance_vie;
 
+  // Rankings
+  const rankPart65 = getRanking(allData, department.code_departement, 'part_60_plus');
+  const rankPauvrete = getRanking(allData, department.code_departement, 'taux_pauvrete_60', true);
+  const rankNiveauVie = getRanking(allData, department.code_departement, 'niveau_vie_median');
+  const rankEsperance = getRanking(allData, department.code_departement, 'esperance_vie');
+
   return (
     <div className="p-5 rounded-xl bg-card border border-border shadow-card">
       {/* Header */}
@@ -94,6 +124,7 @@ export const DepartmentInfo = ({ department, allData }: DepartmentInfoProps) => 
           <p className="text-xl md:text-2xl font-bold text-orange-700">{part65Plus.toFixed(1)}%</p>
           <p className="text-[10px] md:text-xs text-orange-600/80 mt-1">de la population</p>
           <ComparisonBadge value={part65Plus} avg={avgPart65} unit="%" />
+          <RankBadge rank={rankPart65.rank} total={rankPart65.total} />
         </div>
 
         {/* Pauvreté 65+ */}
@@ -104,6 +135,7 @@ export const DepartmentInfo = ({ department, allData }: DepartmentInfoProps) => 
           </div>
           <p className="text-xl md:text-2xl font-bold text-rose-700">{tauxPauvrete65.toFixed(1)}%</p>
           <ComparisonBadge value={tauxPauvrete65} avg={avgPauvrete65} unit="%" invert />
+          <RankBadge rank={rankPauvrete.rank} total={rankPauvrete.total} />
         </div>
 
         {/* Niveau de vie */}
@@ -115,6 +147,7 @@ export const DepartmentInfo = ({ department, allData }: DepartmentInfoProps) => 
           <p className="text-xl md:text-2xl font-bold text-amber-700">{niveauVieMensuel.toLocaleString('fr-FR')} €</p>
           <p className="text-[10px] md:text-xs text-amber-600/80 mt-1">médian / mois</p>
           <ComparisonBadge value={niveauVieMensuel} avg={avgNiveauVieMensuel} unit="€" />
+          <RankBadge rank={rankNiveauVie.rank} total={rankNiveauVie.total} />
         </div>
 
         {/* Espérance de vie */}
@@ -128,6 +161,7 @@ export const DepartmentInfo = ({ department, allData }: DepartmentInfoProps) => 
           </p>
           <p className="text-[10px] md:text-xs text-rose-500/80 mt-1">âge moyen au décès</p>
           {esperanceVie > 0 && <ComparisonBadge value={esperanceVie} avg={avgEsperanceVie} unit="ans" />}
+          {esperanceVie > 0 && <RankBadge rank={rankEsperance.rank} total={rankEsperance.total} />}
         </div>
 
         {/* Pathologie principale */}
