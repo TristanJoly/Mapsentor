@@ -6,7 +6,8 @@ import {
 } from "recharts";
 import { DepartmentData, getAverage } from "@/lib/data";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Heart, Users, Euro, Activity } from "lucide-react";
+import { Tooltip as UITooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
+import { Heart, Users, Euro, Activity, HelpCircle } from "lucide-react";
 
 interface DepartmentChartsProps {
   department: DepartmentData | undefined;
@@ -24,6 +25,19 @@ const COLORS = {
   muted: "#DEB887",
   dark: "#A0522D",
 };
+
+const AmeliSource = () => (
+  <TooltipProvider>
+    <UITooltip>
+      <TooltipTrigger asChild>
+        <HelpCircle className="w-3.5 h-3.5 text-muted-foreground/60 cursor-help inline-block ml-1" />
+      </TooltipTrigger>
+      <TooltipContent side="top" className="max-w-[240px] text-xs">
+        <p>Données de prévalence issues du <strong>dataset Ameli (CNAM) – 2023</strong>. Effectifs normalisés en % de la population concernée.</p>
+      </TooltipContent>
+    </UITooltip>
+  </TooltipProvider>
+);
 
 const getRegionMaladieAverage = (allData: DepartmentData[], region: string, maladieName: string): number => {
   const regionData = allData.filter(d => d.region === region);
@@ -60,7 +74,7 @@ const Top5MaladiesChart = ({ department }: { department: DepartmentData }) => {
 
   return (
     <div className="p-4 rounded-xl bg-card border border-border shadow-card">
-      <h4 className="text-sm font-semibold text-foreground mb-4">Prévalence des 5 maladies les plus fréquentes</h4>
+      <h4 className="text-sm font-semibold text-foreground mb-4 flex items-center">Prévalence des 5 maladies les plus fréquentes <AmeliSource /></h4>
       <ResponsiveContainer width="100%" height={250}>
         <BarChart data={data} layout="vertical">
           <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
@@ -88,7 +102,7 @@ const Top10MaladiesCompareChart = ({ department, allData }: { department: Depart
 
   return (
     <div className="p-4 rounded-xl bg-card border border-border shadow-card">
-      <h4 className="text-sm font-semibold text-foreground mb-4">Top 10 pathologies ≥ 65 ans – Comparaison</h4>
+      <h4 className="text-sm font-semibold text-foreground mb-4 flex items-center">Top 10 pathologies ≥ 65 ans – Comparaison <AmeliSource /></h4>
       <ResponsiveContainer width="100%" height={400}>
         <BarChart data={data} layout="vertical">
           <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
@@ -118,7 +132,7 @@ const RadarSanteChart = ({ department, allData }: { department: DepartmentData; 
 
   return (
     <div className="p-4 rounded-xl bg-card border border-border shadow-card">
-      <h4 className="text-sm font-semibold text-foreground mb-4">Zoom sur l'état de santé</h4>
+      <h4 className="text-sm font-semibold text-foreground mb-4 flex items-center">Zoom sur l'état de santé <AmeliSource /></h4>
       <ResponsiveContainer width="100%" height={280}>
         <RadarChart data={data}>
           <PolarGrid stroke="hsl(var(--border))" />
@@ -592,6 +606,49 @@ const AplEhpaChart = ({ department, allData }: { department: DepartmentData; all
   );
 };
 
+// Pathologies par genre (Femmes vs Hommes)
+const PathologiesGenreChart = ({ department }: { department: DepartmentData }) => {
+  const femmes = department.maladies_femmes || {};
+  const hommes = department.maladies_hommes || {};
+  
+  // Get top pathologies from 65+ then show F vs H
+  const maladies65 = department.maladies_65_plus || {};
+  const top8 = Object.entries(maladies65)
+    .filter(([_, v]) => v > 0)
+    .sort((a, b) => b[1] - a[1])
+    .slice(0, 8);
+  
+  const data = top8.map(([name]) => ({
+    name: name.length > 20 ? name.substring(0, 20) + '…' : name,
+    fullName: name,
+    femmes: femmes[name] || 0,
+    hommes: hommes[name] || 0,
+  }));
+
+  if (data.length === 0) return null;
+
+  return (
+    <div className="p-4 rounded-xl bg-card border border-border shadow-card">
+      <h4 className="text-sm font-semibold text-foreground mb-4 flex items-center">Pathologies par genre (top 8) <AmeliSource /></h4>
+      <ResponsiveContainer width="100%" height={350}>
+        <BarChart data={data} layout="vertical">
+          <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
+          <XAxis type="number" tick={{ fontSize: 10 }} unit="%" />
+          <YAxis dataKey="name" type="category" tick={{ fontSize: 8 }} width={130} />
+          <Tooltip 
+            formatter={(value: number, name: string) => [`${value.toFixed(2)}%`, name]} 
+            labelFormatter={(label) => data.find(d => d.name === label)?.fullName || label}
+            contentStyle={{ background: 'hsl(var(--card))', border: '1px solid hsl(var(--border))', borderRadius: '8px', fontSize: '12px' }} 
+          />
+          <Bar dataKey="femmes" fill={COLORS.primary} name="Femmes" />
+          <Bar dataKey="hommes" fill={COLORS.secondary} name="Hommes" />
+          <Legend wrapperStyle={{ fontSize: '10px' }} />
+        </BarChart>
+      </ResponsiveContainer>
+    </div>
+  );
+};
+
 // Main component
 export const DepartmentCharts = ({ department, allData, selectedMetric }: DepartmentChartsProps) => {
   const [category, setCategory] = useState<"all" | "medical" | "social" | "economic">("all");
@@ -618,21 +675,24 @@ export const DepartmentCharts = ({ department, allData, selectedMetric }: Depart
           {category === "all" && <h3 className="text-lg font-semibold text-foreground flex items-center gap-2"><Heart className="w-5 h-5 text-primary" />Indicateurs médicaux</h3>}
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
             <Top5MaladiesChart department={department} />
-            <RadarSanteChart department={department} allData={allData} />
+            <PathologiesGenreChart department={department} />
           </div>
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+            <RadarSanteChart department={department} allData={allData} />
             <VaccinationChart department={department} allData={allData} />
+          </div>
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
             <ServicesMedicoSociauxChart department={department} allData={allData} />
+            <EhpadCapaciteChart department={department} allData={allData} />
           </div>
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
             <AplSapaChart department={department} allData={allData} />
             <AplEhpaChart department={department} allData={allData} />
           </div>
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-            <EhpadCapaciteChart department={department} allData={allData} />
             <OffreVsBesoinChart department={department} allData={allData} />
+            <LiviaProjectionsChart department={department} />
           </div>
-          <LiviaProjectionsChart department={department} />
           {category === "medical" && <Top10MaladiesCompareChart department={department} allData={allData} />}
         </div>
       )}
