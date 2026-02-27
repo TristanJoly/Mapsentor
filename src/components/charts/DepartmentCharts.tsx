@@ -7,7 +7,9 @@ import {
 import { DepartmentData, getAverage } from "@/lib/data";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Tooltip as UITooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
-import { Heart, Users, Euro, Activity, HelpCircle } from "lucide-react";
+import { Heart, Users, Euro, Activity, HelpCircle, Settings2, ChevronDown, ChevronUp, Check } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 
 interface DepartmentChartsProps {
   department: DepartmentData | undefined;
@@ -655,16 +657,114 @@ const PathologiesGenreChart = ({ department }: { department: DepartmentData }) =
 };
 
 // Main component
+// Chart registry
+type ChartDef = {
+  id: string;
+  label: string;
+  category: "medical" | "social" | "economic";
+  render: (dept: DepartmentData, allData: DepartmentData[]) => React.ReactNode;
+};
+
+const CHART_REGISTRY: ChartDef[] = [
+  { id: "top5", label: "Top 5 maladies", category: "medical", render: (d) => <Top5MaladiesChart department={d} /> },
+  { id: "patho_genre", label: "Pathologies par genre", category: "medical", render: (d) => <PathologiesGenreChart department={d} /> },
+  { id: "radar_sante", label: "Zoom état de santé", category: "medical", render: (d, a) => <RadarSanteChart department={d} allData={a} /> },
+  { id: "vaccination", label: "Vaccination", category: "medical", render: (d, a) => <VaccinationChart department={d} allData={a} /> },
+  { id: "services_medico", label: "Offre médico-sociale", category: "medical", render: (d, a) => <ServicesMedicoSociauxChart department={d} allData={a} /> },
+  { id: "ehpad_capacite", label: "Capacité EHPAD", category: "medical", render: (d, a) => <EhpadCapaciteChart department={d} allData={a} /> },
+  { id: "apl_sapa", label: "APL SAPA", category: "medical", render: (d, a) => <AplSapaChart department={d} allData={a} /> },
+  { id: "apl_ehpa", label: "APL EHPA", category: "medical", render: (d, a) => <AplEhpaChart department={d} allData={a} /> },
+  { id: "offre_besoin", label: "Offre vs Besoin", category: "medical", render: (d, a) => <OffreVsBesoinChart department={d} allData={a} /> },
+  { id: "livia", label: "Prévisions LIVIA", category: "medical", render: (d) => <LiviaProjectionsChart department={d} /> },
+  { id: "top10_compare", label: "Top 10 comparaison", category: "medical", render: (d, a) => <Top10MaladiesCompareChart department={d} allData={a} /> },
+  { id: "radar_social", label: "Profil social 60-74", category: "social", render: (d, a) => <RadarSocialChart department={d} allData={a} /> },
+  { id: "isolement_social", label: "Isolement social", category: "social", render: (d) => <IsolementSocialChart department={d} /> },
+  { id: "fragilite_num", label: "Fragilité numérique", category: "social", render: (d) => <FragiliteNumeriqueChart department={d} /> },
+  { id: "sans_voiture", label: "Sans voiture", category: "social", render: (d, a) => <SansVoitureChart department={d} allData={a} /> },
+  { id: "isolement_age", label: "Seniors seuls par âge", category: "social", render: (d, a) => <IsolementParAgeChart department={d} allData={a} /> },
+  { id: "demographie", label: "Démographie seniors", category: "social", render: (d) => <DemographieSeniorsChart department={d} /> },
+  { id: "revenus", label: "Revenus médians", category: "economic", render: (d, a) => <RevenusChart department={d} allData={a} /> },
+  { id: "logement", label: "Propriétaires vs Locataires", category: "economic", render: (d) => <LogementChart department={d} /> },
+  { id: "aspa", label: "Évolution ASPA", category: "economic", render: (d) => <AspaEvolutionChart department={d} /> },
+];
+
+const DEFAULT_SELECTED: Record<string, string[]> = {
+  all: ["top5", "radar_social", "revenus"],
+  medical: ["top5", "patho_genre", "radar_sante"],
+  social: ["radar_social", "isolement_social", "isolement_age"],
+  economic: ["revenus", "logement", "aspa"],
+};
+
+const CATEGORY_ICONS: Record<string, React.ReactNode> = {
+  medical: <Heart className="w-3.5 h-3.5 text-primary" />,
+  social: <Users className="w-3.5 h-3.5 text-secondary" />,
+  economic: <Euro className="w-3.5 h-3.5" style={{ color: COLORS.quaternary }} />,
+};
+
+// Main component
 export const DepartmentCharts = ({ department, allData, selectedMetric }: DepartmentChartsProps) => {
   const [category, setCategory] = useState<"all" | "medical" | "social" | "economic">("all");
+  const [selectedCharts, setSelectedCharts] = useState<Record<string, string[]>>(DEFAULT_SELECTED);
+  const [showAll, setShowAll] = useState(false);
   
   if (!department) return null;
 
+  const availableCharts = category === "all" 
+    ? CHART_REGISTRY 
+    : CHART_REGISTRY.filter(c => c.category === category);
+
+  const currentSelection = selectedCharts[category] || DEFAULT_SELECTED[category];
+  const visibleCharts = showAll 
+    ? availableCharts 
+    : availableCharts.filter(c => currentSelection.includes(c.id));
+
+  const toggleChart = (chartId: string) => {
+    setSelectedCharts(prev => {
+      const current = prev[category] || DEFAULT_SELECTED[category];
+      const updated = current.includes(chartId)
+        ? current.filter(id => id !== chartId)
+        : [...current, chartId];
+      return { ...prev, [category]: updated.length > 0 ? updated : current };
+    });
+  };
+
   return (
     <div className="space-y-6">
-      <div className="p-4 rounded-xl bg-card border border-border shadow-card">
-        <h4 className="text-sm font-semibold text-foreground mb-3">Catégorie de graphiques</h4>
-        <Tabs value={category} onValueChange={(v) => setCategory(v as typeof category)}>
+      <div className="p-4 rounded-xl bg-card border border-border shadow-card space-y-3">
+        <div className="flex items-center justify-between">
+          <h4 className="text-sm font-semibold text-foreground">Catégorie de graphiques</h4>
+          <Popover>
+            <PopoverTrigger asChild>
+              <Button variant="outline" size="sm" className="gap-1.5 text-xs">
+                <Settings2 className="w-3.5 h-3.5" />
+                Choisir ({currentSelection.length})
+              </Button>
+            </PopoverTrigger>
+            <PopoverContent className="w-72 p-3" align="end">
+              <p className="text-xs font-semibold text-foreground mb-2">Graphiques à afficher</p>
+              <div className="space-y-1 max-h-[300px] overflow-y-auto">
+                {availableCharts.map(chart => (
+                  <button
+                    key={chart.id}
+                    onClick={() => toggleChart(chart.id)}
+                    className="flex items-center gap-2 w-full text-left px-2 py-1.5 rounded-md text-xs hover:bg-accent transition-colors"
+                  >
+                    <div className={`w-4 h-4 rounded border flex items-center justify-center shrink-0 ${
+                      currentSelection.includes(chart.id) 
+                        ? 'bg-primary border-primary' 
+                        : 'border-border'
+                    }`}>
+                      {currentSelection.includes(chart.id) && <Check className="w-3 h-3 text-primary-foreground" />}
+                    </div>
+                    {CATEGORY_ICONS[chart.category]}
+                    <span className="truncate">{chart.label}</span>
+                  </button>
+                ))}
+              </div>
+            </PopoverContent>
+          </Popover>
+        </div>
+        <Tabs value={category} onValueChange={(v) => { setCategory(v as typeof category); setShowAll(false); }}>
           <TabsList className="grid grid-cols-4 w-full">
             <TabsTrigger value="all" className="gap-1.5 text-xs"><Activity className="w-3.5 h-3.5" />Tous</TabsTrigger>
             <TabsTrigger value="medical" className="gap-1.5 text-xs"><Heart className="w-3.5 h-3.5" />Médical</TabsTrigger>
@@ -674,62 +774,28 @@ export const DepartmentCharts = ({ department, allData, selectedMetric }: Depart
         </Tabs>
       </div>
 
-      {/* Medical Charts */}
-      {(category === "all" || category === "medical") && (
-        <div className="space-y-4">
-          {category === "all" && <h3 className="text-lg font-semibold text-foreground flex items-center gap-2"><Heart className="w-5 h-5 text-primary" />Indicateurs médicaux</h3>}
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-            <Top5MaladiesChart department={department} />
-            <PathologiesGenreChart department={department} />
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+        {visibleCharts.map(chart => (
+          <div key={chart.id} className={chart.id === "top10_compare" ? "lg:col-span-2" : ""}>
+            {chart.render(department, allData)}
           </div>
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-            <RadarSanteChart department={department} allData={allData} />
-            <VaccinationChart department={department} allData={allData} />
-          </div>
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-            <ServicesMedicoSociauxChart department={department} allData={allData} />
-            <EhpadCapaciteChart department={department} allData={allData} />
-          </div>
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-            <AplSapaChart department={department} allData={allData} />
-            <AplEhpaChart department={department} allData={allData} />
-          </div>
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-            <OffreVsBesoinChart department={department} allData={allData} />
-            <LiviaProjectionsChart department={department} />
-          </div>
-          {category === "medical" && <Top10MaladiesCompareChart department={department} allData={allData} />}
+        ))}
+      </div>
+
+      {!showAll && availableCharts.length > visibleCharts.length && (
+        <div className="flex justify-center">
+          <Button variant="ghost" size="sm" className="gap-1.5 text-xs text-muted-foreground" onClick={() => setShowAll(true)}>
+            <ChevronDown className="w-4 h-4" />
+            Afficher tous ({availableCharts.length - visibleCharts.length} de plus)
+          </Button>
         </div>
       )}
-
-      {/* Social Charts */}
-      {(category === "all" || category === "social") && (
-        <div className="space-y-4">
-          {category === "all" && <h3 className="text-lg font-semibold text-foreground flex items-center gap-2"><Users className="w-5 h-5 text-secondary" />Indicateurs sociaux</h3>}
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-            <RadarSocialChart department={department} allData={allData} />
-            <IsolementSocialChart department={department} />
-          </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <FragiliteNumeriqueChart department={department} />
-            <SansVoitureChart department={department} allData={allData} />
-          </div>
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-            <IsolementParAgeChart department={department} allData={allData} />
-            <DemographieSeniorsChart department={department} />
-          </div>
-        </div>
-      )}
-
-      {/* Economic Charts */}
-      {(category === "all" || category === "economic") && (
-        <div className="space-y-4">
-          {category === "all" && <h3 className="text-lg font-semibold text-foreground flex items-center gap-2"><Euro className="w-5 h-5" style={{ color: COLORS.quaternary }} />Indicateurs économiques</h3>}
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-            <RevenusChart department={department} allData={allData} />
-            <LogementChart department={department} />
-          </div>
-          <AspaEvolutionChart department={department} />
+      {showAll && (
+        <div className="flex justify-center">
+          <Button variant="ghost" size="sm" className="gap-1.5 text-xs text-muted-foreground" onClick={() => setShowAll(false)}>
+            <ChevronUp className="w-4 h-4" />
+            Réduire
+          </Button>
         </div>
       )}
     </div>
