@@ -116,7 +116,7 @@ const Index = () => {
             </div>
 
             {/* Map */}
-            <div className="h-[calc(100vh-600px)] min-h-[400px]">
+            <div className="h-[calc(100vh-600px)] min-h-[400px] mb-8">
               <FranceMap 
                 data={data}
                 selectedMetric={selectedMetric}
