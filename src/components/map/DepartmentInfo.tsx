@@ -82,7 +82,7 @@ export const DepartmentInfo = ({ department, allData }: DepartmentInfoProps) => 
 
       <h4 className="text-base font-semibold mb-4" style={{ color: '#FF8C42' }}>Chiffres clés</h4>
       
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
+      <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-5 gap-3 md:gap-4">
         
         {/* Part 65+ */}
         <div className="p-4 rounded-xl bg-gradient-to-br from-orange-50 to-orange-100/50 border border-orange-200/50">
@@ -90,8 +90,8 @@ export const DepartmentInfo = ({ department, allData }: DepartmentInfoProps) => 
             <Users className="w-5 h-5 text-orange-600" />
             <span className="text-sm font-medium text-orange-800">Part 65+</span>
           </div>
-          <p className="text-2xl font-bold text-orange-700">{part65Plus.toFixed(1)}%</p>
-          <p className="text-xs text-orange-600/80 mt-1">de la population</p>
+          <p className="text-xl md:text-2xl font-bold text-orange-700">{part65Plus.toFixed(1)}%</p>
+          <p className="text-[10px] md:text-xs text-orange-600/80 mt-1">de la population</p>
           <ComparisonBadge value={part65Plus} avg={avgPart65} unit="%" />
         </div>
 
@@ -101,7 +101,7 @@ export const DepartmentInfo = ({ department, allData }: DepartmentInfoProps) => 
             <TrendingUp className="w-5 h-5 text-rose-600" />
             <span className="text-sm font-medium text-rose-800">Pauvreté 65+</span>
           </div>
-          <p className="text-2xl font-bold text-rose-700">{tauxPauvrete65.toFixed(1)}%</p>
+          <p className="text-xl md:text-2xl font-bold text-rose-700">{tauxPauvrete65.toFixed(1)}%</p>
           <ComparisonBadge value={tauxPauvrete65} avg={avgPauvrete65} unit="%" invert />
         </div>
 
@@ -111,8 +111,8 @@ export const DepartmentInfo = ({ department, allData }: DepartmentInfoProps) => 
             <Euro className="w-5 h-5 text-amber-600" />
             <span className="text-sm font-medium text-amber-800">Niveau de vie</span>
           </div>
-          <p className="text-2xl font-bold text-amber-700">{niveauVieMensuel.toLocaleString('fr-FR')} €</p>
-          <p className="text-xs text-amber-600/80 mt-1">médian / mois</p>
+          <p className="text-xl md:text-2xl font-bold text-amber-700">{niveauVieMensuel.toLocaleString('fr-FR')} €</p>
+          <p className="text-[10px] md:text-xs text-amber-600/80 mt-1">médian / mois</p>
           <ComparisonBadge value={niveauVieMensuel} avg={avgNiveauVieMensuel} unit="€" />
         </div>
 
@@ -122,10 +122,10 @@ export const DepartmentInfo = ({ department, allData }: DepartmentInfoProps) => 
             <Heart className="w-5 h-5 text-rose-500" />
             <span className="text-sm font-medium text-rose-700">Espérance de vie</span>
           </div>
-          <p className="text-2xl font-bold text-rose-600">
+          <p className="text-xl md:text-2xl font-bold text-rose-600">
             {esperanceVie ? `${esperanceVie.toFixed(1)} ans` : 'N/A'}
           </p>
-          <p className="text-xs text-rose-500/80 mt-1">âge moyen au décès</p>
+          <p className="text-[10px] md:text-xs text-rose-500/80 mt-1">âge moyen au décès</p>
           {esperanceVie > 0 && <ComparisonBadge value={esperanceVie} avg={avgEsperanceVie} unit="ans" />}
         </div>
 
