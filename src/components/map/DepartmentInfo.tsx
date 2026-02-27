@@ -1,4 +1,5 @@
-import { Users, TrendingUp, Euro, Heart, Activity, ArrowUp, ArrowDown, Minus } from "lucide-react";
+import { Users, TrendingUp, Euro, Heart, Activity, ArrowUp, ArrowDown, Minus, HelpCircle } from "lucide-react";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { DepartmentData, getAverage } from "@/lib/data";
 
 interface DepartmentInfoProps {
@@ -134,6 +135,16 @@ export const DepartmentInfo = ({ department, allData }: DepartmentInfoProps) => 
           <div className="flex items-center gap-2 mb-2">
             <Activity className="w-5 h-5 text-primary" />
             <span className="text-sm font-medium text-primary/90">Pathologie n°1</span>
+            <TooltipProvider>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <HelpCircle className="w-3.5 h-3.5 text-muted-foreground/60 cursor-help" />
+                </TooltipTrigger>
+                <TooltipContent side="top" className="max-w-[220px] text-xs">
+                  <p>Source : <strong>Ameli (CNAM) – 2023</strong>. Prévalence chez les ≥ 65 ans.</p>
+                </TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
           </div>
           <p className="text-lg font-bold text-primary leading-tight" title={topMaladie.name}>
             {topMaladie.name.length > 20 ? topMaladie.name.substring(0, 20) + "…" : topMaladie.name}

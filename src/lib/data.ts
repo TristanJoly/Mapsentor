@@ -104,6 +104,9 @@ export interface DepartmentData {
   vol_glob_s3_h_2050: number;
   // Maladies 65+
   maladies_65_plus: { [key: string]: number };
+  // Maladies par genre
+  maladies_femmes: { [key: string]: number };
+  maladies_hommes: { [key: string]: number };
   [key: string]: string | number | { [key: string]: number };
 }
 
@@ -153,18 +156,26 @@ export const loadDepartmentData = async (): Promise<DepartmentData[]> => {
     };
 
     cachedData = result.data.map((row: any) => {
-      // Extract maladies 65+ data
-      // Les valeurs brutes sont des effectifs → on divise par le total 65+ pour obtenir un %
+      // Extract maladies data by category
       const total65Plus = parseFloat(row['≥ 65 ans - Total'] || row['total_65_plus'] || '0') || 0;
-      const maladies_65_plus: { [key: string]: number } = {};
-      Object.keys(row).forEach(key => {
-        if (key.startsWith('≥ 65 ans -') && !key.includes('Total') && !key.toLowerCase().includes('traitement')) {
-          const maladieName = key.replace('≥ 65 ans - ', '');
-          const effectif = parseFloat(row[key]) || 0;
-          // Convertir en % de la population 65+ du département
-          maladies_65_plus[maladieName] = total65Plus > 0 ? (effectif / total65Plus) * 100 : effectif;
-        }
-      });
+      const totalFemmes = parseFloat(row['Femmes - Total'] || '0') || 0;
+      const totalHommes = parseFloat(row['Hommes - Total'] || '0') || 0;
+      
+      const extractMaladies = (prefix: string, total: number): { [key: string]: number } => {
+        const result: { [key: string]: number } = {};
+        Object.keys(row).forEach(key => {
+          if (key.startsWith(prefix) && !key.includes('Total') && !key.toLowerCase().includes('traitement')) {
+            const maladieName = key.replace(prefix, '');
+            const effectif = parseFloat(row[key]) || 0;
+            result[maladieName] = total > 0 ? (effectif / total) * 100 : effectif;
+          }
+        });
+        return result;
+      };
+      
+      const maladies_65_plus = extractMaladies('≥ 65 ans - ', total65Plus);
+      const maladies_femmes = extractMaladies('Femmes - ', totalFemmes);
+      const maladies_hommes = extractMaladies('Hommes - ', totalHommes);
 
       return {
         code_departement: String(row['code_departement'] || row['Code département'] || '').trim(),
@@ -273,8 +284,10 @@ export const loadDepartmentData = async (): Promise<DepartmentData[]> => {
         vol_glob_s3_h_2040: parseFloat(row['vol_GLOB_s3_H_2040']) || 0,
         vol_glob_s3_h_2045: parseFloat(row['vol_GLOB_s3_H_2045']) || 0,
         vol_glob_s3_h_2050: parseFloat(row['vol_GLOB_s3_H_2050']) || 0,
-        // Maladies 65+
+        // Maladies
         maladies_65_plus,
+        maladies_femmes,
+        maladies_hommes,
       };
     }) as DepartmentData[];
 
