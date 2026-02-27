@@ -26,6 +26,11 @@ const COLORS = {
   dark: "#A0522D",
 };
 
+const formatAxisK = (value: number) => {
+  if (value >= 1000) return `${(value / 1000).toFixed(value >= 10000 ? 0 : 1)}k`;
+  return value.toLocaleString('fr-FR');
+};
+
 const AmeliSource = () => (
   <TooltipProvider>
     <UITooltip>
@@ -68,7 +73,7 @@ const Top5MaladiesChart = ({ department }: { department: DepartmentData }) => {
     .slice(0, 5);
   
   const data = maladieEntries.map(([name, value], index) => ({ 
-    name: `${index + 1}. ${name.substring(0, 22)}`, 
+    name: `${index + 1}. ${name}`, 
     value 
   }));
 
@@ -79,7 +84,7 @@ const Top5MaladiesChart = ({ department }: { department: DepartmentData }) => {
         <BarChart data={data} layout="vertical">
           <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
           <XAxis type="number" tick={{ fontSize: 10 }} />
-          <YAxis dataKey="name" type="category" tick={{ fontSize: 9 }} width={120} />
+          <YAxis dataKey="name" type="category" tick={{ fontSize: 8 }} width={220} />
           <Tooltip formatter={(value: number) => `${value.toFixed(1)}%`} contentStyle={{ background: 'hsl(var(--card))', border: '1px solid hsl(var(--border))', borderRadius: '8px', fontSize: '12px' }} />
           <Bar dataKey="value" fill={COLORS.secondary} radius={[0, 4, 4, 0]} />
         </BarChart>
@@ -220,7 +225,7 @@ const EhpadCapaciteChart = ({ department, allData }: { department: DepartmentDat
         <BarChart data={data}>
           <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
           <XAxis dataKey="name" tick={{ fontSize: 10 }} />
-          <YAxis tick={{ fontSize: 10 }} />
+          <YAxis tick={{ fontSize: 10 }} tickFormatter={formatAxisK} />
           <Tooltip formatter={(value: number) => value.toLocaleString('fr-FR')} contentStyle={{ background: 'hsl(var(--card))', border: '1px solid hsl(var(--border))', borderRadius: '8px', fontSize: '12px' }} />
           <Bar dataKey="departement" fill={COLORS.primary} name="Département" />
           <Bar dataKey="region" fill={COLORS.secondary} name="Région" />
@@ -247,7 +252,7 @@ const LiviaProjectionsChart = ({ department }: { department: DepartmentData }) =
         <LineChart data={data}>
           <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
           <XAxis dataKey="annee" tick={{ fontSize: 10 }} />
-          <YAxis tick={{ fontSize: 10 }} />
+          <YAxis tick={{ fontSize: 10 }} tickFormatter={formatAxisK} />
           <Tooltip contentStyle={{ background: 'hsl(var(--card))', border: '1px solid hsl(var(--border))', borderRadius: '8px', fontSize: '12px' }} />
           <Line type="monotone" dataKey="femmes" stroke={COLORS.primary} strokeWidth={2} name="Femmes" dot />
           <Line type="monotone" dataKey="hommes" stroke={COLORS.secondary} strokeWidth={2} strokeDasharray="5 5" name="Hommes" dot />
@@ -452,7 +457,7 @@ const IsolementParAgeChart = ({ department, allData }: { department: DepartmentD
         <BarChart data={data}>
           <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
           <XAxis dataKey="name" tick={{ fontSize: 10 }} />
-          <YAxis tick={{ fontSize: 10 }} />
+          <YAxis tick={{ fontSize: 10 }} tickFormatter={formatAxisK} />
           <Tooltip formatter={(value: number) => value.toLocaleString('fr-FR')} contentStyle={{ background: 'hsl(var(--card))', border: '1px solid hsl(var(--border))', borderRadius: '8px', fontSize: '12px' }} />
           <Bar dataKey="departement" fill={COLORS.primary} name="Département" />
           <Bar dataKey="france" fill={COLORS.muted} name="Moy. France" />
@@ -477,7 +482,7 @@ const DemographieSeniorsChart = ({ department }: { department: DepartmentData })
         <BarChart data={data}>
           <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
           <XAxis dataKey="name" tick={{ fontSize: 10 }} />
-          <YAxis tick={{ fontSize: 10 }} />
+          <YAxis tick={{ fontSize: 10 }} tickFormatter={formatAxisK} />
           <Tooltip formatter={(value: number) => value.toLocaleString('fr-FR')} contentStyle={{ background: 'hsl(var(--card))', border: '1px solid hsl(var(--border))', borderRadius: '8px', fontSize: '12px' }} />
           <Bar dataKey="value" radius={[4, 4, 0, 0]}>
             <Cell fill={COLORS.secondary} />
@@ -570,7 +575,7 @@ const AplSapaChart = ({ department, allData }: { department: DepartmentData; all
         <BarChart data={data}>
           <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
           <XAxis dataKey="name" tick={{ fontSize: 10 }} />
-          <YAxis tick={{ fontSize: 10 }} />
+          <YAxis tick={{ fontSize: 10 }} tickFormatter={formatAxisK} />
           <Tooltip formatter={(value: number) => value.toLocaleString('fr-FR')} contentStyle={{ background: 'hsl(var(--card))', border: '1px solid hsl(var(--border))', borderRadius: '8px', fontSize: '12px' }} />
           <Bar dataKey="departement" fill={COLORS.primary} name="Département" />
           <Bar dataKey="region" fill={COLORS.secondary} name="Région" />
@@ -594,7 +599,7 @@ const AplEhpaChart = ({ department, allData }: { department: DepartmentData; all
         <BarChart data={data}>
           <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
           <XAxis dataKey="name" tick={{ fontSize: 10 }} />
-          <YAxis tick={{ fontSize: 10 }} />
+          <YAxis tick={{ fontSize: 10 }} tickFormatter={formatAxisK} />
           <Tooltip formatter={(value: number) => value.toLocaleString('fr-FR')} contentStyle={{ background: 'hsl(var(--card))', border: '1px solid hsl(var(--border))', borderRadius: '8px', fontSize: '12px' }} />
           <Bar dataKey="departement" fill={COLORS.primary} name="Département" />
           <Bar dataKey="region" fill={COLORS.secondary} name="Région" />
