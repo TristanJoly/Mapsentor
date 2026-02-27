@@ -74,29 +74,26 @@ const Index = () => {
             <Menu className="w-5 h-5" />
           </Button>
           <div className="min-w-0">
-            <h1 className="text-xl md:text-3xl font-bold text-foreground mb-1">
+            <h1 className="text-xl md:text-3xl font-bold text-foreground">
               Mapsentor
             </h1>
-            <p className="text-xs md:text-sm text-muted-foreground">
-              Indicateurs du vieillissement • {data.length} départements
-            </p>
           </div>
         </div>
 
         {/* Tabs */}
 
         <Tabs defaultValue="map" className="space-y-6">
-          <TabsList className="bg-muted/50 w-full md:w-auto">
-            <TabsTrigger value="map" className="gap-1.5 text-xs md:text-sm flex-1 md:flex-none">
-              <Map className="w-4 h-4" />
+          <TabsList className="bg-muted/50 w-full md:w-auto h-12">
+            <TabsTrigger value="map" className="gap-2 text-sm md:text-base flex-1 md:flex-none px-4 py-2.5">
+              <Map className="w-5 h-5" />
               Carte
             </TabsTrigger>
-            <TabsTrigger value="charts" className="gap-1.5 text-xs md:text-sm flex-1 md:flex-none">
-              <BarChart3 className="w-4 h-4" />
+            <TabsTrigger value="charts" className="gap-2 text-sm md:text-base flex-1 md:flex-none px-4 py-2.5">
+              <BarChart3 className="w-5 h-5" />
               Graphiques
             </TabsTrigger>
-            <TabsTrigger value="compare" className="gap-1.5 text-xs md:text-sm flex-1 md:flex-none">
-              <GitCompare className="w-4 h-4" />
+            <TabsTrigger value="compare" className="gap-2 text-sm md:text-base flex-1 md:flex-none px-4 py-2.5">
+              <GitCompare className="w-5 h-5" />
               Comparaison
             </TabsTrigger>
           </TabsList>
@@ -110,12 +107,6 @@ const Index = () => {
               departments={data}
             />
 
-            {/* Metric Selector - juste au-dessus de la carte */}
-            <div className="p-4 rounded-xl bg-card border border-border shadow-card">
-              <h4 className="text-sm font-semibold text-foreground mb-3" style={{ color: '#FF8C42' }}>Choix de la métrique</h4>
-              <MetricSelector value={selectedMetric} onChange={setSelectedMetric} />
-            </div>
-
             {/* Department Info + Alerts */}
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
               <div className="lg:col-span-2">
@@ -124,6 +115,12 @@ const Index = () => {
               <div>
                 <DepartmentAlerts department={selectedDeptData} allData={data} />
               </div>
+            </div>
+
+            {/* Metric Selector - juste au-dessus de la carte */}
+            <div className="p-4 rounded-xl bg-card border border-border shadow-card">
+              <h4 className="text-sm font-semibold text-foreground mb-3" style={{ color: '#FF8C42' }}>Choix de la métrique</h4>
+              <MetricSelector value={selectedMetric} onChange={setSelectedMetric} />
             </div>
 
             {/* Map */}

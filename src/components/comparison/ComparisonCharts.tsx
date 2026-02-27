@@ -54,7 +54,7 @@ const RadarSocialComparison = ({ dept1, dept2 }: { dept1: DepartmentData; dept2:
             fill={COLORS.dept2}
             fillOpacity={0.4}
           />
-          <Legend wrapperStyle={{ fontSize: '10px' }} />
+          <Legend wrapperStyle={{ fontSize: '11px', color: '#333' }} />
         </RadarChart>
       </ResponsiveContainer>
     </div>
@@ -92,7 +92,7 @@ const RadarSanteComparison = ({ dept1, dept2, allData }: { dept1: DepartmentData
           <Radar name={dept1.departement} dataKey="dept1" stroke={COLORS.dept1} fill={COLORS.dept1} fillOpacity={0.3} />
           <Radar name={dept2.departement} dataKey="dept2" stroke={COLORS.dept2} fill={COLORS.dept2} fillOpacity={0.3} />
           <Radar name="France" dataKey="france" stroke={COLORS.france} fill={COLORS.france} fillOpacity={0.2} />
-          <Legend wrapperStyle={{ fontSize: '10px' }} />
+          <Legend wrapperStyle={{ fontSize: '11px', color: '#333' }} />
         </RadarChart>
       </ResponsiveContainer>
     </div>
@@ -138,7 +138,7 @@ const VaccinationComparison = ({ dept1, dept2, allData }: { dept1: DepartmentDat
           <Bar dataKey={dept1.departement} fill={COLORS.dept1} />
           <Bar dataKey={dept2.departement} fill={COLORS.dept2} />
           <Bar dataKey="France" fill={COLORS.france} />
-          <Legend wrapperStyle={{ fontSize: '10px' }} />
+          <Legend wrapperStyle={{ fontSize: '11px', color: '#333' }} />
         </BarChart>
       </ResponsiveContainer>
     </div>
@@ -184,7 +184,7 @@ const RevenusComparison = ({ dept1, dept2, allData }: { dept1: DepartmentData; d
           <Bar dataKey={dept1.departement} fill={COLORS.dept1} />
           <Bar dataKey={dept2.departement} fill={COLORS.dept2} />
           <Bar dataKey="France" fill={COLORS.france} />
-          <Legend wrapperStyle={{ fontSize: '10px' }} />
+          <Legend wrapperStyle={{ fontSize: '11px', color: '#333' }} />
         </BarChart>
       </ResponsiveContainer>
     </div>
@@ -237,7 +237,7 @@ const IsolementComparison = ({ dept1, dept2 }: { dept1: DepartmentData; dept2: D
           />
           <Bar dataKey={dept1.departement} fill={COLORS.dept1} />
           <Bar dataKey={dept2.departement} fill={COLORS.dept2} />
-          <Legend wrapperStyle={{ fontSize: '10px' }} />
+          <Legend wrapperStyle={{ fontSize: '11px', color: '#333' }} />
         </BarChart>
       </ResponsiveContainer>
     </div>
@@ -276,7 +276,7 @@ const LiviaComparison = ({ dept1, dept2 }: { dept1: DepartmentData; dept2: Depar
           />
           <Line type="monotone" dataKey={`${dept1.departement} F`} stroke={COLORS.dept1} strokeWidth={2} dot />
           <Line type="monotone" dataKey={`${dept2.departement} F`} stroke={COLORS.dept2} strokeWidth={2} dot />
-          <Legend wrapperStyle={{ fontSize: '10px' }} />
+          <Legend wrapperStyle={{ fontSize: '11px', color: '#333' }} />
         </LineChart>
       </ResponsiveContainer>
     </div>
@@ -314,7 +314,7 @@ const AspaComparison = ({ dept1, dept2 }: { dept1: DepartmentData; dept2: Depart
           />
           <Line type="monotone" dataKey={dept1.departement} stroke={COLORS.dept1} strokeWidth={2} dot />
           <Line type="monotone" dataKey={dept2.departement} stroke={COLORS.dept2} strokeWidth={2} dot />
-          <Legend wrapperStyle={{ fontSize: '10px' }} />
+          <Legend wrapperStyle={{ fontSize: '11px', color: '#333' }} />
         </LineChart>
       </ResponsiveContainer>
     </div>
@@ -370,7 +370,7 @@ const ServicesComparison = ({ dept1, dept2, allData }: { dept1: DepartmentData; 
           />
           <Bar dataKey={dept1.departement} fill={COLORS.dept1} />
           <Bar dataKey={dept2.departement} fill={COLORS.dept2} />
-          <Legend wrapperStyle={{ fontSize: '10px' }} />
+          <Legend wrapperStyle={{ fontSize: '11px', color: '#333' }} />
         </BarChart>
       </ResponsiveContainer>
       <div className="text-xs text-center text-muted-foreground mt-2">
