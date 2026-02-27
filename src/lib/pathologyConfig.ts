@@ -57,14 +57,6 @@ export const CSV_TO_DISPLAY_NAME: Record<string, string> = {
   "Séjours hospitaliers pour Covid-19": "Hospitalisation pour Covid-19",
   "Séquelle d'accident vasculaire cérébral": "Séquelle d'accident vasculaire cérébral",
   "Troubles psychiatriques ayant débuté dans l'enfance": "Troubles psychiatriques débutant dans l'enfance",
-
-  // Traitements (hors pathologies)
-  "Traitements antidépresseurs ou régulateurs de l'humeur (hors pathologies)": "Traitements antidépresseurs ou thymorégulateurs (hors pathologies)",
-  "Traitements antihypertenseurs (hors pathologies)": "Traitements antihypertenseurs (hors pathologies)",
-  "Traitements anxiolytiques (hors pathologies)": "Traitements anxiolytiques (hors pathologies)",
-  "Traitements hypnotiques (hors pathologies)": "Traitements hypnotiques (hors pathologies)",
-  "Traitements hypolipémiants (hors pathologies)": "Traitements hypolipémiants (hors pathologies)",
-  "Traitements neuroleptiques (hors pathologies)": "Traitements neuroleptiques (hors pathologies)",
 };
 
 /**
