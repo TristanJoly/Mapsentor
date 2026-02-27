@@ -6,6 +6,36 @@ interface DepartmentInfoProps {
   allData: DepartmentData[];
 }
 
+const ComparisonBadge = ({ value, avg, unit = "pts", invert = false }: { value: number; avg: number; unit?: string; invert?: boolean }) => {
+  const diff = value - avg;
+  // invert: lower is better (e.g. poverty)
+  const isGood = invert ? diff < -1 : diff > 1;
+  const isBad = invert ? diff > 1 : diff < -1;
+
+  if (Math.abs(diff) <= 1) {
+    return (
+      <div className="flex items-center gap-1 mt-1.5">
+        <Minus className="w-3.5 h-3.5 text-orange-500" />
+        <span className="text-xs text-orange-500">≈ moy. nationale</span>
+      </div>
+    );
+  }
+
+  return (
+    <div className="flex items-center gap-1 mt-1.5">
+      {diff > 0 ? (
+        <ArrowUp className={`w-3.5 h-3.5 ${isBad ? 'text-rose-600' : 'text-emerald-600'}`} />
+      ) : (
+        <ArrowDown className={`w-3.5 h-3.5 ${isGood ? 'text-emerald-600' : 'text-rose-600'}`} />
+      )}
+      <span className={`text-xs font-medium ${isBad ? 'text-rose-600' : isGood ? 'text-emerald-600' : 'text-muted-foreground'}`}>
+        {diff > 0 ? '+' : ''}{unit === '%' ? diff.toFixed(1) + ' pts' : Math.round(diff).toLocaleString('fr-FR') + (unit ? ' ' + unit : '')}
+      </span>
+      <span className="text-xs text-muted-foreground/70">vs FR</span>
+    </div>
+  );
+};
+
 export const DepartmentInfo = ({ department, allData }: DepartmentInfoProps) => {
   if (!department) {
     return (
@@ -15,8 +45,11 @@ export const DepartmentInfo = ({ department, allData }: DepartmentInfoProps) => 
     );
   }
 
-  // Calculate national average for poverty rate
+  // Moyennes nationales
   const avgPauvrete65 = getAverage(allData, 'taux_pauvrete_60');
+  const avgPart65 = getAverage(allData, 'part_60_plus');
+  const avgNiveauVie = getAverage(allData, 'niveau_vie_median');
+  const avgEsperanceVie = getAverage(allData, 'esperance_vie');
 
   // Calculer la maladie la plus fréquente
   const maladies = department.maladies_65_plus || {};
@@ -27,17 +60,10 @@ export const DepartmentInfo = ({ department, allData }: DepartmentInfoProps) => 
     }
   });
 
-  // Part 65+
   const part65Plus = department.part_60_plus;
-
-  // Taux pauvreté 65+
   const tauxPauvrete65 = department.taux_pauvrete_60;
-  const diffPauvrete = tauxPauvrete65 - avgPauvrete65;
-
-  // Niveau de vie médian en €/mois
   const niveauVieMensuel = Math.round(department.niveau_vie_median / 12);
-
-  // Espérance de vie
+  const avgNiveauVieMensuel = Math.round(avgNiveauVie / 12);
   const esperanceVie = department.esperance_vie;
 
   return (
@@ -56,7 +82,6 @@ export const DepartmentInfo = ({ department, allData }: DepartmentInfoProps) => 
 
       <h4 className="text-base font-semibold mb-4" style={{ color: '#FF8C42' }}>Chiffres clés</h4>
       
-      {/* Grid avec cartes plus grandes et lisibles */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
         
         {/* Part 65+ */}
@@ -67,6 +92,7 @@ export const DepartmentInfo = ({ department, allData }: DepartmentInfoProps) => 
           </div>
           <p className="text-2xl font-bold text-orange-700">{part65Plus.toFixed(1)}%</p>
           <p className="text-xs text-orange-600/80 mt-1">de la population</p>
+          <ComparisonBadge value={part65Plus} avg={avgPart65} unit="%" />
         </div>
 
         {/* Pauvreté 65+ */}
@@ -76,25 +102,7 @@ export const DepartmentInfo = ({ department, allData }: DepartmentInfoProps) => 
             <span className="text-sm font-medium text-rose-800">Pauvreté 65+</span>
           </div>
           <p className="text-2xl font-bold text-rose-700">{tauxPauvrete65.toFixed(1)}%</p>
-          <div className="flex items-center gap-1.5 mt-2">
-            {diffPauvrete > 1 ? (
-              <>
-                <ArrowUp className="w-4 h-4 text-rose-600" />
-                <span className="text-xs font-medium text-rose-600">+{diffPauvrete.toFixed(1)} pts</span>
-              </>
-            ) : diffPauvrete < -1 ? (
-              <>
-                <ArrowDown className="w-4 h-4 text-emerald-600" />
-                <span className="text-xs font-medium text-emerald-600">{diffPauvrete.toFixed(1)} pts</span>
-              </>
-            ) : (
-              <>
-                <Minus className="w-4 h-4 text-orange-500" />
-                <span className="text-xs font-medium text-orange-500">≈ moyenne</span>
-              </>
-            )}
-            <span className="text-xs text-rose-500/70">vs France ({avgPauvrete65.toFixed(1)}%)</span>
-          </div>
+          <ComparisonBadge value={tauxPauvrete65} avg={avgPauvrete65} unit="%" invert />
         </div>
 
         {/* Niveau de vie */}
@@ -105,6 +113,7 @@ export const DepartmentInfo = ({ department, allData }: DepartmentInfoProps) => 
           </div>
           <p className="text-2xl font-bold text-amber-700">{niveauVieMensuel.toLocaleString('fr-FR')} €</p>
           <p className="text-xs text-amber-600/80 mt-1">médian / mois</p>
+          <ComparisonBadge value={niveauVieMensuel} avg={avgNiveauVieMensuel} unit="€" />
         </div>
 
         {/* Espérance de vie */}
@@ -117,6 +126,7 @@ export const DepartmentInfo = ({ department, allData }: DepartmentInfoProps) => 
             {esperanceVie ? `${esperanceVie.toFixed(1)} ans` : 'N/A'}
           </p>
           <p className="text-xs text-rose-500/80 mt-1">âge moyen au décès</p>
+          {esperanceVie > 0 && <ComparisonBadge value={esperanceVie} avg={avgEsperanceVie} unit="ans" />}
         </div>
 
         {/* Pathologie principale */}
