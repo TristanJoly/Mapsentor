@@ -1,4 +1,4 @@
-import { Users, TrendingUp, Euro, Heart, Activity, ArrowUp, ArrowDown, Minus, HelpCircle, Trophy } from "lucide-react";
+import { Users, TrendingUp, Euro, Heart, Activity, ArrowUp, ArrowDown, Minus, HelpCircle } from "lucide-react";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { DepartmentData, getAverage } from "@/lib/data";
 
@@ -17,8 +17,7 @@ const RankBadge = ({ rank, total }: { rank: number; total: number }) => {
   const isTop = rank <= 10;
   const isBottom = rank > total - 10;
   return (
-    <div className={`flex items-center gap-1 mt-1`}>
-      <Trophy className={`w-3 h-3 ${isTop ? 'text-amber-500' : isBottom ? 'text-rose-400' : 'text-muted-foreground/50'}`} />
+    <div className="flex items-center gap-1 mt-1">
       <span className={`text-[10px] font-medium ${isTop ? 'text-amber-600' : isBottom ? 'text-rose-500' : 'text-muted-foreground/70'}`}>
         {rank}<sup>e</sup>/{total}
       </span>
