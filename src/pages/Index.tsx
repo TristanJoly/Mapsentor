@@ -11,13 +11,15 @@ import { loadDepartmentData, DepartmentData } from "@/lib/data";
 import { Loader2, BarChart3, Menu, GitCompare, Map } from "lucide-react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 const Index = () => {
+  const isMobile = useIsMobile();
   const [selectedMetric, setSelectedMetric] = useState("taux_pauvrete_75");
   const [selectedDepartment, setSelectedDepartment] = useState("01");
   const [data, setData] = useState<DepartmentData[]>([]);
   const [loading, setLoading] = useState(true);
-  const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
+  const [sidebarCollapsed, setSidebarCollapsed] = useState(true);
 
   useEffect(() => {
     loadDepartmentData().then(departmentData => {
@@ -43,31 +45,40 @@ const Index = () => {
   }
 
   return (
-    <div className="flex min-h-screen w-full bg-background">
-      <Sidebar 
-        collapsed={sidebarCollapsed} 
-        onToggle={() => setSidebarCollapsed(!sidebarCollapsed)} 
-      />
+    <div className="flex min-h-screen w-full bg-background relative">
+      {/* Mobile overlay */}
+      {isMobile && !sidebarCollapsed && (
+        <div 
+          className="fixed inset-0 bg-black/50 z-40"
+          onClick={() => setSidebarCollapsed(true)}
+        />
+      )}
       
-      <main className="flex-1 p-6 lg:p-8 overflow-auto">
+      {/* Sidebar - overlay on mobile */}
+      <div className={`${isMobile ? 'fixed z-50 h-full' : ''} ${isMobile && sidebarCollapsed ? '-translate-x-full' : 'translate-x-0'} transition-transform duration-300`}>
+        <Sidebar 
+          collapsed={isMobile ? false : sidebarCollapsed} 
+          onToggle={() => setSidebarCollapsed(!sidebarCollapsed)} 
+        />
+      </div>
+      
+      <main className="flex-1 p-4 md:p-6 lg:p-8 overflow-auto w-full">
         {/* Header */}
-        <div className="mb-6 flex items-start gap-4">
-          {sidebarCollapsed && (
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={() => setSidebarCollapsed(false)}
-              className="shrink-0"
-            >
-              <Menu className="w-5 h-5" />
-            </Button>
-          )}
-          <div>
-            <h1 className="text-3xl font-bold text-foreground mb-2">
+        <div className="mb-4 md:mb-6 flex items-start gap-3">
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={() => setSidebarCollapsed(!sidebarCollapsed)}
+            className="shrink-0"
+          >
+            <Menu className="w-5 h-5" />
+          </Button>
+          <div className="min-w-0">
+            <h1 className="text-xl md:text-3xl font-bold text-foreground mb-1">
               Mapsentor
             </h1>
-            <p className="text-muted-foreground">
-              Visualisez les indicateurs du vieillissement par département • {data.length} départements
+            <p className="text-xs md:text-sm text-muted-foreground">
+              Indicateurs du vieillissement • {data.length} départements
             </p>
           </div>
         </div>
@@ -75,16 +86,16 @@ const Index = () => {
         {/* Tabs */}
 
         <Tabs defaultValue="map" className="space-y-6">
-          <TabsList className="bg-muted/50">
-            <TabsTrigger value="map" className="gap-2">
+          <TabsList className="bg-muted/50 w-full md:w-auto">
+            <TabsTrigger value="map" className="gap-1.5 text-xs md:text-sm flex-1 md:flex-none">
               <Map className="w-4 h-4" />
               Carte
             </TabsTrigger>
-            <TabsTrigger value="charts" className="gap-2">
+            <TabsTrigger value="charts" className="gap-1.5 text-xs md:text-sm flex-1 md:flex-none">
               <BarChart3 className="w-4 h-4" />
               Graphiques
             </TabsTrigger>
-            <TabsTrigger value="compare" className="gap-2">
+            <TabsTrigger value="compare" className="gap-1.5 text-xs md:text-sm flex-1 md:flex-none">
               <GitCompare className="w-4 h-4" />
               Comparaison
             </TabsTrigger>
@@ -116,7 +127,7 @@ const Index = () => {
             </div>
 
             {/* Map */}
-            <div className="h-[calc(100vh-600px)] min-h-[400px] mb-8">
+            <div className="h-[60vh] md:h-[calc(100vh-600px)] min-h-[350px] mb-8">
               <FranceMap 
                 data={data}
                 selectedMetric={selectedMetric}

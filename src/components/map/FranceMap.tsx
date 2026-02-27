@@ -136,7 +136,7 @@ export const FranceMap = ({ data, selectedMetric, selectedDepartment, onDepartme
   };
 
   return (
-    <div className="relative w-full h-full min-h-[500px] rounded-2xl bg-card border border-border overflow-hidden shadow-card">
+    <div className="relative w-full h-full min-h-[350px] md:min-h-[500px] rounded-2xl bg-card border border-border overflow-hidden shadow-card">
       <TooltipProvider>
         <ComposableMap
           projection="geoMercator"
