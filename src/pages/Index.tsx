@@ -156,8 +156,7 @@ const Index = () => {
               selectedMetric={selectedMetric}
             />
 
-            {/* Alerts */}
-            <DepartmentAlerts department={selectedDeptData} allData={data} />
+
           </TabsContent>
 
           {/* Onglet Comparaison */}
