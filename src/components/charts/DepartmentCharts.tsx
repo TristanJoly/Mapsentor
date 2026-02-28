@@ -409,25 +409,96 @@ const SansVoitureChart = ({ department, allData }: { department: DepartmentData;
 
 const FragiliteNumeriqueChart = ({ department }: { department: DepartmentData }) => {
   const score = department.score_fragilite_numerique || 0;
-  const percentage = (score / 10) * 100;
-  const getColor = (s: number) => s <= 3.3 ? COLORS.tertiary : s <= 6.6 ? COLORS.secondary : COLORS.primary;
-  const gaugeData = [{ name: "Score", value: percentage }, { name: "Restant", value: 100 - percentage }];
+  const getColor = (s: number) => s <= 3.3 ? '#22c55e' : s <= 6.6 ? '#f59e0b' : '#ef4444';
+  const getLabel = (s: number) => s <= 3.3 ? 'Faible' : s <= 6.6 ? 'Modéré' : 'Élevé';
+  
+  // SVG gauge parameters
+  const cx = 120, cy = 110, r = 80;
+  const startAngle = 225, endAngle = -45; // 270° arc
+  const totalAngle = startAngle - endAngle;
+  const scoreAngle = startAngle - (score / 10) * totalAngle;
+  
+  const polarToCartesian = (angle: number, radius: number) => ({
+    x: cx + radius * Math.cos((angle * Math.PI) / 180),
+    y: cy - radius * Math.sin((angle * Math.PI) / 180),
+  });
+
+  // Arc path helper
+  const describeArc = (startA: number, endA: number, radius: number) => {
+    const start = polarToCartesian(startA, radius);
+    const end = polarToCartesian(endA, radius);
+    const largeArc = startA - endA > 180 ? 1 : 0;
+    return `M ${start.x} ${start.y} A ${radius} ${radius} 0 ${largeArc} 1 ${end.x} ${end.y}`;
+  };
+
+  // Tick marks
+  const ticks = Array.from({ length: 11 }, (_, i) => {
+    const angle = startAngle - (i / 10) * totalAngle;
+    const inner = polarToCartesian(angle, r - 8);
+    const outer = polarToCartesian(angle, r + 2);
+    const labelPos = polarToCartesian(angle, r + 14);
+    return { inner, outer, labelPos, value: i, isMajor: i % 5 === 0 };
+  });
+
+  // Needle endpoint
+  const needleEnd = polarToCartesian(scoreAngle, r - 16);
+  const needleColor = getColor(score);
+
+  // Gradient segments (green → yellow → red)
+  const segments = [
+    { start: startAngle, end: startAngle - totalAngle * 0.33, color: '#22c55e' },
+    { start: startAngle - totalAngle * 0.33, end: startAngle - totalAngle * 0.66, color: '#f59e0b' },
+    { start: startAngle - totalAngle * 0.66, end: endAngle, color: '#ef4444' },
+  ];
+
   return (
     <div className="p-4 rounded-xl bg-card border border-border shadow-card">
       <h4 className="text-sm font-semibold text-foreground mb-2 flex items-center gap-1">Fragilité numérique<ChartInfoButton text="Score de 0 à 10 : plus le score est élevé, plus la population est vulnérable face au numérique (faible accès, peu d'usages)." /></h4>
-      <div className="relative">
-        <ResponsiveContainer width="100%" height={140}>
-          <PieChart>
-            <Pie data={gaugeData} cx="50%" cy="100%" startAngle={180} endAngle={0} innerRadius={50} outerRadius={65} dataKey="value" stroke="none">
-              <Cell fill={getColor(score)} />
-              <Cell fill="hsl(var(--muted))" />
-            </Pie>
-          </PieChart>
-        </ResponsiveContainer>
-        <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 text-center">
-          <div className="text-3xl font-bold" style={{ color: getColor(score) }}>{score.toFixed(1)}</div>
-          <div className="text-xs text-muted-foreground">/10</div>
-        </div>
+      <div className="flex justify-center">
+        <svg viewBox="0 0 240 160" width="100%" style={{ maxWidth: 280 }}>
+          {/* Background track */}
+          <path d={describeArc(startAngle, endAngle, r)} fill="none" stroke="hsl(var(--muted))" strokeWidth={14} strokeLinecap="round" />
+          
+          {/* Colored segments */}
+          {segments.map((seg, i) => (
+            <path key={i} d={describeArc(seg.start, seg.end, r)} fill="none" stroke={seg.color} strokeWidth={14} strokeLinecap="round" opacity={0.2} />
+          ))}
+          
+          {/* Active arc */}
+          {score > 0 && (
+            <path d={describeArc(startAngle, scoreAngle, r)} fill="none" stroke={needleColor} strokeWidth={14} strokeLinecap="round"
+              style={{ filter: `drop-shadow(0 0 6px ${needleColor}50)` }} />
+          )}
+
+          {/* Tick marks */}
+          {ticks.map((t, i) => (
+            <g key={i}>
+              <line x1={t.inner.x} y1={t.inner.y} x2={t.outer.x} y2={t.outer.y}
+                stroke={t.isMajor ? 'hsl(var(--foreground))' : 'hsl(var(--muted-foreground))'} 
+                strokeWidth={t.isMajor ? 2 : 1} opacity={t.isMajor ? 0.6 : 0.3} />
+              {t.isMajor && (
+                <text x={t.labelPos.x} y={t.labelPos.y} textAnchor="middle" dominantBaseline="middle"
+                  fontSize={10} fill="hsl(var(--muted-foreground))" fontWeight={500}>{t.value}</text>
+              )}
+            </g>
+          ))}
+
+          {/* Needle */}
+          <line x1={cx} y1={cy} x2={needleEnd.x} y2={needleEnd.y}
+            stroke={needleColor} strokeWidth={3} strokeLinecap="round"
+            style={{ filter: `drop-shadow(0 1px 3px ${needleColor}80)` }} />
+          {/* Center dot */}
+          <circle cx={cx} cy={cy} r={6} fill={needleColor} />
+          <circle cx={cx} cy={cy} r={3} fill="hsl(var(--card))" />
+
+          {/* Score text */}
+          <text x={cx} y={cy + 28} textAnchor="middle" fontSize={22} fontWeight={700} fill={needleColor}>
+            {score.toFixed(1)}
+          </text>
+          <text x={cx} y={cy + 42} textAnchor="middle" fontSize={11} fill="hsl(var(--muted-foreground))">
+            /10 — {getLabel(score)}
+          </text>
+        </svg>
       </div>
     </div>
   );
