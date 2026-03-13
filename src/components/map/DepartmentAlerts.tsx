@@ -1,7 +1,7 @@
 import { AlertTriangle, Wrench, Info, ExternalLink, Sparkles, Heart, Euro, Users, ChevronDown, ChevronUp } from "lucide-react";
 import { useState } from "react";
 import { DepartmentData } from "@/lib/data";
-import { getAllDepartmentAlerts, AlertDefinition, getQuartile, getDeptValue } from "@/lib/alertConfig";
+import { getAllDepartmentAlerts, AlertDefinition, getQuintile, getDeptValue } from "@/lib/alertConfig";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 
 interface DepartmentAlertsProps {
