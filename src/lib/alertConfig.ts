@@ -348,8 +348,8 @@ export const getAllDepartmentAlerts = (
   return ALERT_DEFINITIONS.filter(alert => {
     return alert.conditions.every(condition => {
       const value = getDeptValue(department, String(condition.column));
-      if (condition.direction === "low") return isInD1(value, allData, String(condition.column));
-      if (condition.direction === "high") return isInD10(value, allData, String(condition.column));
+      if (condition.direction === "low") return isInQ1(value, allData, String(condition.column));
+      if (condition.direction === "high") return isInQ4(value, allData, String(condition.column));
       return false;
     });
   });
