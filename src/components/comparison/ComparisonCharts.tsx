@@ -4,6 +4,7 @@ import {
   PolarGrid, PolarAngleAxis, PolarRadiusAxis 
 } from "recharts";
 import { DepartmentData, getAverage } from "@/lib/data";
+import { ChartInfoButton } from "@/components/charts/ChartInfoButton";
 
 interface ComparisonChartsProps {
   department1: DepartmentData;
