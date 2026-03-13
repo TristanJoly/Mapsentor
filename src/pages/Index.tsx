@@ -125,7 +125,7 @@ const Index = () => {
 
             {/* Map */}
             <div className="rounded-xl border border-border bg-card shadow-card overflow-hidden">
-              <div className="h-[56vh] md:h-[calc(100vh-640px)] min-h-[300px] md:min-h-[360px]">
+              <div className="h-[70vh] md:h-[calc(100vh-400px)] min-h-[400px] md:min-h-[500px]">
                 <FranceMap 
                   data={data}
                   selectedMetric={selectedMetric}
