@@ -64,7 +64,7 @@ const AlertCard = ({ alert, allData, department }: { alert: AlertDefinition; all
             <div className="pt-2 border-t border-border">
               <p className="text-[11px] font-medium text-primary mb-1">📖 Comment lire cette alerte ?</p>
               <p className="text-xs text-muted-foreground leading-relaxed mb-2">
-                L'alerte se déclenche quand toutes les conditions ci-dessous sont réunies. « Bas » = 1er quartile (25% les plus bas), « Haut » = dernier quartile (25% les plus hauts).
+                L'alerte se déclenche quand toutes les conditions ci-dessous sont réunies. « Bas » = 1er quintile (20% les plus bas), « Haut » = dernier quintile (20% les plus hauts).
               </p>
               <ul className="text-xs space-y-1 list-disc pl-3">
                 {alert.conditions.map((cond, j) => (
