@@ -292,7 +292,7 @@ export const FranceMap = ({ data, selectedMetric, selectedDepartment, onDepartme
 
       {/* Île-de-France inset map */}
       <div 
-        className="absolute bottom-14 right-4 w-[130px] h-[130px] md:w-[170px] md:h-[170px] rounded-xl bg-card border-2 border-primary/30 shadow-elevated overflow-hidden z-10"
+        className="absolute top-3 right-3 w-[130px] h-[130px] md:w-[170px] md:h-[170px] rounded-xl bg-card border-2 border-primary/30 shadow-elevated overflow-hidden z-10"
       >
         <p className="absolute top-1.5 left-0 right-0 text-center text-[10px] md:text-xs font-semibold text-foreground z-10 pointer-events-none drop-shadow-sm">Île-de-France</p>
         <ComposableMap
