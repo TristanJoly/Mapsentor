@@ -472,7 +472,7 @@ const FragiliteNumeriqueChart = ({ department }: { department: DepartmentData })
 
   return (
     <div className="p-4 rounded-xl bg-card border border-border shadow-card">
-      <h4 className="text-sm font-semibold text-foreground mb-2 flex items-center gap-1">Fragilité numérique<ChartInfoButton text="Score de 0 à 10 : plus le score est élevé, plus la population est vulnérable face au numérique (faible accès, peu d'usages)." /></h4>
+      <h4 className="text-sm font-semibold text-foreground mb-2 flex items-center gap-1">Fragilité numérique<ChartInfoButton title="Score de fragilité numérique" text="Score de 0 à 10 mesurant la vulnérabilité numérique de la population senior du département." howToRead="L'aiguille pointe vers la zone verte (0-3 : faible), jaune (3-7 : modéré) ou rouge (7-10 : élevé). Un score élevé signifie que beaucoup de seniors ont un accès limité à Internet et aux démarches en ligne." /></h4>
       <div className="flex justify-center">
         <svg viewBox="0 0 240 160" className="w-full max-w-[280px] md:max-w-[300px]">
           {/* Background track */}
