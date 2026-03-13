@@ -196,9 +196,10 @@ const RadarSanteChart = ({ department, allData }: { department: DepartmentData; 
         <RadarChart data={data}>
           <PolarGrid stroke="hsl(var(--border))" />
           <PolarAngleAxis dataKey="subject" tick={{ fontSize: 8 }} />
-          <PolarRadiusAxis tick={{ fontSize: 8 }} />
+          <PolarRadiusAxis tick={{ fontSize: 8 }} tickFormatter={(v) => `${v.toFixed(0)}%`} />
           <Radar name="France" dataKey="france" stroke={COLORS.muted} fill={COLORS.muted} fillOpacity={0.25} strokeWidth={2} />
           <Radar name={department.departement} dataKey="departement" stroke={COLORS.primary} fill={COLORS.secondary} fillOpacity={0.5} strokeWidth={2} />
+          <Tooltip formatter={(value: number) => `${value.toFixed(1)}%`} contentStyle={{ background: 'hsl(var(--card))', border: '1px solid hsl(var(--border))', borderRadius: '8px', fontSize: '12px' }} />
           <Legend wrapperStyle={{ fontSize: '11px', color: '#333' }} />
         </RadarChart>
       </ResponsiveContainer>

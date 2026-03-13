@@ -134,8 +134,8 @@ const Index = () => {
             </div>
 
             {/* Bandeau Mapsentor */}
-            <div className="w-full py-6 bg-card rounded-xl border-2 border-primary shadow-elevated text-center mb-16">
-              <span className="text-lg md:text-2xl font-bold text-foreground tracking-widest uppercase">Mapsentor</span>
+            <div className="w-full py-8 md:py-10 bg-card rounded-xl border-2 border-primary shadow-elevated text-center mt-8 mb-16">
+              <span className="text-xl md:text-3xl font-bold text-foreground tracking-widest uppercase">Mapsentor</span>
             </div>
           </TabsContent>
 

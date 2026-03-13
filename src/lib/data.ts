@@ -223,13 +223,37 @@ export const loadDepartmentData = async (): Promise<DepartmentData[]> => {
         // Social profile 75+
         proprietaires_75_plus: parseFloat(row['75_plus_proprietaires']) || 0,
         sans_voiture_75_plus: parseFloat(row['75_plus_sans_voiture']) || 0,
-        // Health
-        mal_chro_oui: parseFloat(row['MAL_CHRO_Oui']) || 0,
-        handicap_oui: parseFloat(row['HANDICAP_Oui']) || 0,
-        lfphysiques_oui: parseFloat(row['LFPHYSIQUES_Oui']) || 0,
-        vue_difficulte: parseFloat(row['VUE_1 - Beaucoup de difficultés ou ne peut pas du tout']) || 0,
-        auditif_difficulte: parseFloat(row['AUDITIF_1 - Beaucoup de difficultés ou ne peut pas du tout']) || 0,
-        etat_sante_mauvais: parseFloat(row['ETAT_SANT_4 - Mauvais ou très mauvais']) || 0,
+        // Health (converted to % of ensemble)
+        mal_chro_oui: (() => {
+          const ensemble = parseFloat(row['MAL_CHRO_Ensemble']) || 0;
+          const val = parseFloat(row['MAL_CHRO_Oui']) || 0;
+          return ensemble > 0 ? (val / ensemble) * 100 : 0;
+        })(),
+        handicap_oui: (() => {
+          const ensemble = parseFloat(row['HANDICAP_Ensemble']) || 0;
+          const val = parseFloat(row['HANDICAP_Oui']) || 0;
+          return ensemble > 0 ? (val / ensemble) * 100 : 0;
+        })(),
+        lfphysiques_oui: (() => {
+          const ensemble = parseFloat(row['LFPHYSIQUES_Ensemble']) || 0;
+          const val = parseFloat(row['LFPHYSIQUES_Oui']) || 0;
+          return ensemble > 0 ? (val / ensemble) * 100 : 0;
+        })(),
+        vue_difficulte: (() => {
+          const ensemble = parseFloat(row['VUE_Ensemble']) || 0;
+          const val = parseFloat(row['VUE_1 - Beaucoup de difficultés ou ne peut pas du tout']) || 0;
+          return ensemble > 0 ? (val / ensemble) * 100 : 0;
+        })(),
+        auditif_difficulte: (() => {
+          const ensemble = parseFloat(row['AUDITIF_Ensemble']) || 0;
+          const val = parseFloat(row['AUDITIF_1 - Beaucoup de difficultés ou ne peut pas du tout']) || 0;
+          return ensemble > 0 ? (val / ensemble) * 100 : 0;
+        })(),
+        etat_sante_mauvais: (() => {
+          const ensemble = parseFloat(row['ETAT_SANT_Ensemble']) || 0;
+          const val = parseFloat(row['ETAT_SANT_4 - Mauvais ou très mauvais']) || 0;
+          return ensemble > 0 ? (val / ensemble) * 100 : 0;
+        })(),
         // Services
         aide_menagere_personnes_agees: parseFloat(row['aide_menagere_personnes_agees']) || 0,
         apl_sapa: parseFloat(row['APL_SAPA']) || 0,
