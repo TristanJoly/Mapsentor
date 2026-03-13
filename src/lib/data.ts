@@ -280,9 +280,11 @@ export const loadDepartmentData = async (): Promise<DepartmentData[]> => {
         sans_voiture_75_plus: parseFloat(row['75_plus_sans_voiture']) || 0,
         // Health (converted to % of ensemble)
         mal_chro_oui: (() => {
-          const ensemble = parseFloat(row['MAL_CHRO_Ensemble']) || 0;
-          const val = parseFloat(row['MAL_CHRO_Oui']) || 0;
-          return ensemble > 0 ? (val / ensemble) * 100 : 0;
+          // Sum of all 65+ disease counts / total 65+ population
+          const totalMaladies = Object.keys(row)
+            .filter(k => k.startsWith('≥ 65 ans - ') && !k.includes('Total'))
+            .reduce((sum, k) => sum + (parseFloat(row[k]) || 0), 0);
+          return total65Plus > 0 ? (totalMaladies / total65Plus) * 100 : 0;
         })(),
         handicap_oui: (() => {
           const ensemble = parseFloat(row['HANDICAP_Ensemble']) || 0;
