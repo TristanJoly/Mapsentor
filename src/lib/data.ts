@@ -284,7 +284,7 @@ export const loadDepartmentData = async (): Promise<DepartmentData[]> => {
           const totalMaladies = Object.keys(row)
             .filter(k => k.startsWith('≥ 65 ans - ') && !k.includes('Total'))
             .reduce((sum, k) => sum + (parseFloat(row[k]) || 0), 0);
-          return total65Plus > 0 ? (totalMaladies / total65Plus) * 100 : 0;
+          return total65Plus > 0 ? totalMaladies / total65Plus : 0;
         })(),
         handicap_oui: (() => {
           const ensemble = parseFloat(row['HANDICAP_Ensemble']) || 0;
