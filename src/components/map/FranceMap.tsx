@@ -235,7 +235,7 @@ export const FranceMap = ({ data, selectedMetric, selectedDepartment, onDepartme
       {/* Zoom Controls */}
       <div className="absolute bottom-4 left-4 flex flex-col gap-2">
         <button
-          onClick={() => setPosition(prev => ({ ...prev, zoom: Math.min(prev.zoom * 1.5, 8) }))}
+          onClick={() => setPosition(prev => ({ ...prev, zoom: Math.min(prev.zoom * 1.5, 16) }))}
           className="w-8 h-8 rounded-lg bg-card border border-border shadow-soft flex items-center justify-center text-foreground hover:bg-muted transition-colors"
         >
           +
