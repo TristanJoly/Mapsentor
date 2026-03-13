@@ -652,7 +652,7 @@ const AspaEvolutionChart = ({ department }: { department: DepartmentData }) => {
   const data = annees.map(annee => ({ annee, value: department[`aspa_effectif_${annee}` as keyof DepartmentData] as number || 0 }));
   return (
     <div className="p-4 rounded-xl bg-card border border-border shadow-card">
-      <h4 className="text-sm font-semibold text-foreground mb-4 flex items-center gap-1">Évolution bénéficiaires ASPA<ChartInfoButton text="Nombre de bénéficiaires de l'Allocation de Solidarité aux Personnes Âgées au fil des années. Une hausse peut indiquer une précarisation croissante." /></h4>
+      <h4 className="text-sm font-semibold text-foreground mb-4 flex items-center gap-1">Évolution bénéficiaires ASPA<ChartInfoButton title="Évolution ASPA" text="Nombre de bénéficiaires de l'Allocation de Solidarité aux Personnes Âgées (minimum vieillesse) de 2013 à 2024." howToRead="Une courbe qui monte indique une précarisation croissante des retraités. Si la hausse est plus forte que la moyenne nationale, le département se paupérise plus vite que le reste du pays." /></h4>
       <ResponsiveContainer width="100%" height={250}>
         <LineChart data={data}>
           <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
