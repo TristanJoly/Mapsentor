@@ -39,8 +39,8 @@ const ComparisonBadge = ({ value, avg, unit = "pts", invert = false }: { value: 
   if (Math.abs(diff) <= 1) {
     return (
       <div className="flex items-center gap-1 mt-1.5">
-        <Minus className="w-3.5 h-3.5 text-orange-500" />
-        <span className="text-xs text-orange-500">≈ moy. nationale</span>
+        <Minus className="w-3.5 h-3.5 text-muted-foreground" />
+        <span className="text-xs text-muted-foreground">≈ moy. nationale</span>
       </div>
     );
   }
