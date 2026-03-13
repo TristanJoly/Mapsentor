@@ -176,8 +176,8 @@ export const FranceMap = ({ data, selectedMetric, selectedDepartment, onDepartme
         <ComposableMap
           projection="geoMercator"
           projectionConfig={{
-            center: [2.5, 46.5],
-            scale: 2200,
+            center: [2.5, 46.8],
+            scale: 1800,
           }}
           style={{ width: "100%", height: "100%" }}
         >
@@ -292,7 +292,7 @@ export const FranceMap = ({ data, selectedMetric, selectedDepartment, onDepartme
 
       {/* Île-de-France inset map */}
       <div 
-        className="absolute top-3 right-3 w-[160px] h-[160px] md:w-[220px] md:h-[220px] rounded-xl bg-card border-2 border-primary/30 shadow-elevated overflow-hidden z-10"
+        className="absolute bottom-14 right-4 w-[130px] h-[130px] md:w-[170px] md:h-[170px] rounded-xl bg-card border-2 border-primary/30 shadow-elevated overflow-hidden z-10"
       >
         <p className="absolute top-1.5 left-0 right-0 text-center text-[10px] md:text-xs font-semibold text-foreground z-10 pointer-events-none drop-shadow-sm">Île-de-France</p>
         <ComposableMap
