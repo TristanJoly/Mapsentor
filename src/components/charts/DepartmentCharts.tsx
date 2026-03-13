@@ -380,7 +380,7 @@ const OffreVsBesoinChart = ({ department, allData }: { department: DepartmentDat
 
   return (
     <div className="p-4 rounded-xl bg-card border border-border shadow-card">
-      <h4 className="text-sm font-semibold text-foreground mb-4 flex items-center gap-1">Offre vs Besoin – Synthèse<ChartInfoButton title="Synthèse offre/besoin" text="Vue d'ensemble de l'adéquation entre l'offre médico-sociale et les besoins du département : taux de couverture EHPAD, distances d'accès aux services." howToRead="Comparez le taux de couverture du département à la région et la France. Le tableau ci-dessous détaille les indicateurs clés pour évaluer si le territoire est bien doté." source="DREES – Panorama statistique 2024 + INSEE RP 2020" /></h4>
+      <h4 className="text-sm font-semibold text-foreground mb-4 flex items-center gap-1"><h4 className="text-sm font-semibold text-foreground mb-4 flex items-center gap-1">Déficit de l'offre en lits d'EHPAD pour les 65 ans et plus (en %)<ChartInfoButton title="Synthèse offre/besoin" text="Vue d'ensemble de l'adéquation entre l'offre médico-sociale et les besoins du département : taux de couverture EHPAD, distances d'accès aux services." howToRead="Comparez le taux de couverture du département à la région et la France. Le tableau ci-dessous détaille les indicateurs clés pour évaluer si le territoire est bien doté." source="DREES – Panorama statistique 2024 + INSEE RP 2020" /></h4>
       <ResponsiveContainer width="100%" height={200}>
         <BarChart data={data}>
           <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
