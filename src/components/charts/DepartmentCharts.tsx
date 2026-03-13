@@ -957,17 +957,51 @@ const QualiteAirAtmoChart = ({ department, allData }: { department: DepartmentDa
   );
 };
 
-// ============ GRAPHIQUE QUALITÉ DE L'EAU ============
+// ============ GRAPHIQUES QUALITÉ DE L'EAU ============
 
-const QualiteEauChart = ({ department, allData }: { department: DepartmentData; allData: DepartmentData[] }) => {
+const EauPotableChart = ({ department, allData }: { department: DepartmentData; allData: DepartmentData[] }) => {
   const regionData = allData.filter(d => d.region === department.region);
   const avg = (arr: DepartmentData[], field: keyof DepartmentData) => arr.reduce((s, d) => s + (d[field] as number), 0) / arr.length;
 
   const dataConformite = [
-    { name: "Bactériologique", departement: department.eau_conformite_bacterio, region: avg(regionData, 'eau_conformite_bacterio').toFixed(1), france: avg(allData, 'eau_conformite_bacterio').toFixed(1) },
-    { name: "Physico-chimique", departement: department.eau_conformite_physicochim, region: avg(regionData, 'eau_conformite_physicochim').toFixed(1), france: avg(allData, 'eau_conformite_physicochim').toFixed(1) },
-    { name: "État chimique bon", departement: department.eau_etat_chimique_bon, region: avg(regionData, 'eau_etat_chimique_bon').toFixed(1), france: avg(allData, 'eau_etat_chimique_bon').toFixed(1) },
+    { name: "Bactériologique", departement: department.eau_conformite_bacterio, region: parseFloat(avg(regionData, 'eau_conformite_bacterio').toFixed(1)), france: parseFloat(avg(allData, 'eau_conformite_bacterio').toFixed(1)) },
+    { name: "Physico-chimique", departement: department.eau_conformite_physicochim, region: parseFloat(avg(regionData, 'eau_conformite_physicochim').toFixed(1)), france: parseFloat(avg(allData, 'eau_conformite_physicochim').toFixed(1)) },
+    { name: "État chimique bon", departement: department.eau_etat_chimique_bon, region: parseFloat(avg(regionData, 'eau_etat_chimique_bon').toFixed(1)), france: parseFloat(avg(allData, 'eau_etat_chimique_bon').toFixed(1)) },
   ];
+
+  return (
+    <div className="p-4 rounded-xl bg-card border border-border shadow-card">
+      <h4 className="text-sm font-semibold text-foreground mb-4 flex items-center gap-1">
+        Eau potable – Conformité
+        <ChartInfoButton 
+          title="Conformité de l'eau potable" 
+          text="Taux de conformité bactériologique et physico-chimique de l'eau du robinet, et part des masses d'eau en bon état chimique." 
+          howToRead="Des taux proches de 100% indiquent une eau potable de bonne qualité. Un taux plus bas peut signaler des risques sanitaires pour les populations fragiles." 
+          source="ARS / SISE-Eaux, 2023" 
+        />
+      </h4>
+      <ResponsiveContainer width="100%" height={220}>
+        <BarChart data={dataConformite} layout="vertical">
+          <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
+          <XAxis type="number" domain={[40, 100]} tick={{ fontSize: 10 }} />
+          <YAxis dataKey="name" type="category" tick={{ fontSize: 10 }} width={90} />
+          <Tooltip formatter={(value: number) => `${value}%`} contentStyle={{ background: 'hsl(var(--card))', border: '1px solid hsl(var(--border))', borderRadius: '8px', fontSize: '12px' }} />
+          <Bar dataKey="departement" fill="#4CAF50" name="Département" />
+          <Bar dataKey="region" fill={COLORS.secondary} name="Région" />
+          <Bar dataKey="france" fill={COLORS.muted} name="France" />
+          <Legend wrapperStyle={{ fontSize: '11px' }} />
+        </BarChart>
+      </ResponsiveContainer>
+      <p className="text-[10px] text-muted-foreground text-center mt-1">
+        Pesticides : <strong>{department.eau_pesticides_depassement}%</strong> de dépassement (Région : {avg(regionData, 'eau_pesticides_depassement').toFixed(1)}% · France : {avg(allData, 'eau_pesticides_depassement').toFixed(1)}%)
+      </p>
+    </div>
+  );
+};
+
+const EauCoursEauChart = ({ department, allData }: { department: DepartmentData; allData: DepartmentData[] }) => {
+  const regionData = allData.filter(d => d.region === department.region);
+  const avg = (arr: DepartmentData[], field: keyof DepartmentData) => arr.reduce((s, d) => s + (d[field] as number), 0) / arr.length;
 
   const dataEcoEtat = [
     { name: "Bon", value: department.eau_etat_eco_bon, fill: "#4CAF50" },
@@ -978,48 +1012,31 @@ const QualiteEauChart = ({ department, allData }: { department: DepartmentData; 
   return (
     <div className="p-4 rounded-xl bg-card border border-border shadow-card">
       <h4 className="text-sm font-semibold text-foreground mb-4 flex items-center gap-1">
-        Qualité de l'eau
+        Cours d'eau – État écologique
         <ChartInfoButton 
-          title="Qualité de l'eau – Synthèse" 
-          text="Conformité de l'eau potable (bactériologique et physico-chimique), état écologique des cours d'eau, et taux de dépassement des normes pesticides dans les captages." 
-          howToRead="Des taux de conformité élevés (proches de 100%) indiquent une eau potable de bonne qualité. Un taux de pesticides élevé signale un risque pour la santé, notamment pour les seniors." 
-          source="ARS / SISE-Eaux (eau potable), Naïades / Agences de l'eau (cours d'eau), BNVD (pesticides), 2023" 
+          title="État écologique des cours d'eau" 
+          text="Répartition des masses d'eau de surface selon leur état écologique (bon, moyen, médiocre). Un bon état écologique garantit un environnement sain." 
+          howToRead="Plus la part 'Bon' (vert) est grande, meilleure est la qualité des cours d'eau du département. Une forte part médiocre (rouge) indique une dégradation de l'environnement aquatique." 
+          source="Naïades / Agences de l'eau, 2023" 
         />
       </h4>
-      <div className="grid grid-cols-2 gap-2">
-        <div>
-          <p className="text-[10px] text-muted-foreground text-center mb-1 font-medium">Conformité eau potable (%)</p>
-          <ResponsiveContainer width="100%" height={160}>
-            <BarChart data={dataConformite} layout="vertical">
-              <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
-              <XAxis type="number" domain={[80, 100]} tick={{ fontSize: 9 }} />
-              <YAxis dataKey="name" type="category" tick={{ fontSize: 9 }} width={75} />
-              <Tooltip formatter={(value: number) => `${value}%`} contentStyle={{ background: 'hsl(var(--card))', border: '1px solid hsl(var(--border))', borderRadius: '8px', fontSize: '11px' }} />
-              <Bar dataKey="departement" fill="#4CAF50" name="Département" />
-            </BarChart>
-          </ResponsiveContainer>
-        </div>
-        <div>
-          <p className="text-[10px] text-muted-foreground text-center mb-1 font-medium">État écologique cours d'eau (%)</p>
-          <ResponsiveContainer width="100%" height={160}>
-            <PieChart>
-              <Pie data={dataEcoEtat} cx="50%" cy="50%" innerRadius={30} outerRadius={55} dataKey="value" label={({ name, value }) => `${name}: ${value}%`} labelLine={false}>
-                {dataEcoEtat.map((entry, index) => (
-                  <Cell key={`cell-${index}`} fill={entry.fill} />
-                ))}
-              </Pie>
-              <Tooltip formatter={(value: number) => `${value}%`} contentStyle={{ background: 'hsl(var(--card))', border: '1px solid hsl(var(--border))', borderRadius: '8px', fontSize: '11px' }} />
-            </PieChart>
-          </ResponsiveContainer>
-        </div>
-      </div>
+      <ResponsiveContainer width="100%" height={220}>
+        <PieChart>
+          <Pie data={dataEcoEtat} cx="50%" cy="50%" innerRadius={45} outerRadius={80} dataKey="value" label={({ name, value }) => `${name}: ${value}%`} labelLine={false}>
+            {dataEcoEtat.map((entry, index) => (
+              <Cell key={`cell-${index}`} fill={entry.fill} />
+            ))}
+          </Pie>
+          <Tooltip formatter={(value: number) => `${value}%`} contentStyle={{ background: 'hsl(var(--card))', border: '1px solid hsl(var(--border))', borderRadius: '8px', fontSize: '12px' }} />
+          <Legend wrapperStyle={{ fontSize: '11px' }} />
+        </PieChart>
+      </ResponsiveContainer>
       <p className="text-[10px] text-muted-foreground text-center mt-1">
-        Pesticides : <strong>{department.eau_pesticides_depassement}%</strong> de dépassement (Région : {avg(regionData, 'eau_pesticides_depassement').toFixed(1)}% · France : {avg(allData, 'eau_pesticides_depassement').toFixed(1)}%)
+        Bon état régional : {avg(regionData, 'eau_etat_eco_bon').toFixed(0)}% · France : {avg(allData, 'eau_etat_eco_bon').toFixed(0)}%
       </p>
     </div>
   );
 };
-
 // Main component
 // Chart registry
 type ChartDef = {
