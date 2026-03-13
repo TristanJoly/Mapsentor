@@ -303,6 +303,7 @@ export const ALERT_DEFINITIONS: AlertDefinition[] = [
       { column: "sans_voiture_75_plus", direction: "high", label: "Sans voiture (75+)" },
     ],
     explanation: "L'APL est basse (médecins loin) et les gens n'ont pas de voiture. Si pas de transports en commun ou d'ambulances, l'accès au soin est physiquement impossible.",
+    source: "APL médecins : DREES – Panorama statistique 2024 · Sans voiture : INSEE RP 2020",
     levers: [
       {
         title: "Transport à la Demande (TAD) zonal",
