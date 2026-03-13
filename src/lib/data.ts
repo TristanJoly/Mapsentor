@@ -119,6 +119,13 @@ export interface DepartmentData {
   irep_emission_sol_tonnes: number;
   irep_nb_polluants_air: number;
   irep_nb_polluants_eau: number;
+  // Qualité de l'air ATMO
+  atmo_indice_moyen: number;
+  atmo_jours_bon: number;
+  atmo_jours_moyen: number;
+  atmo_jours_degrade: number;
+  atmo_jours_mauvais: number;
+  atmo_jours_tres_mauvais: number;
   [key: string]: string | number | { [key: string]: number };
 }
 
@@ -134,12 +141,14 @@ export const loadDepartmentData = async (): Promise<DepartmentData[]> => {
   if (cachedData) return cachedData;
 
   try {
-    const [response, pollutionResponse] = await Promise.all([
+    const [response, pollutionResponse, atmoResponse] = await Promise.all([
       fetch('/data/departements.csv'),
       fetch('/data/pollution_departements.csv'),
+      fetch('/data/atmo_departements.csv'),
     ]);
     const csvText = await response.text();
     const pollutionText = await pollutionResponse.text();
+    const atmoText = await atmoResponse.text();
     
     // Parse pollution data
     const pollutionResult = Papa.parse(pollutionText, { header: true, skipEmptyLines: true, delimiter: ';' });
@@ -147,6 +156,14 @@ export const loadDepartmentData = async (): Promise<DepartmentData[]> => {
     pollutionResult.data.forEach((row: any) => {
       const code = String(row.code_departement || '').trim();
       if (code) pollutionMap[code] = row;
+    });
+
+    // Parse ATMO data
+    const atmoResult = Papa.parse(atmoText, { header: true, skipEmptyLines: true, delimiter: ';' });
+    const atmoMap: Record<string, any> = {};
+    atmoResult.data.forEach((row: any) => {
+      const code = String(row.code_departement || '').trim();
+      if (code) atmoMap[code] = row;
     });
     
     const result = Papa.parse(csvText, {
@@ -351,6 +368,19 @@ export const loadDepartmentData = async (): Promise<DepartmentData[]> => {
             irep_emission_sol_tonnes: parseFloat(p.emission_sol_tonnes) || 0,
             irep_nb_polluants_air: parseFloat(p.nb_polluants_air) || 0,
             irep_nb_polluants_eau: parseFloat(p.nb_polluants_eau) || 0,
+          };
+        })(),
+        // Qualité de l'air ATMO
+        ...(() => {
+          const code = String(row['code_departement'] || row['Code département'] || '').trim();
+          const a = atmoMap[code] || {};
+          return {
+            atmo_indice_moyen: parseFloat(a.indice_atmo_moyen) || 0,
+            atmo_jours_bon: parseFloat(a.jours_bon) || 0,
+            atmo_jours_moyen: parseFloat(a.jours_moyen) || 0,
+            atmo_jours_degrade: parseFloat(a.jours_degrade) || 0,
+            atmo_jours_mauvais: parseFloat(a.jours_mauvais) || 0,
+            atmo_jours_tres_mauvais: parseFloat(a.jours_tres_mauvais) || 0,
           };
         })(),
       };
