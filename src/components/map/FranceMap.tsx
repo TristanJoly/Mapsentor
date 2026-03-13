@@ -269,14 +269,14 @@ export const FranceMap = ({ data, selectedMetric, selectedDepartment, onDepartme
 
       {/* Île-de-France inset map */}
       <div 
-        className="absolute top-3 left-3 w-[140px] h-[140px] md:w-[180px] md:h-[180px] rounded-xl bg-card border-2 border-border shadow-elevated overflow-hidden z-10"
+        className="absolute top-3 right-3 w-[160px] h-[160px] md:w-[220px] md:h-[220px] rounded-xl bg-card border-2 border-primary/30 shadow-elevated overflow-hidden z-10"
       >
-        <p className="absolute top-1 left-0 right-0 text-center text-[9px] md:text-[10px] font-semibold text-foreground z-10 pointer-events-none">Île-de-France</p>
+        <p className="absolute top-1.5 left-0 right-0 text-center text-[10px] md:text-xs font-semibold text-foreground z-10 pointer-events-none drop-shadow-sm">Île-de-France</p>
         <ComposableMap
           projection="geoMercator"
           projectionConfig={{
-            center: [2.5, 48.75],
-            scale: 28000,
+            center: [2.42, 48.78],
+            scale: 32000,
           }}
           style={{ width: "100%", height: "100%" }}
         >
@@ -290,20 +290,34 @@ export const FranceMap = ({ data, selectedMetric, selectedDepartment, onDepartme
                 .map((geo) => {
                   const code = geo.properties.code?.padStart(2, '0');
                   const isSelected = code === selectedDepartment;
+                  const deptData = getDataForCode(code);
+                  const alertCount = departmentAlerts[code] || 0;
                   return (
-                    <Geography
-                      key={geo.rsmKey}
-                      geography={geo}
-                      fill={getFillColor(code)}
-                      stroke={isSelected ? "#C41E3A" : "#94a3b8"}
-                      strokeWidth={isSelected ? 2 : 0.8}
-                      style={{
-                        default: { outline: "none", transition: "all 0.2s" },
-                        hover: { fill: "#FF8C42", stroke: "#C41E3A", strokeWidth: 1.5, outline: "none", cursor: "pointer" },
-                        pressed: { fill: "#C41E3A", outline: "none" },
-                      }}
-                      onClick={() => onDepartmentClick(code)}
-                    />
+                    <Tooltip key={geo.rsmKey}>
+                      <TooltipTrigger asChild>
+                        <Geography
+                          geography={geo}
+                          fill={getFillColor(code)}
+                          stroke={isSelected ? "#C41E3A" : "#64748b"}
+                          strokeWidth={isSelected ? 2.5 : 1}
+                          style={{
+                            default: { outline: "none", transition: "all 0.2s" },
+                            hover: { fill: "#FF8C42", stroke: "#C41E3A", strokeWidth: 2, outline: "none", cursor: "pointer" },
+                            pressed: { fill: "#C41E3A", outline: "none" },
+                          }}
+                          onClick={() => onDepartmentClick(code)}
+                        />
+                      </TooltipTrigger>
+                      <TooltipContent className="bg-card border border-border shadow-elevated z-50">
+                        <p className="font-medium text-xs">{deptData?.departement || geo.properties.nom}</p>
+                        {alertCount > 0 && (
+                          <p className="text-xs flex items-center gap-1 mt-0.5" style={{ color: getWarningColor(alertCount) }}>
+                            <AlertTriangle className="w-3 h-3" />
+                            {alertCount} alerte{alertCount > 1 ? 's' : ''}
+                          </p>
+                        )}
+                      </TooltipContent>
+                    </Tooltip>
                   );
                 })
             }
@@ -314,21 +328,24 @@ export const FranceMap = ({ data, selectedMetric, selectedDepartment, onDepartme
             if (alertCount === 0) return null;
             const coords = DEPARTMENT_CENTERS[dept.code];
             if (!coords) return null;
+            const color = getWarningColor(alertCount);
             return (
               <Marker key={`idf-marker-${dept.code}`} coordinates={coords}>
-                <circle 
-                  r={4} 
-                  fill={getWarningColor(alertCount)} 
-                  stroke="#fff" 
-                  strokeWidth={1.5} 
-                  style={{ cursor: 'pointer' }}
-                  onClick={() => onDepartmentClick(dept.code)}
-                />
-                {alertCount > 1 && (
-                  <text textAnchor="middle" y={3.5} style={{ fontFamily: "system-ui", fill: "#fff", fontSize: 6, fontWeight: "bold" }}>
-                    {alertCount}
-                  </text>
-                )}
+                <g style={{ cursor: 'pointer' }} onClick={() => onDepartmentClick(dept.code)}>
+                  {/* Pin shape */}
+                  <g transform="translate(-6, -16)">
+                    <path
+                      d="M6 0C2.69 0 0 2.69 0 6c0 4.5 6 10 6 10s6-5.5 6-10c0-3.31-2.69-6-6-6z"
+                      fill={color}
+                      stroke="#fff"
+                      strokeWidth="1.2"
+                    />
+                    <circle cx="6" cy="5.5" r="3" fill="#fff" opacity="0.9" />
+                    <text textAnchor="middle" x="6" y="7.5" style={{ fontFamily: "system-ui", fill: color, fontSize: 5, fontWeight: "bold" }}>
+                      {alertCount}
+                    </text>
+                  </g>
+                </g>
               </Marker>
             );
           })}
