@@ -182,6 +182,9 @@ export const loadDepartmentData = async (): Promise<DepartmentData[]> => {
       const maladies_hommes = normalizeMaladies(extractMaladiesRaw('Hommes - ', totalHommes));
 
       return {
+        total_65_plus: total65Plus,
+        total_femmes_65_plus: totalFemmes,
+        total_hommes_65_plus: totalHommes,
         code_departement: String(row['code_departement'] || row['Code département'] || '').trim(),
         departement: row['departement'] || row['Département'] || '',
         population: parseFloat(row['Population']) || 0,
