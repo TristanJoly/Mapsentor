@@ -88,8 +88,14 @@ const RadarSanteComparison = ({ dept1, dept2, allData }: { dept1: DepartmentData
 
   return (
     <div className="p-4 rounded-xl bg-card border border-border shadow-card">
-      <h4 className="text-sm font-semibold text-foreground mb-4">
+      <h4 className="text-sm font-semibold text-foreground mb-4 flex items-center gap-1">
         Radar santé
+        <ChartInfoButton
+          title="Radar santé comparatif"
+          text="Compare les indicateurs de santé (vue, audition, maladies chroniques, limitations physiques, handicap, mauvais état de santé) entre deux départements et la moyenne France."
+          howToRead="Plus le tracé est étendu, plus la situation est préoccupante. Le tracé beige (France) sert de référence. Si un département dépasse nettement la moyenne nationale sur un axe, c'est un point d'alerte."
+          source="Enquête Vie Quotidienne et Santé (VQS) 2021 – DREES, données départementales"
+        />
       </h4>
       <ResponsiveContainer width="100%" height={280}>
         <RadarChart data={data}>
