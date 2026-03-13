@@ -1005,7 +1005,7 @@ const EauCoursEauChart = ({ department, allData }: { department: DepartmentData;
 
   const dataEcoEtat = [
     { name: "Bon", value: department.eau_etat_eco_bon, fill: "#4CAF50" },
-    { name: "Moyen", value: department.eau_etat_eco_moyen, fill: "#FFE8B0" },
+    { name: "Moyen", value: department.eau_etat_eco_moyen, fill: "#DBEAFE" },
     { name: "Médiocre", value: department.eau_etat_eco_mediocre, fill: COLORS.primary },
   ];
 
