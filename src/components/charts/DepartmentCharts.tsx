@@ -913,7 +913,7 @@ const QualiteAirAtmoChart = ({ department, allData }: { department: DepartmentDa
 
   const dataJours = [
     { name: "Bon", departement: department.atmo_jours_bon, fill: "#4CAF50" },
-    { name: "Moyen", departement: department.atmo_jours_moyen, fill: "#FFE8B0" },
+    { name: "Moyen", departement: department.atmo_jours_moyen, fill: "#DBEAFE" },
     { name: "Dégradé", departement: department.atmo_jours_degrade, fill: COLORS.secondary },
     { name: "Mauvais", departement: department.atmo_jours_mauvais, fill: COLORS.primary },
     { name: "Très mauvais", departement: department.atmo_jours_tres_mauvais, fill: "#8B0000" },
