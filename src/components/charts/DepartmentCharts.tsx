@@ -714,17 +714,17 @@ const AplSapaChart = ({ department, allData }: { department: DepartmentData; all
 const AplEhpaChart = ({ department, allData }: { department: DepartmentData; allData: DepartmentData[] }) => {
   const regionData = allData.filter(d => d.region === department.region);
   const data = [
-    { name: "APL EHPA", departement: department.apl_ehpa, region: getAverage(regionData, 'apl_ehpa'), france: getAverage(allData, 'apl_ehpa') },
+    { name: "APL EHPA", departement: department.apl_ehpa, region: parseFloat(getAverage(regionData, 'apl_ehpa').toFixed(1)), france: parseFloat(getAverage(allData, 'apl_ehpa').toFixed(1)) },
   ];
   return (
     <div className="p-4 rounded-xl bg-card border border-border shadow-card">
-      <h4 className="text-sm font-semibold text-foreground mb-4 flex items-center gap-1">APL Établissements (EHPA)<ChartInfoButton title="APL EHPA" text="Accessibilité Potentielle Localisée aux Établissements d'Hébergement pour Personnes Âgées. Mesure la capacité d'accueil par habitant." howToRead="Même lecture que l'APL SAPA : comparez le département à la région et la France. Un écart important signale un déficit de places en établissement sur le territoire." source="DREES – Panorama statistique 2024, APL aux EHPA" /></h4>
+      <h4 className="text-sm font-semibold text-foreground mb-4 flex items-center gap-1">APL Établissements (EHPA)<ChartInfoButton title="APL EHPA" text="Accessibilité Potentielle Localisée aux Établissements d'Hébergement pour Personnes Âgées. Mesure la distance moyenne (en minutes) pour accéder à un EHPA." howToRead="Même lecture que l'APL SAPA : plus c'est bas, plus l'accès est facile. Un temps nettement supérieur à la moyenne signale un déficit de places en établissement sur le territoire." source="DREES – Panorama statistique 2024, APL aux EHPA" /></h4>
       <ResponsiveContainer width="100%" height={200}>
         <BarChart data={data}>
           <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
           <XAxis dataKey="name" tick={{ fontSize: 10 }} />
-          <YAxis tick={{ fontSize: 10 }} tickFormatter={formatAxisK} />
-          <Tooltip formatter={(value: number) => value.toLocaleString('fr-FR')} contentStyle={{ background: 'hsl(var(--card))', border: '1px solid hsl(var(--border))', borderRadius: '8px', fontSize: '12px' }} />
+          <YAxis tick={{ fontSize: 10 }} unit=" min" />
+          <Tooltip formatter={(value: number) => `${value.toFixed(1)} min`} contentStyle={{ background: 'hsl(var(--card))', border: '1px solid hsl(var(--border))', borderRadius: '8px', fontSize: '12px' }} />
           <Bar dataKey="departement" fill={COLORS.primary} name="Département" />
           <Bar dataKey="region" fill={COLORS.secondary} name="Région" />
           <Bar dataKey="france" fill={COLORS.tertiary} name="France" />
