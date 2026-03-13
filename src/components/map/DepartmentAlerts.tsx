@@ -131,7 +131,7 @@ export const DepartmentAlerts = ({ department, allData }: DepartmentAlertsProps)
       <h3 className="text-sm font-semibold text-foreground flex items-center gap-2">
         <AlertTriangle className="w-4 h-4" />
         {alertCount} alerte{alertCount !== 1 ? 's' : ''} détectée{alertCount !== 1 ? 's' : ''}
-        <span className="text-[10px] font-normal text-muted-foreground">(seuil : déciles D1/D10)</span>
+        <span className="text-[10px] font-normal text-muted-foreground">(seuil : quartiles Q1/Q4)</span>
       </h3>
       
       {alerts.length === 0 ? (
