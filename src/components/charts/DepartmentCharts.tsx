@@ -333,7 +333,7 @@ const LiviaProjectionsChart = ({ department }: { department: DepartmentData }) =
   }));
   return (
     <div className="p-4 rounded-xl bg-card border border-border shadow-card">
-      <h4 className="text-sm font-semibold text-foreground mb-4 flex items-center gap-1">Prévisions LIVIA (perte d'autonomie)<ChartInfoButton title="Projections LIVIA" text="Nombre projeté de personnes en perte d'autonomie de 2025 à 2050 (scénario 1), ventilé par genre." howToRead="Si les courbes montent fortement, le département devra anticiper un besoin croissant en infrastructure et personnel. L'écart entre femmes et hommes reflète les différences d'espérance de vie." source="Modèle LIVIA (DREES) – Projections de perte d'autonomie, scénario 2 (lieux de vie)" /></h4>
+      <h4 className="text-sm font-semibold text-foreground mb-4 flex items-center gap-1"><h4 className="text-sm font-semibold text-foreground mb-4 flex items-center gap-1">Prévisions LIVIA (prédictions sur le nombre de seniors en perte d'autonomie)<ChartInfoButton title="Projections LIVIA" text="Nombre projeté de personnes en perte d'autonomie de 2025 à 2050 (scénario 1), ventilé par genre." howToRead="Si les courbes montent fortement, le département devra anticiper un besoin croissant en infrastructure et personnel. L'écart entre femmes et hommes reflète les différences d'espérance de vie." source="Modèle LIVIA (DREES) – Projections de perte d'autonomie, scénario 2 (lieux de vie)" /></h4>
       <ResponsiveContainer width="100%" height={250}>
         <LineChart data={data}>
           <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
