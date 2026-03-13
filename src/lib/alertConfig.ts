@@ -180,6 +180,7 @@ export const ALERT_DEFINITIONS: AlertDefinition[] = [
       { column: "proprietaires_75_plus", direction: "low", label: "Part de propriétaires" },
     ],
     explanation: "Si pauvre + loyer : le reste à vivre pour manger ou se soigner est minime/insuffisant. Ces seniors cumulent faibles revenus et charges locatives.",
+    source: "ASPA : Caisse des Dépôts / DREES 2024 · Propriétaires : INSEE RP 2020",
     levers: [
       {
         title: "Renforcement ciblé du FSL (Fonds de Solidarité Logement)",
