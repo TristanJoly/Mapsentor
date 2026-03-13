@@ -62,7 +62,7 @@ const Index = () => {
         />
       </div>
       
-      <main className="flex-1 p-4 md:p-6 lg:p-8 overflow-auto w-full">
+      <main className="flex-1 p-3 md:p-6 lg:p-8 overflow-auto w-full">
         {/* Header */}
         <div className="mb-4 md:mb-6 flex items-start gap-3">
           <Button
@@ -82,19 +82,19 @@ const Index = () => {
 
         {/* Tabs */}
 
-        <Tabs defaultValue="map" className="space-y-6">
-          <TabsList className="bg-muted/50 w-full md:w-auto h-12">
-            <TabsTrigger value="map" className="gap-2 text-sm md:text-base flex-1 md:flex-none px-4 py-2.5">
-              <Map className="w-5 h-5" />
-              Carte
+        <Tabs defaultValue="map" className="space-y-4 md:space-y-6">
+          <TabsList className="bg-muted/50 w-full h-11 md:h-12">
+            <TabsTrigger value="map" className="gap-1.5 md:gap-2 text-xs md:text-base flex-1 px-2 md:px-4 py-2 md:py-2.5">
+              <Map className="w-4 h-4 md:w-5 md:h-5" />
+              <span className="hidden sm:inline">Carte</span>
             </TabsTrigger>
-            <TabsTrigger value="charts" className="gap-2 text-sm md:text-base flex-1 md:flex-none px-4 py-2.5">
-              <BarChart3 className="w-5 h-5" />
-              Graphiques
+            <TabsTrigger value="charts" className="gap-1.5 md:gap-2 text-xs md:text-base flex-1 px-2 md:px-4 py-2 md:py-2.5">
+              <BarChart3 className="w-4 h-4 md:w-5 md:h-5" />
+              <span className="hidden sm:inline">Graphiques</span>
             </TabsTrigger>
-            <TabsTrigger value="compare" className="gap-2 text-sm md:text-base flex-1 md:flex-none px-4 py-2.5">
-              <GitCompare className="w-5 h-5" />
-              Comparaison
+            <TabsTrigger value="compare" className="gap-1.5 md:gap-2 text-xs md:text-base flex-1 px-2 md:px-4 py-2 md:py-2.5">
+              <GitCompare className="w-4 h-4 md:w-5 md:h-5" />
+              <span className="hidden sm:inline">Comparaison</span>
             </TabsTrigger>
           </TabsList>
 
