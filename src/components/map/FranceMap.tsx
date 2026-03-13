@@ -120,7 +120,7 @@ export const FranceMap = ({ data, selectedMetric, selectedDepartment, onDepartme
   const colorScale = useMemo(() => {
     const values = data.map(d => d[selectedMetric] as number).filter(v => !isNaN(v) && v > 0).sort((a, b) => a - b);
     if (values.length === 0) {
-      return scaleLinear<string>().domain([0, 100]).range(["#FFF8DC", "#C41E3A"]);
+      return scaleLinear<string>().domain([0, 100]).range(["#EFF6FF", "#1E40AF"]);
     }
     const [min, max] = [values[0], values[values.length - 1]];
 
@@ -134,7 +134,7 @@ export const FranceMap = ({ data, selectedMetric, selectedDepartment, onDepartme
         if (acc.length === 0 || v > acc[acc.length - 1]) acc.push(v);
         return acc;
       }, []);
-      const colors = ["#FFF8DC", "#FFE4A0", "#FFD580", "#FF8C42", "#D4451A", "#C41E3A"];
+      const colors = ["#EFF6FF", "#DBEAFE", "#93C5FD", "#3B82F6", "#2563EB", "#1E40AF"];
       const selectedColors = domain.length <= 2 
         ? [colors[0], colors[colors.length - 1]]
         : domain.map((_, i) => colors[Math.round(i * (colors.length - 1) / (domain.length - 1))]);
@@ -144,7 +144,7 @@ export const FranceMap = ({ data, selectedMetric, selectedDepartment, onDepartme
     // Linear scale for social and economic
     return scaleLinear<string>()
       .domain([min, (min + max) / 3, (min + max) * 2/3, max])
-      .range(["#FFF8DC", "#FFD580", "#FF8C42", "#C41E3A"]);
+      .range(["#EFF6FF", "#93C5FD", "#3B82F6", "#1E40AF"]);
   }, [data, selectedMetric]);
 
   // Calculate alerts for all departments
