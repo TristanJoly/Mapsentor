@@ -4,6 +4,7 @@ import {
   PolarGrid, PolarAngleAxis, PolarRadiusAxis 
 } from "recharts";
 import { DepartmentData, getAverage } from "@/lib/data";
+import { ChartInfoButton } from "@/components/charts/ChartInfoButton";
 
 interface ComparisonChartsProps {
   department1: DepartmentData;
@@ -32,8 +33,14 @@ const RadarSocialComparison = ({ dept1, dept2 }: { dept1: DepartmentData; dept2:
 
   return (
     <div className="p-4 rounded-xl bg-card border border-border shadow-card">
-      <h4 className="text-sm font-semibold text-foreground mb-4">
+      <h4 className="text-sm font-semibold text-foreground mb-4 flex items-center gap-1">
         Profil social 60–74 ans
+        <ChartInfoButton
+          title="Profil social comparatif"
+          text="Radar comparant les caractéristiques sociales des 60-74 ans entre les deux départements : diplômes, immigration, propriété, isolement féminin et mobilité."
+          howToRead="Chaque axe représente un indicateur social. Plus le tracé s'étend vers l'extérieur, plus la valeur est élevée. Comparez les deux formes pour identifier les différences de profil social."
+          source="INSEE – Recensement de la population 2020, données départementales"
+        />
       </h4>
       <ResponsiveContainer width="100%" height={280}>
         <RadarChart data={data}>
@@ -81,8 +88,14 @@ const RadarSanteComparison = ({ dept1, dept2, allData }: { dept1: DepartmentData
 
   return (
     <div className="p-4 rounded-xl bg-card border border-border shadow-card">
-      <h4 className="text-sm font-semibold text-foreground mb-4">
+      <h4 className="text-sm font-semibold text-foreground mb-4 flex items-center gap-1">
         Radar santé
+        <ChartInfoButton
+          title="Radar santé comparatif"
+          text="Compare les indicateurs de santé (vue, audition, maladies chroniques, limitations physiques, handicap, mauvais état de santé) entre deux départements et la moyenne France."
+          howToRead="Plus le tracé est étendu, plus la situation est préoccupante. Le tracé beige (France) sert de référence. Si un département dépasse nettement la moyenne nationale sur un axe, c'est un point d'alerte."
+          source="Enquête Vie Quotidienne et Santé (VQS) 2021 – DREES, données départementales"
+        />
       </h4>
       <ResponsiveContainer width="100%" height={280}>
         <RadarChart data={data}>
@@ -118,8 +131,14 @@ const VaccinationComparison = ({ dept1, dept2, allData }: { dept1: DepartmentDat
 
   return (
     <div className="p-4 rounded-xl bg-card border border-border shadow-card">
-      <h4 className="text-sm font-semibold text-foreground mb-4">
+      <h4 className="text-sm font-semibold text-foreground mb-4 flex items-center gap-1">
         Taux de vaccination
+        <ChartInfoButton
+          title="Vaccination comparée"
+          text="Taux de vaccination Covid et Grippe chez les 65+ pour les deux départements, comparés à la moyenne nationale."
+          howToRead="Plus la barre est haute, meilleure est la couverture vaccinale. Si un département est nettement en dessous de la France, des campagnes ciblées pourraient être nécessaires."
+          source="Santé publique France / Ameli – Taux de couverture vaccinale, 2023"
+        />
       </h4>
       <ResponsiveContainer width="100%" height={250}>
         <BarChart data={data}>
@@ -164,8 +183,14 @@ const RevenusComparison = ({ dept1, dept2, allData }: { dept1: DepartmentData; d
 
   return (
     <div className="p-4 rounded-xl bg-card border border-border shadow-card">
-      <h4 className="text-sm font-semibold text-foreground mb-4">
+      <h4 className="text-sm font-semibold text-foreground mb-4 flex items-center gap-1">
         Revenus médians
+        <ChartInfoButton
+          title="Revenus médians comparés"
+          text="Revenu médian annuel des 60-74 ans et des 75+ pour les deux départements, comparé à la moyenne nationale."
+          howToRead="Plus la barre est haute, plus le revenu médian est élevé. Un écart important entre les deux départements peut indiquer des inégalités économiques territoriales."
+          source="INSEE – FILOSOFI 2021, revenus médians par tranche d'âge"
+        />
       </h4>
       <ResponsiveContainer width="100%" height={250}>
         <BarChart data={data}>
@@ -218,8 +243,14 @@ const IsolementComparison = ({ dept1, dept2 }: { dept1: DepartmentData; dept2: D
 
   return (
     <div className="p-4 rounded-xl bg-card border border-border shadow-card">
-      <h4 className="text-sm font-semibold text-foreground mb-4">
+      <h4 className="text-sm font-semibold text-foreground mb-4 flex items-center gap-1">
         Isolement social
+        <ChartInfoButton
+          title="Isolement social comparé"
+          text="Nombre de personnes isolées par tranche d'âge et par genre, comparé entre les deux départements."
+          howToRead="Plus la barre est longue, plus il y a de personnes isolées. Les femmes isolées de 75+ sont souvent les plus vulnérables. Comparez les proportions entre départements pour identifier les territoires les plus fragiles."
+          source="INSEE – Recensement de la population 2020, indicateurs de vieillissement"
+        />
       </h4>
       <ResponsiveContainer width="100%" height={250}>
         <BarChart data={data} layout="vertical">
@@ -258,8 +289,14 @@ const LiviaComparison = ({ dept1, dept2 }: { dept1: DepartmentData; dept2: Depar
 
   return (
     <div className="p-4 rounded-xl bg-card border border-border shadow-card">
-      <h4 className="text-sm font-semibold text-foreground mb-4">
+      <h4 className="text-sm font-semibold text-foreground mb-4 flex items-center gap-1">
         Projections LIVIA (Femmes)
+        <ChartInfoButton
+          title="Projections LIVIA"
+          text="Évolution projetée du nombre de femmes en perte d'autonomie (scénario 1) de 2025 à 2050 pour les deux départements."
+          howToRead="La courbe montante indique une augmentation des besoins. Comparez la pente des deux départements : une croissance plus rapide nécessitera des investissements médico-sociaux plus importants."
+          source="Modèle LIVIA – DREES / INSEE, projections lieux de vie des personnes en perte d'autonomie, scénario 1"
+        />
       </h4>
       <ResponsiveContainer width="100%" height={250}>
         <LineChart data={data}>
@@ -295,8 +332,14 @@ const AspaComparison = ({ dept1, dept2 }: { dept1: DepartmentData; dept2: Depart
 
   return (
     <div className="p-4 rounded-xl bg-card border border-border shadow-card">
-      <h4 className="text-sm font-semibold text-foreground mb-4">
+      <h4 className="text-sm font-semibold text-foreground mb-4 flex items-center gap-1">
         Évolution ASPA
+        <ChartInfoButton
+          title="Évolution ASPA"
+          text="Nombre de bénéficiaires de l'Allocation de Solidarité aux Personnes Âgées (ASPA) de 2013 à 2024 pour les deux départements."
+          howToRead="Une courbe ascendante indique un nombre croissant de seniors en situation de précarité. Si un département augmente plus vite que l'autre, la pauvreté des seniors y progresse plus rapidement."
+          source="CNAV / Caisse des Dépôts – Effectifs ASPA par département, série annuelle 2013-2024"
+        />
       </h4>
       <ResponsiveContainer width="100%" height={250}>
         <LineChart data={data}>
@@ -351,8 +394,14 @@ const ServicesComparison = ({ dept1, dept2, allData }: { dept1: DepartmentData; 
 
   return (
     <div className="p-4 rounded-xl bg-card border border-border shadow-card">
-      <h4 className="text-sm font-semibold text-foreground mb-4">
+      <h4 className="text-sm font-semibold text-foreground mb-4 flex items-center gap-1">
         Offre médico-sociale (indice)
+        <ChartInfoButton
+          title="Offre médico-sociale comparée"
+          text="Indice comparatif de l'offre (aides à domicile, EHPAD, médecins) par rapport à la moyenne nationale (indice 1)."
+          howToRead="La valeur 1 = moyenne nationale. Au-dessus : le département est mieux doté. En dessous : l'offre est insuffisante. Un indice de 0.5 signifie deux fois moins de ressources que la moyenne."
+          source="DREES – Panorama statistique 2024 (APL SAPA, EHPA, médecins généralistes)"
+        />
       </h4>
       <ResponsiveContainer width="100%" height={250}>
         <BarChart data={data}>
