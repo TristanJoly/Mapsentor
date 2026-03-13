@@ -561,7 +561,7 @@ const IsolementParAgeChart = ({ department, allData }: { department: DepartmentD
   ];
   return (
     <div className="p-4 rounded-xl bg-card border border-border shadow-card">
-      <h4 className="text-sm font-semibold text-foreground mb-4 flex items-center gap-1">Seniors vivant seuls par tranche d'âge<ChartInfoButton title="Seniors seuls" text="Nombre de seniors vivant seuls, ventilé par tranche d'âge (60-74 et 75+)." howToRead="Comparez la barre rouge (département) à la grise (moyenne France). Un nombre élevé chez les 75+ est particulièrement préoccupant car ces personnes sont plus vulnérables et dépendantes." /></h4>
+      <h4 className="text-sm font-semibold text-foreground mb-4 flex items-center gap-1">Seniors vivant seuls par tranche d'âge<ChartInfoButton title="Seniors seuls" text="Nombre de seniors vivant seuls, ventilé par tranche d'âge (60-74 et 75+)." howToRead="Comparez la barre rouge (département) à la grise (moyenne France). Un nombre élevé chez les 75+ est particulièrement préoccupant car ces personnes sont plus vulnérables et dépendantes." source="INSEE – Recensement de la population 2020, indicateurs départementaux 60+ et 75+" /></h4>
       <ResponsiveContainer width="100%" height={200}>
         <BarChart data={data}>
           <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
