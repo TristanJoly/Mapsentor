@@ -869,7 +869,7 @@ export const DepartmentCharts = ({ department, allData, selectedMetric }: Depart
         </Tabs>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-3 md:gap-4">
         {visibleCharts.map(chart => (
           <div key={chart.id}>
             {chart.render(department, allData)}
