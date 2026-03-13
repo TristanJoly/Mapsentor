@@ -379,10 +379,10 @@ export const FranceMap = ({ data, selectedMetric, selectedDepartment, onDepartme
       <div className="absolute bottom-4 right-4 glass p-3 rounded-xl shadow-soft">
         <p className="text-xs font-medium text-foreground mb-2">Intensité</p>
         <div className="flex items-center gap-0.5">
-          <div className="h-3 w-6 rounded-l-sm" style={{ background: "#FFF8DC" }}></div>
-          <div className="h-3 w-6" style={{ background: "#FFD580" }}></div>
-          <div className="h-3 w-6" style={{ background: "#FF8C42" }}></div>
-          <div className="h-3 w-6 rounded-r-sm" style={{ background: "#C41E3A" }}></div>
+          <div className="h-3 w-6 rounded-l-sm" style={{ background: "#EFF6FF" }}></div>
+          <div className="h-3 w-6" style={{ background: "#93C5FD" }}></div>
+          <div className="h-3 w-6" style={{ background: "#3B82F6" }}></div>
+          <div className="h-3 w-6 rounded-r-sm" style={{ background: "#1E40AF" }}></div>
         </div>
         {/* Tick values under the scale */}
         <div className="flex justify-between text-[9px] text-muted-foreground mt-0.5 w-[96px]">
