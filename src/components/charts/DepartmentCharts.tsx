@@ -760,7 +760,7 @@ const CHART_REGISTRY: ChartDef[] = [
   { id: "apl_ehpa", label: "APL EHPA", category: "medical", render: (d, a) => <AplEhpaChart department={d} allData={a} /> },
   { id: "offre_besoin", label: "Offre vs Besoin", category: "medical", render: (d, a) => <OffreVsBesoinChart department={d} allData={a} /> },
   { id: "livia", label: "Prévisions LIVIA", category: "medical", render: (d) => <LiviaProjectionsChart department={d} /> },
-  { id: "top10_compare", label: "Top 10 comparaison", category: "medical", render: (d, a) => <Top10MaladiesCompareChart department={d} allData={a} /> },
+  { id: "top10_compare", label: "Top 10 diagnostics", category: "medical", render: (d, a) => <Top10MaladiesCompareChart department={d} allData={a} /> },
   { id: "radar_social", label: "Profil social 60-74", category: "social", render: (d, a) => <RadarSocialChart department={d} allData={a} /> },
   { id: "isolement_social", label: "Isolement social", category: "social", render: (d) => <IsolementSocialChart department={d} /> },
   { id: "fragilite_num", label: "Fragilité numérique", category: "social", render: (d) => <FragiliteNumeriqueChart department={d} /> },
