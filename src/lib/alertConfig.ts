@@ -107,6 +107,7 @@ export const ALERT_DEFINITIONS: AlertDefinition[] = [
       { column: "top5_prevalence", direction: "high", label: "Prévalence Top 5 Pathologies" },
     ],
     explanation: "Forte charge de maladies chroniques dans un territoire en désert médical. Les patients n'ont pas de médecin traitant à proximité pour gérer leurs pathologies.",
+    source: "APL médecins : DREES – Panorama statistique 2024 · Prévalence pathologies : Ameli (CNAM) 2023",
     levers: [
       {
         title: "Cabines de téléconsultation assistée en officine",
