@@ -289,8 +289,14 @@ const LiviaComparison = ({ dept1, dept2 }: { dept1: DepartmentData; dept2: Depar
 
   return (
     <div className="p-4 rounded-xl bg-card border border-border shadow-card">
-      <h4 className="text-sm font-semibold text-foreground mb-4">
+      <h4 className="text-sm font-semibold text-foreground mb-4 flex items-center gap-1">
         Projections LIVIA (Femmes)
+        <ChartInfoButton
+          title="Projections LIVIA"
+          text="Évolution projetée du nombre de femmes en perte d'autonomie (scénario 1) de 2025 à 2050 pour les deux départements."
+          howToRead="La courbe montante indique une augmentation des besoins. Comparez la pente des deux départements : une croissance plus rapide nécessitera des investissements médico-sociaux plus importants."
+          source="Modèle LIVIA – DREES / INSEE, projections lieux de vie des personnes en perte d'autonomie, scénario 1"
+        />
       </h4>
       <ResponsiveContainer width="100%" height={250}>
         <LineChart data={data}>
