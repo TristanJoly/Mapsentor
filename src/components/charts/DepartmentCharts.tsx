@@ -473,7 +473,7 @@ const RadarSocialChart = ({ department, allData }: { department: DepartmentData;
   
   return (
     <div className="p-4 rounded-xl bg-card border border-border shadow-card">
-      <h4 className="text-sm font-semibold text-foreground mb-4 flex items-center gap-1">Profil social 60–74 ans (%)<ChartInfoButton title="Radar social" text="Chaque axe représente un indicateur social en % des 60-74 ans : diplôme, immigration, propriété, isolement féminin, accès voiture." howToRead="Le tracé coloré = département, le tracé clair = moyenne France. Si un axe dépasse la moyenne, c'est une spécificité locale. Ex : un axe 'Sans voiture' élevé signale un risque d'enclavement." source="INSEE – Recensement de la population 2020, indicateurs départementaux 60+ et 75+" /></h4>
+      <h4 className="text-sm font-semibold text-foreground mb-4 flex items-center gap-1"><h4 className="text-sm font-semibold text-foreground mb-4 flex items-center gap-1">Profil social 65+<ChartInfoButton title="Radar social" text="Chaque axe représente un indicateur social en % des 60-74 ans : diplôme, immigration, propriété, isolement féminin, accès voiture." howToRead="Le tracé coloré = département, le tracé clair = moyenne France. Si un axe dépasse la moyenne, c'est une spécificité locale. Ex : un axe 'Sans voiture' élevé signale un risque d'enclavement." source="INSEE – Recensement de la population 2020, indicateurs départementaux 60+ et 75+" /></h4>
       <ResponsiveContainer width="100%" height={250}>
         <RadarChart data={data}>
           <PolarGrid stroke="hsl(var(--border))" />
