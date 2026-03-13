@@ -247,8 +247,8 @@ export const DepartmentComparison = ({ allData, selectedMetric }: DepartmentComp
         </div>
       )}
 
-      {/* Sélection des graphiques (uniquement si 2 départements) */}
-      {activeSelection.length === 2 && (
+      {/* Sélection des graphiques (2+ départements) */}
+      {activeSelection.length >= 2 && (
         <>
           <div className="p-4 rounded-xl bg-card border border-border shadow-card">
             <h3 className="text-sm font-semibold text-foreground mb-4">
@@ -272,21 +272,11 @@ export const DepartmentComparison = ({ allData, selectedMetric }: DepartmentComp
 
           {/* Graphiques comparatifs */}
           <ComparisonCharts 
-            department1={selectedDepartments[0]}
-            department2={selectedDepartments[1]}
+            departments={selectedDepartments}
             allData={allData}
             selectedCharts={selectedCharts}
           />
         </>
-      )}
-
-      {/* Message si plus de 2 départements */}
-      {activeSelection.length > 2 && (
-        <div className="p-4 rounded-xl bg-muted/50 border border-border text-center">
-          <p className="text-sm text-muted-foreground">
-            💡 Pour afficher les graphiques comparatifs, sélectionnez exactement 2 départements
-          </p>
-        </div>
       )}
     </div>
   );
