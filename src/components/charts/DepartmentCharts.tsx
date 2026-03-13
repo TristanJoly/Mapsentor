@@ -656,7 +656,7 @@ const LogementChart = ({ department }: { department: DepartmentData }) => {
       <ResponsiveContainer width="100%" height={180}>
         <PieChart>
           <Pie data={data} cx="50%" cy="50%" innerRadius={30} outerRadius={55} dataKey="value" label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`} labelLine={false} style={{ fontSize: '10px', fill: '#222' }}>
-            <Cell fill={COLORS.quaternary} />
+            <Cell fill={COLORS.primary} />
             <Cell fill={COLORS.tertiary} />
           </Pie>
           <Tooltip formatter={(value: number) => value.toLocaleString('fr-FR')} contentStyle={{ background: 'hsl(var(--card))', border: '1px solid hsl(var(--border))', borderRadius: '8px', fontSize: '12px' }} />

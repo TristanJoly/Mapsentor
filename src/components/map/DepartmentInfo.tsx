@@ -39,8 +39,8 @@ const ComparisonBadge = ({ value, avg, unit = "pts", invert = false }: { value: 
   if (Math.abs(diff) <= 1) {
     return (
       <div className="flex items-center gap-1 mt-1.5">
-        <Minus className="w-3.5 h-3.5 text-orange-500" />
-        <span className="text-xs text-orange-500">≈ moy. nationale</span>
+        <Minus className="w-3.5 h-3.5 text-muted-foreground" />
+        <span className="text-xs text-muted-foreground">≈ moy. nationale</span>
       </div>
     );
   }
@@ -115,51 +115,51 @@ export const DepartmentInfo = ({ department, allData }: DepartmentInfoProps) => 
       <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-5 gap-3 md:gap-4">
         
         {/* Part 65+ */}
-        <div className="p-4 rounded-xl bg-gradient-to-br from-orange-50 to-orange-100/50 border border-orange-200/50">
+        <div className="p-4 rounded-xl bg-blue-50/60 border border-blue-100">
           <div className="flex items-center gap-2 mb-2">
-            <Users className="w-5 h-5 text-orange-600" />
-            <span className="text-sm font-medium text-orange-800">Part 65+</span>
+            <Users className="w-5 h-5 text-blue-600" />
+            <span className="text-sm font-medium text-foreground">Part 65+</span>
           </div>
-          <p className="text-xl md:text-2xl font-bold text-orange-700">{part65Plus.toFixed(1)}%</p>
-          <p className="text-[10px] md:text-xs text-orange-600/80 mt-1">de la population</p>
+          <p className="text-xl md:text-2xl font-bold text-foreground">{part65Plus.toFixed(1)}%</p>
+          <p className="text-[10px] md:text-xs text-muted-foreground mt-1">de la population</p>
           <ComparisonBadge value={part65Plus} avg={avgPart65} unit="%" />
           <RankBadge rank={rankPart65.rank} total={rankPart65.total} />
         </div>
 
         {/* Taux de pauvreté 65+ */}
-        <div className="p-4 rounded-xl bg-gradient-to-br from-rose-50 to-rose-100/50 border border-rose-200/50">
+        <div className="p-4 rounded-xl bg-blue-50/60 border border-blue-100">
           <div className="flex items-center gap-2 mb-2">
-            <TrendingUp className="w-5 h-5 text-rose-600" />
-            <span className="text-sm font-medium text-rose-800">Pauvreté 65+</span>
+            <TrendingUp className="w-5 h-5 text-blue-600" />
+            <span className="text-sm font-medium text-foreground">Pauvreté 65+</span>
           </div>
-          <p className="text-xl md:text-2xl font-bold text-rose-700">{tauxPauvrete65.toFixed(1)}%</p>
-          <p className="text-[10px] md:text-xs text-rose-600/80 mt-1">vivent sous le seuil de pauvreté</p>
+          <p className="text-xl md:text-2xl font-bold text-foreground">{tauxPauvrete65.toFixed(1)}%</p>
+          <p className="text-[10px] md:text-xs text-muted-foreground mt-1">vivent sous le seuil de pauvreté</p>
           <ComparisonBadge value={tauxPauvrete65} avg={avgPauvrete65} unit="%" invert />
           <RankBadge rank={rankPauvrete.rank} total={rankPauvrete.total} />
         </div>
 
         {/* Niveau de vie */}
-        <div className="p-4 rounded-xl bg-gradient-to-br from-amber-50 to-amber-100/50 border border-amber-200/50">
+        <div className="p-4 rounded-xl bg-blue-50/60 border border-blue-100">
           <div className="flex items-center gap-2 mb-2">
-            <Euro className="w-5 h-5 text-amber-600" />
-            <span className="text-sm font-medium text-amber-800">Niveau de vie</span>
+            <Euro className="w-5 h-5 text-blue-600" />
+            <span className="text-sm font-medium text-foreground">Niveau de vie</span>
           </div>
-          <p className="text-xl md:text-2xl font-bold text-amber-700">{niveauVieMensuel.toLocaleString('fr-FR')} €</p>
-          <p className="text-[10px] md:text-xs text-amber-600/80 mt-1">médian / mois</p>
+          <p className="text-xl md:text-2xl font-bold text-foreground">{niveauVieMensuel.toLocaleString('fr-FR')} €</p>
+          <p className="text-[10px] md:text-xs text-muted-foreground mt-1">médian / mois</p>
           <ComparisonBadge value={niveauVieMensuel} avg={avgNiveauVieMensuel} unit="€" />
           <RankBadge rank={rankNiveauVie.rank} total={rankNiveauVie.total} />
         </div>
 
         {/* Espérance de vie */}
-        <div className="p-4 rounded-xl bg-gradient-to-br from-rose-50 to-pink-100/50 border border-rose-200/50">
+        <div className="p-4 rounded-xl bg-blue-50/60 border border-blue-100">
           <div className="flex items-center gap-2 mb-2">
-            <Heart className="w-5 h-5 text-rose-500" />
-            <span className="text-sm font-medium text-rose-700">Espérance de vie</span>
+            <Heart className="w-5 h-5 text-blue-600" />
+            <span className="text-sm font-medium text-foreground">Espérance de vie</span>
           </div>
-          <p className="text-xl md:text-2xl font-bold text-rose-600">
+          <p className="text-xl md:text-2xl font-bold text-foreground">
             {esperanceVie ? `${esperanceVie.toFixed(1)} ans` : 'N/A'}
           </p>
-          <p className="text-[10px] md:text-xs text-rose-500/80 mt-1">âge moyen au décès</p>
+          <p className="text-[10px] md:text-xs text-muted-foreground mt-1">âge moyen au décès</p>
           {esperanceVie > 0 && <ComparisonBadge value={esperanceVie} avg={avgEsperanceVie} unit="ans" />}
           {esperanceVie > 0 && <RankBadge rank={rankEsperance.rank} total={rankEsperance.total} />}
         </div>
