@@ -282,9 +282,15 @@ export const FranceMap = ({ data, selectedMetric, selectedDepartment, onDepartme
           <div className="flex items-center gap-3">
             <div className="flex items-center gap-1">
               <svg width="12" height="16" viewBox="0 0 24 28">
-                <path d="M12 0C7.58 0 4 3.58 4 8c0 5.76 7.11 11.38 7.42 11.62a1 1 0 0 0 1.16 0C12.89 19.38 20 13.76 20 8c0-4.42-3.58-8-8-8z" fill="#f59e0b" stroke="#fff" strokeWidth="1"/>
+                <path d="M12 0C7.58 0 4 3.58 4 8c0 5.76 7.11 11.38 7.42 11.62a1 1 0 0 0 1.16 0C12.89 19.38 20 13.76 20 8c0-4.42-3.58-8-8-8z" fill="#eab308" stroke="#fff" strokeWidth="1"/>
               </svg>
-              <span className="text-[10px] text-muted-foreground">1-2</span>
+              <span className="text-[10px] text-muted-foreground">1</span>
+            </div>
+            <div className="flex items-center gap-1">
+              <svg width="12" height="16" viewBox="0 0 24 28">
+                <path d="M12 0C7.58 0 4 3.58 4 8c0 5.76 7.11 11.38 7.42 11.62a1 1 0 0 0 1.16 0C12.89 19.38 20 13.76 20 8c0-4.42-3.58-8-8-8z" fill="#f97316" stroke="#fff" strokeWidth="1"/>
+              </svg>
+              <span className="text-[10px] text-muted-foreground">2</span>
             </div>
             <div className="flex items-center gap-1">
               <svg width="12" height="16" viewBox="0 0 24 28">
