@@ -201,7 +201,7 @@ const VaccinationChart = ({ department, allData }: { department: DepartmentData;
   ];
   return (
     <div className="p-4 rounded-xl bg-card border border-border shadow-card">
-      <h4 className="text-sm font-semibold text-foreground mb-4 flex items-center gap-1">Vaccination / prévention<ChartInfoButton title="Couverture vaccinale" text="Taux de vaccination Covid et Grippe chez les 65+. Compare le département à la région et la moyenne nationale." howToRead="Un taux élevé (proche de 100 %) indique une bonne couverture. Si le département est nettement en dessous de la moyenne, des campagnes de vaccination ciblées pourraient être nécessaires." source="Santé publique France / Ameli – Taux de couverture vaccinale, 2023" /></h4>
+      <h4 className="text-sm font-semibold text-foreground mb-4 flex items-center gap-1">Vaccination / prévention</h4>
       <ResponsiveContainer width="100%" height={250}>
         <BarChart data={data}>
           <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
@@ -324,7 +324,7 @@ const OffreVsBesoinChart = ({ department, allData }: { department: DepartmentDat
 
   return (
     <div className="p-4 rounded-xl bg-card border border-border shadow-card">
-      <h4 className="text-sm font-semibold text-foreground mb-4 flex items-center gap-1">Offre vs Besoin (lits / 75+)<ChartInfoButton title="Ratio offre/besoin" text="Pourcentage de lits EHPAD par rapport à la population 75+. Compare le département à la moyenne France." howToRead="Un ratio de 10 % signifie qu'il y a 10 lits pour 100 personnes de 75+. Si le département est en dessous de la moyenne, la capacité d'accueil est sous-dimensionnée par rapport aux besoins." source="DREES – Panorama statistique 2024 + INSEE RP 2020 (population 75+)" /></h4>
+      <h4 className="text-sm font-semibold text-foreground mb-4 flex items-center gap-1">Offre vs Besoin (lits / 75+)</h4>
       <ResponsiveContainer width="100%" height={200}>
         <BarChart data={data}>
           <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
@@ -549,7 +549,7 @@ const IsolementSocialChart = ({ department }: { department: DepartmentData }) =>
   const innerData = [{ name: "Hommes isolés", value: Math.max(0, isoles - femmesIsolees) }, { name: "Femmes isolées", value: femmesIsolees }];
   return (
     <div className="p-4 rounded-xl bg-card border border-border shadow-card">
-      <h4 className="text-sm font-semibold text-foreground mb-4 flex items-center gap-1">Isolement social +60 ans<ChartInfoButton title="Isolement social" text="Anneau extérieur : proportion de seniors isolés vs non-isolés. Anneau intérieur : répartition hommes/femmes parmi les personnes isolées." howToRead="Plus la part rouge (isolés) est grande dans l'anneau extérieur, plus le département est touché. L'anneau intérieur montre si les femmes sont plus concernées — ce qui est souvent le cas après le décès du conjoint." source="INSEE – Recensement de la population 2020, indicateurs départementaux 60+ et 75+" /></h4>
+      <h4 className="text-sm font-semibold text-foreground mb-4 flex items-center gap-1">Isolement social +60 ans</h4>
       <ResponsiveContainer width="100%" height={240}>
         <PieChart>
           <Pie data={outerData} cx="50%" cy="50%" outerRadius={65} innerRadius={40} dataKey="value" label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`} labelLine={false} style={{ fontSize: '10px' }}>
@@ -600,7 +600,7 @@ const DemographieSeniorsChart = ({ department }: { department: DepartmentData })
   ];
   return (
     <div className="p-4 rounded-xl bg-card border border-border shadow-card">
-      <h4 className="text-sm font-semibold text-foreground mb-4 flex items-center gap-1">Répartition démographique seniors<ChartInfoButton title="Pyramide des âges" text="Effectifs de la population senior répartis par genre (F/H) et tranche d'âge (60-74 et 75+)." howToRead="Les 4 barres permettent de voir l'équilibre du département : un fort décalage entre F et H chez les 75+ reflète l'écart d'espérance de vie. Une dominance des 75+ peut indiquer un vieillissement accéléré." source="INSEE – Recensement de la population 2020, populations départementales 60+ et 75+" /></h4>
+      <h4 className="text-sm font-semibold text-foreground mb-4 flex items-center gap-1">Répartition démographique seniors</h4>
       <ResponsiveContainer width="100%" height={200}>
         <BarChart data={data}>
           <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
@@ -671,7 +671,7 @@ const AspaEvolutionChart = ({ department }: { department: DepartmentData }) => {
   const data = annees.map(annee => ({ annee, value: department[`aspa_effectif_${annee}` as keyof DepartmentData] as number || 0 }));
   return (
     <div className="p-4 rounded-xl bg-card border border-border shadow-card">
-      <h4 className="text-sm font-semibold text-foreground mb-4 flex items-center gap-1">Évolution bénéficiaires ASPA<ChartInfoButton title="Évolution ASPA" text="Nombre de bénéficiaires de l'Allocation de Solidarité aux Personnes Âgées (minimum vieillesse) de 2013 à 2024." howToRead="Une courbe qui monte indique une précarisation croissante des retraités. Si la hausse est plus forte que la moyenne nationale, le département se paupérise plus vite que le reste du pays." source="Caisse des Dépôts / DREES – Effectifs ASPA par département, série annuelle 2013-2024" /></h4>
+      <h4 className="text-sm font-semibold text-foreground mb-4 flex items-center gap-1">Évolution bénéficiaires ASPA</h4>
       <ResponsiveContainer width="100%" height={250}>
         <LineChart data={data}>
           <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
