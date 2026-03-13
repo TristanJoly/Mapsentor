@@ -204,6 +204,7 @@ export const ALERT_DEFINITIONS: AlertDefinition[] = [
       { column: "taux_pauvrete_60", direction: "high", label: "Taux de pauvreté" },
     ],
     explanation: "C'est le cumul des barrières : il faut aller loin (donc payer de l'essence) avec des revenus faibles. Beaucoup renoncent purement et simplement à se soigner.",
+    source: "APL médecins : DREES – Panorama statistique 2024 · Pauvreté : FILOSOFI (INSEE) 2020",
     levers: [
       {
         title: "Dispositif « Sortir Plus » et Chèques Mobilité",
