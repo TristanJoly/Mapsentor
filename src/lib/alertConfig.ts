@@ -20,7 +20,8 @@ export interface AlertDefinition {
   conditions: AlertCondition[];
   explanation: string;
   levers: AlertLever[];
-  headerNote?: string; // Note displayed above alerts for the category
+  headerNote?: string;
+  source?: string;
 }
 
 // ==========================================
