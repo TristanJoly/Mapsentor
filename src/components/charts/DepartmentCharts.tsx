@@ -789,6 +789,121 @@ const PathologiesGenreChart = ({ department }: { department: DepartmentData }) =
   );
 };
 
+// ============ GRAPHIQUES POLLUTION (IREP) ============
+
+const EmissionsAirChart = ({ department, allData }: { department: DepartmentData; allData: DepartmentData[] }) => {
+  const regionData = allData.filter(d => d.region === department.region);
+  const data = [
+    { 
+      name: department.departement.length > 12 ? department.departement.substring(0, 12) + '…' : department.departement, 
+      value: department.irep_emission_air_tonnes,
+      sites: department.irep_nb_emetteurs,
+    },
+    { 
+      name: "Moy. Région", 
+      value: Math.round(regionData.reduce((s, d) => s + d.irep_emission_air_tonnes, 0) / regionData.length),
+      sites: Math.round(regionData.reduce((s, d) => s + d.irep_nb_emetteurs, 0) / regionData.length),
+    },
+    { 
+      name: "Moy. France", 
+      value: Math.round(allData.reduce((s, d) => s + d.irep_emission_air_tonnes, 0) / allData.length),
+      sites: Math.round(allData.reduce((s, d) => s + d.irep_nb_emetteurs, 0) / allData.length),
+    },
+  ];
+
+  return (
+    <div className="p-4 rounded-xl bg-card border border-border shadow-card">
+      <h4 className="text-sm font-semibold text-foreground mb-4 flex items-center gap-1">
+        Émissions polluantes air (IREP)
+        <ChartInfoButton 
+          title="Émissions industrielles dans l'air" 
+          text="Total des émissions polluantes dans l'air déclarées par les établissements industriels du département (registre IREP 2019), en tonnes/an." 
+          howToRead="Plus la barre est haute, plus le département concentre d'émissions industrielles dans l'air. Un niveau élevé peut impacter la santé respiratoire des seniors." 
+          source="Registre français des émissions polluantes (IREP) – Georisques / Ministère de la Transition écologique, 2019" 
+        />
+      </h4>
+      <ResponsiveContainer width="100%" height={220}>
+        <BarChart data={data}>
+          <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
+          <XAxis dataKey="name" tick={{ fontSize: 10 }} />
+          <YAxis tick={{ fontSize: 10 }} tickFormatter={formatAxisK} />
+          <Tooltip 
+            content={({ active, payload }) => {
+              if (!active || !payload?.length) return null;
+              const d = payload[0].payload;
+              return (
+                <div className="rounded-lg border border-border bg-card p-2.5 shadow-md text-xs">
+                  <p className="font-medium text-foreground mb-1">{d.name}</p>
+                  <p className="text-muted-foreground">{d.value.toLocaleString('fr-FR')} tonnes/an</p>
+                  <p className="text-muted-foreground">{d.sites} sites émetteurs</p>
+                </div>
+              );
+            }}
+          />
+          <Bar dataKey="value" radius={[4, 4, 0, 0]}>
+            <Cell fill={COLORS.primary} />
+            <Cell fill={COLORS.secondary} />
+            <Cell fill={COLORS.muted} />
+          </Bar>
+        </BarChart>
+      </ResponsiveContainer>
+      <p className="text-[10px] text-muted-foreground text-center mt-1">
+        {department.irep_nb_sites} sites IREP · {department.irep_nb_emetteurs} émetteurs · {department.irep_nb_polluants_air} polluants dans l'air
+      </p>
+    </div>
+  );
+};
+
+const SitesPolluantsChart = ({ department, allData }: { department: DepartmentData; allData: DepartmentData[] }) => {
+  const regionData = allData.filter(d => d.region === department.region);
+  const sitesPerCapita = (d: DepartmentData) => d.population > 0 ? (d.irep_nb_sites / d.population) * 100000 : 0;
+  
+  const data = [
+    { name: "Sites IREP", 
+      departement: department.irep_nb_sites, 
+      region: Math.round(regionData.reduce((s, d) => s + d.irep_nb_sites, 0) / regionData.length),
+      france: Math.round(allData.reduce((s, d) => s + d.irep_nb_sites, 0) / allData.length),
+    },
+    { name: "Sites émetteurs", 
+      departement: department.irep_nb_emetteurs, 
+      region: Math.round(regionData.reduce((s, d) => s + d.irep_nb_emetteurs, 0) / regionData.length),
+      france: Math.round(allData.reduce((s, d) => s + d.irep_nb_emetteurs, 0) / allData.length),
+    },
+  ];
+
+  const deptRate = sitesPerCapita(department);
+  const franceRate = allData.reduce((s, d) => s + sitesPerCapita(d), 0) / allData.length;
+
+  return (
+    <div className="p-4 rounded-xl bg-card border border-border shadow-card">
+      <h4 className="text-sm font-semibold text-foreground mb-4 flex items-center gap-1">
+        Sites industriels polluants (IREP)
+        <ChartInfoButton 
+          title="Densité de sites polluants" 
+          text="Nombre de sites industriels déclarant des émissions polluantes, comparé à la région et à la moyenne France." 
+          howToRead="Plus le nombre de sites est élevé, plus le département est exposé. Le taux pour 100k habitants permet de comparer indépendamment de la taille." 
+          source="Registre français des émissions polluantes (IREP) – Georisques, 2019" 
+        />
+      </h4>
+      <ResponsiveContainer width="100%" height={220}>
+        <BarChart data={data}>
+          <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
+          <XAxis dataKey="name" tick={{ fontSize: 10 }} />
+          <YAxis tick={{ fontSize: 10 }} />
+          <Tooltip formatter={(value: number) => value.toLocaleString('fr-FR')} contentStyle={{ background: 'hsl(var(--card))', border: '1px solid hsl(var(--border))', borderRadius: '8px', fontSize: '12px' }} />
+          <Bar dataKey="departement" fill={COLORS.primary} name="Département" />
+          <Bar dataKey="region" fill={COLORS.secondary} name="Région" />
+          <Bar dataKey="france" fill={COLORS.muted} name="France" />
+          <Legend wrapperStyle={{ fontSize: '11px', color: '#333' }} />
+        </BarChart>
+      </ResponsiveContainer>
+      <p className="text-[10px] text-muted-foreground text-center mt-1">
+        Densité : {deptRate.toFixed(1)} sites / 100k hab. (moy. France : {franceRate.toFixed(1)})
+      </p>
+    </div>
+  );
+};
+
 // Main component
 // Chart registry
 type ChartDef = {
@@ -816,6 +931,8 @@ const CHART_REGISTRY: ChartDef[] = [
   { id: "sans_voiture", label: "Sans voiture", category: "social", render: (d, a) => <SansVoitureChart department={d} allData={a} /> },
   { id: "isolement_age", label: "Seniors seuls par âge", category: "social", render: (d, a) => <IsolementParAgeChart department={d} allData={a} /> },
   { id: "demographie", label: "Démographie seniors", category: "social", render: (d) => <DemographieSeniorsChart department={d} /> },
+  { id: "emissions_air", label: "Émissions air (IREP)", category: "social", render: (d, a) => <EmissionsAirChart department={d} allData={a} /> },
+  { id: "sites_polluants", label: "Sites polluants (IREP)", category: "social", render: (d, a) => <SitesPolluantsChart department={d} allData={a} /> },
   { id: "revenus", label: "Revenus médians", category: "economic", render: (d, a) => <RevenusChart department={d} allData={a} /> },
   { id: "logement", label: "Propriétaires vs Locataires", category: "economic", render: (d) => <LogementChart department={d} /> },
   { id: "aspa", label: "Évolution ASPA", category: "economic", render: (d) => <AspaEvolutionChart department={d} /> },
