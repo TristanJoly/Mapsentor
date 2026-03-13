@@ -33,6 +33,17 @@ const DEPARTMENT_CENTERS: { [key: string]: [number, number] } = {
   "2A": [8.9, 41.9], "2B": [9.3, 42.4]
 };
 
+const IDF_DEPARTMENTS = [
+  { code: "75", name: "Paris" },
+  { code: "77", name: "Seine-et-Marne" },
+  { code: "78", name: "Yvelines" },
+  { code: "91", name: "Essonne" },
+  { code: "92", name: "Hauts-de-Seine" },
+  { code: "93", name: "Seine-Saint-Denis" },
+  { code: "94", name: "Val-de-Marne" },
+  { code: "95", name: "Val-d'Oise" },
+];
+
 interface FranceMapProps {
   data: DepartmentData[];
   selectedMetric: string;
