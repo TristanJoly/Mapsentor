@@ -437,6 +437,23 @@ export const loadDepartmentData = async (): Promise<DepartmentData[]> => {
             eau_pesticides_depassement: parseFloat(e.taux_pesticides_depassement) || 0,
           };
         })(),
+        // Pesticides détaillés
+        ...(() => {
+          const code = String(row['code_departement'] || row['Code département'] || '').trim();
+          const p = pesticidesMap[code] || {};
+          return {
+            pest_nodu_total_tonnes: parseFloat(p.nodu_total_tonnes) || 0,
+            pest_glyphosate_tonnes: parseFloat(p.glyphosate_tonnes) || 0,
+            pest_prosulfocarbe_tonnes: parseFloat(p.prosulfocarbe_tonnes) || 0,
+            pest_metolachlore_tonnes: parseFloat(p.metolachlore_tonnes) || 0,
+            pest_folpel_tonnes: parseFloat(p.folpel_tonnes) || 0,
+            pest_soufre_tonnes: parseFloat(p.soufre_tonnes) || 0,
+            pest_ift_moyen: parseFloat(p.ift_moyen) || 0,
+            pest_taux_depassement_eau: parseFloat(p.taux_depassement_eau) || 0,
+            pest_nb_substances_detectees: parseFloat(p.nb_substances_detectees) || 0,
+            pest_part_bio_sau: parseFloat(p.part_bio_sau) || 0,
+          };
+        })(),
       };
     }) as DepartmentData[];
 
