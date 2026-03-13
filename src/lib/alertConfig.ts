@@ -25,10 +25,10 @@ export interface AlertDefinition {
 }
 
 // ==========================================
-// QUARTILE-BASED THRESHOLDS (Q1 = 25%, Q4 = 75%)
+// QUINTILE-BASED THRESHOLDS (Q1 = 20%, Q5 = 80%)
 // ==========================================
 
-export const getQuartile = (data: DepartmentData[], column: string, quartile: number): number => {
+export const getQuintile = (data: DepartmentData[], column: string, percentile: number): number => {
   const values = data
     .map(d => {
       if (column === "top5_prevalence") return getTop5Prevalence(d);
@@ -41,7 +41,7 @@ export const getQuartile = (data: DepartmentData[], column: string, quartile: nu
     .sort((a, b) => a - b);
 
   if (values.length === 0) return 0;
-  const index = Math.floor(quartile * (values.length - 1));
+  const index = Math.floor(percentile * (values.length - 1));
   return values[index];
 };
 
@@ -62,25 +62,26 @@ export const getDeptValue = (department: DepartmentData, column: string): number
   return parseFloat(String(department[column as keyof DepartmentData])) || 0;
 };
 
-// Q1 = premier quartile (bas) — le département est dans les 25% les plus bas
+// Q1 = premier quintile (bas) — le département est dans les 20% les plus bas
 export const isInQ1 = (value: number, data: DepartmentData[], column: string): boolean => {
   if (isNaN(value) || value === 0) return false;
-  const q1 = getQuartile(data, column, 0.25);
+  const q1 = getQuintile(data, column, 0.20);
   return value <= q1;
 };
 
-// Q4 = dernier quartile (haut) — le département est dans les 25% les plus hauts
-export const isInQ4 = (value: number, data: DepartmentData[], column: string): boolean => {
+// Q5 = dernier quintile (haut) — le département est dans les 20% les plus hauts
+export const isInQ5 = (value: number, data: DepartmentData[], column: string): boolean => {
   if (isNaN(value) || value === 0) return false;
-  const q4 = getQuartile(data, column, 0.75);
-  return value >= q4;
+  const q5 = getQuintile(data, column, 0.80);
+  return value >= q5;
 };
 
 // Legacy exports for compatibility
-export const getDecile = getQuartile;
-export const getQuantile = getQuartile;
+export const getQuartile = getQuintile;
+export const getDecile = getQuintile;
+export const getQuantile = getQuintile;
 export const isLow = isInQ1;
-export const isHigh = isInQ4;
+export const isHigh = isInQ5;
 
 // ==========================================
 // ALERT DEFINITIONS
