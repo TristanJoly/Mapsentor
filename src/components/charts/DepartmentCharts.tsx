@@ -690,17 +690,17 @@ const AspaEvolutionChart = ({ department }: { department: DepartmentData }) => {
 const AplSapaChart = ({ department, allData }: { department: DepartmentData; allData: DepartmentData[] }) => {
   const regionData = allData.filter(d => d.region === department.region);
   const data = [
-    { name: "APL SAPA", departement: department.apl_sapa, region: getAverage(regionData, 'apl_sapa'), france: getAverage(allData, 'apl_sapa') },
+    { name: "APL SAPA", departement: department.apl_sapa, region: parseFloat(getAverage(regionData, 'apl_sapa').toFixed(1)), france: parseFloat(getAverage(allData, 'apl_sapa').toFixed(1)) },
   ];
   return (
     <div className="p-4 rounded-xl bg-card border border-border shadow-card">
-      <h4 className="text-sm font-semibold text-foreground mb-4 flex items-center gap-1">APL Services d'aide (SAPA)<ChartInfoButton title="APL SAPA" text="Accessibilité Potentielle Localisée aux Services d'Aide et de soins à domicile. Mesure le nombre de professionnels disponibles par habitant." howToRead="Comparez les 3 barres : si le département (rouge) est nettement sous la France (jaune), l'offre de services à domicile est insuffisante pour maintenir les seniors chez eux." source="DREES – Panorama statistique 2024, APL aux Services Autonomie à domicile" /></h4>
+      <h4 className="text-sm font-semibold text-foreground mb-4 flex items-center gap-1">APL Services d'aide (SAPA)<ChartInfoButton title="APL SAPA" text="Accessibilité Potentielle Localisée aux Services d'Aide et de soins à domicile. Mesure la distance moyenne (en minutes) pour accéder à un service d'aide à domicile." howToRead="Plus la valeur est basse, plus l'accès est facile. Comparez le département à la région et la France : un temps nettement supérieur signale un déficit d'offre de proximité." source="DREES – Panorama statistique 2024, APL aux Services Autonomie à domicile" /></h4>
       <ResponsiveContainer width="100%" height={200}>
         <BarChart data={data}>
           <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
           <XAxis dataKey="name" tick={{ fontSize: 10 }} />
-          <YAxis tick={{ fontSize: 10 }} tickFormatter={formatAxisK} />
-          <Tooltip formatter={(value: number) => value.toLocaleString('fr-FR')} contentStyle={{ background: 'hsl(var(--card))', border: '1px solid hsl(var(--border))', borderRadius: '8px', fontSize: '12px' }} />
+          <YAxis tick={{ fontSize: 10 }} unit=" min" />
+          <Tooltip formatter={(value: number) => `${value.toFixed(1)} min`} contentStyle={{ background: 'hsl(var(--card))', border: '1px solid hsl(var(--border))', borderRadius: '8px', fontSize: '12px' }} />
           <Bar dataKey="departement" fill={COLORS.primary} name="Département" />
           <Bar dataKey="region" fill={COLORS.secondary} name="Région" />
           <Bar dataKey="france" fill={COLORS.tertiary} name="France" />
