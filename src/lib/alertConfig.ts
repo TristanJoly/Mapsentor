@@ -25,31 +25,23 @@ export interface AlertDefinition {
 }
 
 // ==========================================
-// DÉCILE-BASED THRESHOLDS (D1 = 10%, D10 = 90%)
+// QUARTILE-BASED THRESHOLDS (Q1 = 25%, Q4 = 75%)
 // ==========================================
 
-export const getDecile = (data: DepartmentData[], column: string, decile: number): number => {
+export const getQuartile = (data: DepartmentData[], column: string, quartile: number): number => {
   const values = data
     .map(d => {
-      if (column === "top5_prevalence") {
-        return getTop5Prevalence(d);
-      }
-      if (column === "vaccination_avg") {
-        return (d.grippe_65_plus + d.covid_65_plus) / 2;
-      }
-      if (column === "total_75_plus") {
-        return d.femmes_75_plus + d.hommes_75_plus;
-      }
-      if (column === "isolement_social") {
-        return d.isoles_60_74 + d.isoles_75_plus;
-      }
+      if (column === "top5_prevalence") return getTop5Prevalence(d);
+      if (column === "vaccination_avg") return (d.grippe_65_plus + d.covid_65_plus) / 2;
+      if (column === "total_75_plus") return d.femmes_75_plus + d.hommes_75_plus;
+      if (column === "isolement_social") return d.isoles_60_74 + d.isoles_75_plus;
       return parseFloat(String(d[column as keyof DepartmentData])) || 0;
     })
     .filter(v => !isNaN(v) && v > 0)
     .sort((a, b) => a - b);
 
   if (values.length === 0) return 0;
-  const index = Math.floor(decile * (values.length - 1));
+  const index = Math.floor(quartile * (values.length - 1));
   return values[index];
 };
 
@@ -70,24 +62,25 @@ export const getDeptValue = (department: DepartmentData, column: string): number
   return parseFloat(String(department[column as keyof DepartmentData])) || 0;
 };
 
-// D1 = premier décile (bas) — le département est dans les 10% les plus bas
-export const isInD1 = (value: number, data: DepartmentData[], column: string): boolean => {
+// Q1 = premier quartile (bas) — le département est dans les 25% les plus bas
+export const isInQ1 = (value: number, data: DepartmentData[], column: string): boolean => {
   if (isNaN(value) || value === 0) return false;
-  const d1 = getDecile(data, column, 0.10);
-  return value <= d1;
+  const q1 = getQuartile(data, column, 0.25);
+  return value <= q1;
 };
 
-// D10 = dernier décile (haut) — le département est dans les 10% les plus hauts
-export const isInD10 = (value: number, data: DepartmentData[], column: string): boolean => {
+// Q4 = dernier quartile (haut) — le département est dans les 25% les plus hauts
+export const isInQ4 = (value: number, data: DepartmentData[], column: string): boolean => {
   if (isNaN(value) || value === 0) return false;
-  const d10 = getDecile(data, column, 0.90);
-  return value >= d10;
+  const q4 = getQuartile(data, column, 0.75);
+  return value >= q4;
 };
 
-// Keep legacy exports for compatibility
-export const getQuantile = getDecile;
-export const isLow = isInD1;
-export const isHigh = isInD10;
+// Legacy exports for compatibility
+export const getDecile = getQuartile;
+export const getQuantile = getQuartile;
+export const isLow = isInQ1;
+export const isHigh = isInQ4;
 
 // ==========================================
 // ALERT DEFINITIONS
