@@ -158,6 +158,7 @@ export const loadDepartmentData = async (): Promise<DepartmentData[]> => {
     const csvText = await response.text();
     const pollutionText = await pollutionResponse.text();
     const atmoText = await atmoResponse.text();
+    const eauText = await eauResponse.text();
     
     // Parse pollution data
     const pollutionResult = Papa.parse(pollutionText, { header: true, skipEmptyLines: true, delimiter: ';' });
