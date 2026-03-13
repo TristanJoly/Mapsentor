@@ -391,9 +391,12 @@ export const FranceMap = ({ data, selectedMetric, selectedDepartment, onDepartme
             if (values.length === 0) return null;
             const min = values[0];
             const max = values[values.length - 1];
-            const p33 = values[Math.floor(values.length * 0.33)];
-            const p66 = values[Math.floor(values.length * 0.66)];
-            const steps = [min, p33, p66, max];
+            let steps: number[];
+            if (selectedMetric === 'mal_chro_oui') {
+              steps = [min, values[Math.floor(values.length * 0.33)], values[Math.floor(values.length * 0.66)], max];
+            } else {
+              steps = [min, (min + max) / 3, (min + max) * 2 / 3, max];
+            }
             return steps.map((v, i) => (
               <span key={i} className="text-center" style={{ width: 24 }}>
                 {v > 1000 ? `${Math.round(v / 1000)}k` : v % 1 === 0 ? Math.round(v) : v.toFixed(1)}
