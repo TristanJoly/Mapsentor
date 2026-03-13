@@ -110,7 +110,7 @@ export const DepartmentInfo = ({ department, allData }: DepartmentInfoProps) => 
         </div>
       </div>
 
-      <h4 className="text-base font-semibold mb-4" style={{ color: '#FF8C42' }}>Chiffres clés</h4>
+      <h4 className="text-base font-semibold mb-4" style={{ color: '#3B82F6' }}>Chiffres clés</h4>
       
       <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-5 gap-3 md:gap-4">
         

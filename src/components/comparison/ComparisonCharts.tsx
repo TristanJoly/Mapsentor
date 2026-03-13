@@ -12,7 +12,7 @@ interface ComparisonChartsProps {
   selectedCharts: string[];
 }
 
-const DEPT_COLORS = ["#C41E3A", "#FF8C42", "#2563EB", "#10B981"];
+const DEPT_COLORS = ["#1E40AF", "#3B82F6", "#60A5FA", "#10B981"];
 const FRANCE_COLOR = "#DEB887";
 
 const tooltipStyle = { 

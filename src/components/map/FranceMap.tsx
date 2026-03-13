@@ -321,12 +321,12 @@ export const FranceMap = ({ data, selectedMetric, selectedDepartment, onDepartme
                         <Geography
                           geography={geo}
                           fill={getFillColor(code)}
-                          stroke={isSelected ? "#C41E3A" : "#64748b"}
+                          stroke={isSelected ? "#1E40AF" : "#64748b"}
                           strokeWidth={isSelected ? 2.5 : 1}
                           style={{
                             default: { outline: "none", transition: "all 0.2s" },
-                            hover: { fill: "#FF8C42", stroke: "#C41E3A", strokeWidth: 2, outline: "none", cursor: "pointer" },
-                            pressed: { fill: "#C41E3A", outline: "none" },
+                            hover: { fill: "#60A5FA", stroke: "#1E40AF", strokeWidth: 2, outline: "none", cursor: "pointer" },
+                            pressed: { fill: "#1E40AF", outline: "none" },
                           }}
                           onClick={() => onDepartmentClick(code)}
                         />

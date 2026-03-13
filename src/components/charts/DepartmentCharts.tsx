@@ -1083,7 +1083,7 @@ const DEFAULT_SELECTED: Record<string, string[]> = {
 
 const CATEGORY_ICONS: Record<string, React.ReactNode> = {
   medical: <Heart className="w-3.5 h-3.5 text-primary" />,
-  social: <Users className="w-3.5 h-3.5" style={{ color: '#FF8C42' }} />,
+  social: <Users className="w-3.5 h-3.5" style={{ color: '#3B82F6' }} />,
   economic: <Euro className="w-3.5 h-3.5" style={{ color: COLORS.quaternary }} />,
 };
 
