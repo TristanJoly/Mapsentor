@@ -382,8 +382,13 @@ export const FranceMap = ({ data, selectedMetric, selectedDepartment, onDepartme
         {/* Tick values under the scale */}
         <div className="flex justify-between text-[9px] text-muted-foreground mt-0.5 w-[96px]">
           {(() => {
-            const [min, max] = metricRange;
-            const steps = [min, (min + max) / 3, (min + max) * 2 / 3, max];
+            const values = data.map(d => d[selectedMetric] as number).filter(v => !isNaN(v) && v > 0).sort((a, b) => a - b);
+            if (values.length === 0) return null;
+            const min = values[0];
+            const max = values[values.length - 1];
+            const p33 = values[Math.floor(values.length * 0.33)];
+            const p66 = values[Math.floor(values.length * 0.66)];
+            const steps = [min, p33, p66, max];
             return steps.map((v, i) => (
               <span key={i} className="text-center" style={{ width: 24 }}>
                 {v > 1000 ? `${Math.round(v / 1000)}k` : v % 1 === 0 ? Math.round(v) : v.toFixed(1)}
