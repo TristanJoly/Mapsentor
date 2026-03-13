@@ -123,19 +123,19 @@ const Index = () => {
               <MetricSelector value={selectedMetric} onChange={setSelectedMetric} />
             </div>
 
-            {/* Map */}
-            <div className="h-[60vh] md:h-[calc(100vh-600px)] min-h-[350px]">
-              <FranceMap 
-                data={data}
-                selectedMetric={selectedMetric}
-                selectedDepartment={selectedDepartment}
-                onDepartmentClick={setSelectedDepartment}
-              />
-            </div>
-
-            {/* Bandeau Mapsentor */}
-            <div className="w-full py-8 md:py-10 bg-card rounded-xl border-2 border-primary shadow-elevated text-center mt-8 mb-16">
-              <span className="text-xl md:text-3xl font-bold text-foreground tracking-widest uppercase">Mapsentor</span>
+            {/* Map + Bandeau */}
+            <div className="rounded-xl border border-border bg-card shadow-card overflow-hidden">
+              <div className="h-[56vh] md:h-[calc(100vh-640px)] min-h-[300px] md:min-h-[360px]">
+                <FranceMap 
+                  data={data}
+                  selectedMetric={selectedMetric}
+                  selectedDepartment={selectedDepartment}
+                  onDepartmentClick={setSelectedDepartment}
+                />
+              </div>
+              <div className="w-full py-5 md:py-6 border-t-2 border-primary text-center bg-card">
+                <span className="text-lg md:text-3xl font-bold text-foreground tracking-widest uppercase">Mapsentor</span>
+              </div>
             </div>
           </TabsContent>
 
