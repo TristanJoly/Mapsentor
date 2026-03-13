@@ -359,6 +359,7 @@ export const getAllDepartmentAlerts = (
 // Get warning color based on number of alerts
 export const getWarningColor = (alertCount: number): string => {
   if (alertCount === 0) return "#22c55e";
-  if (alertCount <= 2) return "#f59e0b";
-  return "#ef4444";
+  if (alertCount === 1) return "#eab308"; // jaune
+  if (alertCount === 2) return "#f97316"; // orange
+  return "#ef4444"; // rouge 3+
 };
