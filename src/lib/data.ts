@@ -370,6 +370,19 @@ export const loadDepartmentData = async (): Promise<DepartmentData[]> => {
             irep_nb_polluants_eau: parseFloat(p.nb_polluants_eau) || 0,
           };
         })(),
+        // Qualité de l'air ATMO
+        ...(() => {
+          const code = String(row['code_departement'] || row['Code département'] || '').trim();
+          const a = atmoMap[code] || {};
+          return {
+            atmo_indice_moyen: parseFloat(a.indice_atmo_moyen) || 0,
+            atmo_jours_bon: parseFloat(a.jours_bon) || 0,
+            atmo_jours_moyen: parseFloat(a.jours_moyen) || 0,
+            atmo_jours_degrade: parseFloat(a.jours_degrade) || 0,
+            atmo_jours_mauvais: parseFloat(a.jours_mauvais) || 0,
+            atmo_jours_tres_mauvais: parseFloat(a.jours_tres_mauvais) || 0,
+          };
+        })(),
       };
     }) as DepartmentData[];
 
