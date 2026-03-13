@@ -228,6 +228,7 @@ export const ALERT_DEFINITIONS: AlertDefinition[] = [
       { column: "part_75_plus", direction: "high", label: "Indice de vieillissement" },
     ],
     explanation: "Le département vieillit et s'appauvrit simultanément. Les ressources fiscales vont diminuer alors que les besoins d'aides sociales vont augmenter.",
+    source: "ASPA : Caisse des Dépôts / DREES 2024 · Vieillissement : INSEE RP 2020",
     levers: [
       {
         title: "Contractualisation via le Pacte des Solidarités",
