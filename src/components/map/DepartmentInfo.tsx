@@ -92,7 +92,7 @@ export const DepartmentInfo = ({ department, allData }: DepartmentInfoProps) => 
 
   // Rankings
   const rankPart65 = getRanking(allData, department.code_departement, 'part_60_plus');
-  const rankPauvrete = getRanking(allData, department.code_departement, 'taux_pauvrete_75', true);
+  const rankPauvrete = getRanking(allData, department.code_departement, 'taux_pauvrete_60', true);
   const rankNiveauVie = getRanking(allData, department.code_departement, 'niveau_vie_median');
   const rankEsperance = getRanking(allData, department.code_departement, 'esperance_vie');
 
