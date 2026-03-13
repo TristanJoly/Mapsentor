@@ -243,8 +243,14 @@ const IsolementComparison = ({ dept1, dept2 }: { dept1: DepartmentData; dept2: D
 
   return (
     <div className="p-4 rounded-xl bg-card border border-border shadow-card">
-      <h4 className="text-sm font-semibold text-foreground mb-4">
+      <h4 className="text-sm font-semibold text-foreground mb-4 flex items-center gap-1">
         Isolement social
+        <ChartInfoButton
+          title="Isolement social comparé"
+          text="Nombre de personnes isolées par tranche d'âge et par genre, comparé entre les deux départements."
+          howToRead="Plus la barre est longue, plus il y a de personnes isolées. Les femmes isolées de 75+ sont souvent les plus vulnérables. Comparez les proportions entre départements pour identifier les territoires les plus fragiles."
+          source="INSEE – Recensement de la population 2020, indicateurs de vieillissement"
+        />
       </h4>
       <ResponsiveContainer width="100%" height={250}>
         <BarChart data={data} layout="vertical">
