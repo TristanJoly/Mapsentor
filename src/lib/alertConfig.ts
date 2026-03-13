@@ -152,6 +152,7 @@ export const ALERT_DEFINITIONS: AlertDefinition[] = [
       { column: "part_75_plus", direction: "high", label: "Indice de vieillissement" },
     ],
     explanation: "Population très âgée insuffisamment vaccinée. Le risque de complications graves (grippe, Covid) est majoré, pouvant saturer les urgences hospitalières locales.",
+    source: "Vaccination : Santé publique France / Ameli 2023 · Vieillissement : INSEE RP 2020",
     levers: [
       {
         title: "Campagnes mobiles « Aller-vers »",
