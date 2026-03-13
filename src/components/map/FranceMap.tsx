@@ -122,24 +122,29 @@ export const FranceMap = ({ data, selectedMetric, selectedDepartment, onDepartme
     if (values.length === 0) {
       return scaleLinear<string>().domain([0, 100]).range(["#FFF8DC", "#C41E3A"]);
     }
-    const min = values[0];
-    const max = values[values.length - 1];
-    // Use percentile-based spread for better contrast
-    const p20 = values[Math.floor(values.length * 0.20)];
-    const p40 = values[Math.floor(values.length * 0.40)];
-    const p60 = values[Math.floor(values.length * 0.60)];
-    const p80 = values[Math.floor(values.length * 0.80)];
-    // Ensure strictly increasing domain
-    const domain = [min, p20, p40, p60, p80, max].reduce<number[]>((acc, v) => {
-      if (acc.length === 0 || v > acc[acc.length - 1]) acc.push(v);
-      return acc;
-    }, []);
-    const colors = ["#FFF8DC", "#FFE4A0", "#FFD580", "#FF8C42", "#D4451A", "#C41E3A"];
-    // Match colors to domain length
-    const selectedColors = domain.length <= 2 
-      ? [colors[0], colors[colors.length - 1]]
-      : domain.map((_, i) => colors[Math.round(i * (colors.length - 1) / (domain.length - 1))]);
-    return scaleLinear<string>().domain(domain).range(selectedColors);
+    const [min, max] = [values[0], values[values.length - 1]];
+
+    if (selectedMetric === 'mal_chro_oui') {
+      // Percentile-based scale for sanitaire only
+      const p20 = values[Math.floor(values.length * 0.20)];
+      const p40 = values[Math.floor(values.length * 0.40)];
+      const p60 = values[Math.floor(values.length * 0.60)];
+      const p80 = values[Math.floor(values.length * 0.80)];
+      const domain = [min, p20, p40, p60, p80, max].reduce<number[]>((acc, v) => {
+        if (acc.length === 0 || v > acc[acc.length - 1]) acc.push(v);
+        return acc;
+      }, []);
+      const colors = ["#FFF8DC", "#FFE4A0", "#FFD580", "#FF8C42", "#D4451A", "#C41E3A"];
+      const selectedColors = domain.length <= 2 
+        ? [colors[0], colors[colors.length - 1]]
+        : domain.map((_, i) => colors[Math.round(i * (colors.length - 1) / (domain.length - 1))]);
+      return scaleLinear<string>().domain(domain).range(selectedColors);
+    }
+
+    // Linear scale for social and economic
+    return scaleLinear<string>()
+      .domain([min, (min + max) / 3, (min + max) * 2/3, max])
+      .range(["#FFF8DC", "#FFD580", "#FF8C42", "#C41E3A"]);
   }, [data, selectedMetric]);
 
   // Calculate alerts for all departments
@@ -386,9 +391,12 @@ export const FranceMap = ({ data, selectedMetric, selectedDepartment, onDepartme
             if (values.length === 0) return null;
             const min = values[0];
             const max = values[values.length - 1];
-            const p33 = values[Math.floor(values.length * 0.33)];
-            const p66 = values[Math.floor(values.length * 0.66)];
-            const steps = [min, p33, p66, max];
+            let steps: number[];
+            if (selectedMetric === 'mal_chro_oui') {
+              steps = [min, values[Math.floor(values.length * 0.33)], values[Math.floor(values.length * 0.66)], max];
+            } else {
+              steps = [min, (min + max) / 3, (min + max) * 2 / 3, max];
+            }
             return steps.map((v, i) => (
               <span key={i} className="text-center" style={{ width: 24 }}>
                 {v > 1000 ? `${Math.round(v / 1000)}k` : v % 1 === 0 ? Math.round(v) : v.toFixed(1)}
