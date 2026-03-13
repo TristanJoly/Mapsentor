@@ -135,10 +135,6 @@ const Index = () => {
               </div>
             </div>
 
-            {/* Bandeau Mapsentor */}
-            <div className="rounded-xl border-2 border-primary bg-card shadow-card p-6 md:p-8 flex items-center justify-center">
-              <span className="text-xl md:text-3xl font-bold text-foreground tracking-[0.25em] uppercase">Mapsentor</span>
-            </div>
           </TabsContent>
 
           {/* Onglet Graphiques */}
