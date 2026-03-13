@@ -70,7 +70,7 @@ export const DepartmentInfo = ({ department, allData }: DepartmentInfoProps) => 
   }
 
   // Moyennes nationales
-  const avgPauvrete75 = getAverage(allData, 'taux_pauvrete_75');
+  const avgPauvrete65 = getAverage(allData, 'taux_pauvrete_60');
   const avgPart65 = getAverage(allData, 'part_60_plus');
   const avgNiveauVie = getAverage(allData, 'niveau_vie_median');
   const avgEsperanceVie = getAverage(allData, 'esperance_vie');
@@ -85,14 +85,14 @@ export const DepartmentInfo = ({ department, allData }: DepartmentInfoProps) => 
   });
 
   const part65Plus = department.part_60_plus;
-  const tauxPauvrete75 = department.taux_pauvrete_75;
+  const tauxPauvrete65 = department.taux_pauvrete_60;
   const niveauVieMensuel = Math.round(department.niveau_vie_median / 12);
   const avgNiveauVieMensuel = Math.round(avgNiveauVie / 12);
   const esperanceVie = department.esperance_vie;
 
   // Rankings
   const rankPart65 = getRanking(allData, department.code_departement, 'part_60_plus');
-  const rankPauvrete = getRanking(allData, department.code_departement, 'taux_pauvrete_75', true);
+  const rankPauvrete = getRanking(allData, department.code_departement, 'taux_pauvrete_60', true);
   const rankNiveauVie = getRanking(allData, department.code_departement, 'niveau_vie_median');
   const rankEsperance = getRanking(allData, department.code_departement, 'esperance_vie');
 
@@ -126,15 +126,15 @@ export const DepartmentInfo = ({ department, allData }: DepartmentInfoProps) => 
           <RankBadge rank={rankPart65.rank} total={rankPart65.total} />
         </div>
 
-        {/* Taux de pauvreté 75+ */}
+        {/* Taux de pauvreté 65+ */}
         <div className="p-4 rounded-xl bg-gradient-to-br from-rose-50 to-rose-100/50 border border-rose-200/50">
           <div className="flex items-center gap-2 mb-2">
             <TrendingUp className="w-5 h-5 text-rose-600" />
-            <span className="text-sm font-medium text-rose-800">Pauvreté 75+</span>
+            <span className="text-sm font-medium text-rose-800">Pauvreté 65+</span>
           </div>
-          <p className="text-xl md:text-2xl font-bold text-rose-700">{tauxPauvrete75.toFixed(1)}%</p>
+          <p className="text-xl md:text-2xl font-bold text-rose-700">{tauxPauvrete65.toFixed(1)}%</p>
           <p className="text-[10px] md:text-xs text-rose-600/80 mt-1">vivent sous le seuil de pauvreté</p>
-          <ComparisonBadge value={tauxPauvrete75} avg={avgPauvrete75} unit="%" invert />
+          <ComparisonBadge value={tauxPauvrete65} avg={avgPauvrete65} unit="%" invert />
           <RankBadge rank={rankPauvrete.rank} total={rankPauvrete.total} />
         </div>
 
