@@ -1,4 +1,5 @@
 import { useState, useMemo } from "react";
+import { ChevronDown, ChevronUp } from "lucide-react";
 import { ComposableMap, Geographies, Geography, ZoomableGroup, Marker } from "react-simple-maps";
 import { scaleLinear } from "d3-scale";
 import { DepartmentData, getMetricRange } from "@/lib/data";
