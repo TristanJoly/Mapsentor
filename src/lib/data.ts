@@ -134,6 +134,17 @@ export interface DepartmentData {
   eau_etat_eco_mediocre: number;
   eau_etat_chimique_bon: number;
   eau_pesticides_depassement: number;
+  // Pesticides détaillés
+  pest_nodu_total_tonnes: number;
+  pest_glyphosate_tonnes: number;
+  pest_prosulfocarbe_tonnes: number;
+  pest_metolachlore_tonnes: number;
+  pest_folpel_tonnes: number;
+  pest_soufre_tonnes: number;
+  pest_ift_moyen: number;
+  pest_taux_depassement_eau: number;
+  pest_nb_substances_detectees: number;
+  pest_part_bio_sau: number;
   [key: string]: string | number | { [key: string]: number };
 }
 
@@ -149,16 +160,18 @@ export const loadDepartmentData = async (): Promise<DepartmentData[]> => {
   if (cachedData) return cachedData;
 
   try {
-    const [response, pollutionResponse, atmoResponse, eauResponse] = await Promise.all([
+    const [response, pollutionResponse, atmoResponse, eauResponse, pesticidesResponse] = await Promise.all([
       fetch('/data/departements.csv'),
       fetch('/data/pollution_departements.csv'),
       fetch('/data/atmo_departements.csv'),
       fetch('/data/eau_departements.csv'),
+      fetch('/data/pesticides_departements.csv'),
     ]);
     const csvText = await response.text();
     const pollutionText = await pollutionResponse.text();
     const atmoText = await atmoResponse.text();
     const eauText = await eauResponse.text();
+    const pesticidesText = await pesticidesResponse.text();
     
     // Parse pollution data
     const pollutionResult = Papa.parse(pollutionText, { header: true, skipEmptyLines: true, delimiter: ';' });
@@ -183,7 +196,14 @@ export const loadDepartmentData = async (): Promise<DepartmentData[]> => {
       const code = String(row.code_departement || '').trim();
       if (code) eauMap[code] = row;
     });
-    
+    // Parse pesticides data
+    const pesticidesResult = Papa.parse(pesticidesText, { header: true, skipEmptyLines: true, delimiter: ';' });
+    const pesticidesMap: Record<string, any> = {};
+    pesticidesResult.data.forEach((row: any) => {
+      const code = String(row.code_departement || '').trim();
+      if (code) pesticidesMap[code] = row;
+    });
+
     const result = Papa.parse(csvText, {
       header: true,
       skipEmptyLines: true,
@@ -415,6 +435,23 @@ export const loadDepartmentData = async (): Promise<DepartmentData[]> => {
             eau_etat_eco_mediocre: parseFloat(e.etat_eco_mediocre) || 0,
             eau_etat_chimique_bon: parseFloat(e.etat_chimique_bon) || 0,
             eau_pesticides_depassement: parseFloat(e.taux_pesticides_depassement) || 0,
+          };
+        })(),
+        // Pesticides détaillés
+        ...(() => {
+          const code = String(row['code_departement'] || row['Code département'] || '').trim();
+          const p = pesticidesMap[code] || {};
+          return {
+            pest_nodu_total_tonnes: parseFloat(p.nodu_total_tonnes) || 0,
+            pest_glyphosate_tonnes: parseFloat(p.glyphosate_tonnes) || 0,
+            pest_prosulfocarbe_tonnes: parseFloat(p.prosulfocarbe_tonnes) || 0,
+            pest_metolachlore_tonnes: parseFloat(p.metolachlore_tonnes) || 0,
+            pest_folpel_tonnes: parseFloat(p.folpel_tonnes) || 0,
+            pest_soufre_tonnes: parseFloat(p.soufre_tonnes) || 0,
+            pest_ift_moyen: parseFloat(p.ift_moyen) || 0,
+            pest_taux_depassement_eau: parseFloat(p.taux_depassement_eau) || 0,
+            pest_nb_substances_detectees: parseFloat(p.nb_substances_detectees) || 0,
+            pest_part_bio_sau: parseFloat(p.part_bio_sau) || 0,
           };
         })(),
       };
