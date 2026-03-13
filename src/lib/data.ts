@@ -175,6 +175,14 @@ export const loadDepartmentData = async (): Promise<DepartmentData[]> => {
       const code = String(row.code_departement || '').trim();
       if (code) atmoMap[code] = row;
     });
+
+    // Parse eau data
+    const eauResult = Papa.parse(eauText, { header: true, skipEmptyLines: true, delimiter: ';' });
+    const eauMap: Record<string, any> = {};
+    eauResult.data.forEach((row: any) => {
+      const code = String(row.code_departement || '').trim();
+      if (code) eauMap[code] = row;
+    });
     
     const result = Papa.parse(csvText, {
       header: true,
