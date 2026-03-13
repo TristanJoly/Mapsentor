@@ -339,6 +339,20 @@ export const loadDepartmentData = async (): Promise<DepartmentData[]> => {
         maladies_65_plus,
         maladies_femmes,
         maladies_hommes,
+        // Pollution IREP
+        ...(() => {
+          const code = String(row['code_departement'] || row['Code département'] || '').trim();
+          const p = pollutionMap[code] || {};
+          return {
+            irep_nb_sites: parseFloat(p.nb_sites_irep) || 0,
+            irep_nb_emetteurs: parseFloat(p.nb_sites_emetteurs) || 0,
+            irep_emission_air_tonnes: parseFloat(p.emission_air_tonnes) || 0,
+            irep_emission_eau_tonnes: parseFloat(p.emission_eau_tonnes) || 0,
+            irep_emission_sol_tonnes: parseFloat(p.emission_sol_tonnes) || 0,
+            irep_nb_polluants_air: parseFloat(p.nb_polluants_air) || 0,
+            irep_nb_polluants_eau: parseFloat(p.nb_polluants_eau) || 0,
+          };
+        })(),
       };
     }) as DepartmentData[];
 
