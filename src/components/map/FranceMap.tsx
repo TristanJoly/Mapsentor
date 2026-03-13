@@ -113,6 +113,7 @@ const FoliumMarker = ({
 };
 
 export const FranceMap = ({ data, selectedMetric, selectedDepartment, onDepartmentClick }: FranceMapProps) => {
+  const [idfOpen, setIdfOpen] = useState(false);
   const [position, setPosition] = useState({ coordinates: [2.5, 46.5] as [number, number], zoom: 1 });
 
   const metricRange = useMemo(() => getMetricRange(data, selectedMetric), [data, selectedMetric]);
