@@ -733,8 +733,9 @@ const AplEhpaChart = ({ department, allData }: { department: DepartmentData; all
 const PathologiesGenreChart = ({ department }: { department: DepartmentData }) => {
   const femmes = department.maladies_femmes || {};
   const hommes = department.maladies_hommes || {};
+  const totalF = department.total_femmes_65_plus || 0;
+  const totalH = department.total_hommes_65_plus || 0;
   
-  // Get top pathologies from 65+ then show F vs H
   const maladies65 = department.maladies_65_plus || {};
   const top8 = Object.entries(maladies65)
     .filter(([_, v]) => v > 0)
@@ -746,6 +747,8 @@ const PathologiesGenreChart = ({ department }: { department: DepartmentData }) =
     fullName: name,
     femmes: femmes[name] || 0,
     hommes: hommes[name] || 0,
+    effectifF: totalF > 0 ? Math.round((femmes[name] || 0) * totalF / 100) : 0,
+    effectifH: totalH > 0 ? Math.round((hommes[name] || 0) * totalH / 100) : 0,
   }));
 
   if (data.length === 0) return null;
@@ -759,9 +762,17 @@ const PathologiesGenreChart = ({ department }: { department: DepartmentData }) =
           <XAxis type="number" tick={{ fontSize: 10 }} unit="%" />
           <YAxis dataKey="name" type="category" tick={{ fontSize: 8 }} width={130} />
           <Tooltip 
-            formatter={(value: number, name: string) => [`${value.toFixed(2)}%`, name]} 
-            labelFormatter={(label) => data.find(d => d.name === label)?.fullName || label}
-            contentStyle={{ background: 'hsl(var(--card))', border: '1px solid hsl(var(--border))', borderRadius: '8px', fontSize: '12px' }} 
+            content={({ active, payload }) => {
+              if (!active || !payload?.length) return null;
+              const d = payload[0].payload;
+              return (
+                <div className="rounded-lg border border-border bg-card p-2.5 shadow-md text-xs">
+                  <p className="font-medium text-foreground mb-1">{d.fullName}</p>
+                  <p className="text-muted-foreground"><span style={{ color: COLORS.primary }}>●</span> Femmes : {d.femmes.toFixed(2)}%{d.effectifF > 0 && <span className="font-semibold"> (≈ {d.effectifF.toLocaleString('fr-FR')})</span>}</p>
+                  <p className="text-muted-foreground"><span style={{ color: COLORS.secondary }}>●</span> Hommes : {d.hommes.toFixed(2)}%{d.effectifH > 0 && <span className="font-semibold"> (≈ {d.effectifH.toLocaleString('fr-FR')})</span>}</p>
+                </div>
+              );
+            }}
           />
           <Bar dataKey="femmes" fill={COLORS.primary} name="Femmes" />
           <Bar dataKey="hommes" fill={COLORS.secondary} name="Hommes" />
