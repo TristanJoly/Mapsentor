@@ -310,7 +310,7 @@ const OffreVsBesoinChart = ({ department, allData }: { department: DepartmentDat
 
   return (
     <div className="p-4 rounded-xl bg-card border border-border shadow-card">
-      <h4 className="text-sm font-semibold text-foreground mb-4 flex items-center gap-1">Offre vs Besoin (lits / 75+)<ChartInfoButton title="Ratio offre/besoin" text="Pourcentage de lits EHPAD par rapport à la population 75+. Compare le département à la moyenne France." howToRead="Un ratio de 10 % signifie qu'il y a 10 lits pour 100 personnes de 75+. Si le département est en dessous de la moyenne, la capacité d'accueil est sous-dimensionnée par rapport aux besoins." /></h4>
+      <h4 className="text-sm font-semibold text-foreground mb-4 flex items-center gap-1">Offre vs Besoin (lits / 75+)<ChartInfoButton title="Ratio offre/besoin" text="Pourcentage de lits EHPAD par rapport à la population 75+. Compare le département à la moyenne France." howToRead="Un ratio de 10 % signifie qu'il y a 10 lits pour 100 personnes de 75+. Si le département est en dessous de la moyenne, la capacité d'accueil est sous-dimensionnée par rapport aux besoins." source="DREES – Panorama statistique 2024 + INSEE RP 2020 (population 75+)" /></h4>
       <ResponsiveContainer width="100%" height={200}>
         <BarChart data={data}>
           <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
