@@ -750,8 +750,8 @@ type ChartDef = {
 };
 
 const CHART_REGISTRY: ChartDef[] = [
-  { id: "top5", label: "Top 5 maladies", category: "medical", render: (d) => <Top5MaladiesChart department={d} /> },
-  { id: "patho_genre", label: "Pathologies par genre", category: "medical", render: (d) => <PathologiesGenreChart department={d} /> },
+  { id: "top5", label: "Top 5 diagnostics", category: "medical", render: (d) => <Top5MaladiesChart department={d} /> },
+  { id: "patho_genre", label: "Diagnostics par genre", category: "medical", render: (d) => <PathologiesGenreChart department={d} /> },
   { id: "radar_sante", label: "Zoom état de santé", category: "medical", render: (d, a) => <RadarSanteChart department={d} allData={a} /> },
   { id: "vaccination", label: "Vaccination", category: "medical", render: (d, a) => <VaccinationChart department={d} allData={a} /> },
   { id: "services_medico", label: "Offre médico-sociale", category: "medical", render: (d, a) => <ServicesMedicoSociauxChart department={d} allData={a} /> },
