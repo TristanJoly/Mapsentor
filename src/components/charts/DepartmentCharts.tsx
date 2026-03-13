@@ -6,12 +6,10 @@ import {
 } from "recharts";
 import { DepartmentData, getAverage } from "@/lib/data";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Tooltip as UITooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
-import { Heart, Users, Euro, Activity, HelpCircle, Settings2, ChevronDown, ChevronUp, Check, Info } from "lucide-react";
+import { Heart, Users, Euro, Activity, Settings2, ChevronDown, ChevronUp, Check } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 
-import { ChartInfoButton } from "./ChartInfoButton";
 
 interface DepartmentChartsProps {
   department: DepartmentData | undefined;
@@ -35,18 +33,6 @@ const formatAxisK = (value: number) => {
   return value.toLocaleString('fr-FR');
 };
 
-const AmeliSource = () => (
-  <TooltipProvider>
-    <UITooltip>
-      <TooltipTrigger asChild>
-        <HelpCircle className="w-3.5 h-3.5 text-muted-foreground/60 cursor-help inline-block ml-1" />
-      </TooltipTrigger>
-      <TooltipContent side="top" className="max-w-[240px] text-xs">
-        <p>Données de prévalence issues du <strong>dataset Ameli (CNAM) – 2023</strong>. Effectifs normalisés en % de la population concernée.</p>
-      </TooltipContent>
-    </UITooltip>
-  </TooltipProvider>
-);
 
 const getRegionMaladieAverage = (allData: DepartmentData[], region: string, maladieName: string): number => {
   const regionData = allData.filter(d => d.region === region);
@@ -85,7 +71,7 @@ const Top5MaladiesChart = ({ department }: { department: DepartmentData }) => {
 
   return (
     <div className="p-4 rounded-xl bg-card border border-border shadow-card">
-      <h4 className="text-sm font-semibold text-foreground mb-4 flex items-center gap-1">Top 5 diagnostics identifiés chez les 65+ <AmeliSource /><ChartInfoButton title="Top 5 diagnostics" text="Barres horizontales montrant les 5 diagnostics les plus fréquents chez les 65+ dans ce département (catégories génériques exclues). La valeur est en % de la population senior." howToRead="Plus la barre est longue, plus la pathologie touche de personnes. Cherchez les diagnostics qui dépassent nettement les autres : ils représentent les enjeux de santé prioritaires du territoire." source="Dataset Ameli (CNAM) – Effectif départemental par pathologie, sexe et âge, 2023" /></h4>
+      <h4 className="text-sm font-semibold text-foreground mb-4 flex items-center gap-1">Top 5 diagnostics identifiés chez les 65+</h4>
       <ResponsiveContainer width="100%" height={250}>
         <BarChart data={data} layout="vertical">
           <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
@@ -139,7 +125,7 @@ const Top10MaladiesCompareChart = ({ department, allData }: { department: Depart
 
   return (
     <div className="p-4 rounded-xl bg-card border border-border shadow-card">
-      <h4 className="text-sm font-semibold text-foreground mb-4 flex items-center gap-1">Top 10 diagnostics ≥ 65 ans – Comparaison <AmeliSource /><ChartInfoButton title="Comparaison des diagnostics" text="Les 10 diagnostics les plus fréquents comparés entre le département (rouge), la région (orange) et la France (jaune). Catégories génériques (« Autres… ») exclues." howToRead="Si la barre rouge dépasse l'orange et la jaune, la pathologie est plus répandue localement. Cela peut signaler un besoin de prévention ou de soins renforcés sur le territoire." source="Dataset Ameli (CNAM) – Effectif départemental par pathologie, sexe et âge, 2023" /></h4>
+      <h4 className="text-sm font-semibold text-foreground mb-4 flex items-center gap-1">Top 10 diagnostics ≥ 65 ans – Comparaison</h4>
       <ResponsiveContainer width="100%" height={400}>
         <BarChart data={data} layout="vertical">
           <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
@@ -191,7 +177,7 @@ const RadarSanteChart = ({ department, allData }: { department: DepartmentData; 
 
   return (
     <div className="p-4 rounded-xl bg-card border border-border shadow-card">
-      <h4 className="text-sm font-semibold text-foreground mb-4 flex items-center gap-1">Zoom sur l'état de santé <AmeliSource /><ChartInfoButton title="Radar santé" text="Chaque axe représente un indicateur de santé (vue, audition, maladies chroniques…). Le tracé coloré = département, le tracé clair = moyenne France." howToRead="Plus le tracé est étendu vers l'extérieur, plus la situation est préoccupante. Si un axe dépasse nettement la moyenne nationale (tracé clair), c'est un point de vigilance à prioriser." source="Enquête Vie Quotidienne et Santé (VQS) 2021 – DREES, données départementales" /></h4>
+      <h4 className="text-sm font-semibold text-foreground mb-4 flex items-center gap-1">Zoom sur l'état de santé</h4>
       <ResponsiveContainer width="100%" height={280}>
         <RadarChart data={data}>
           <PolarGrid stroke="hsl(var(--border))" />
@@ -215,7 +201,7 @@ const VaccinationChart = ({ department, allData }: { department: DepartmentData;
   ];
   return (
     <div className="p-4 rounded-xl bg-card border border-border shadow-card">
-      <h4 className="text-sm font-semibold text-foreground mb-4 flex items-center gap-1">Vaccination / prévention<ChartInfoButton title="Couverture vaccinale" text="Taux de vaccination Covid et Grippe chez les 65+. Compare le département à la région et la moyenne nationale." howToRead="Un taux élevé (proche de 100 %) indique une bonne couverture. Si le département est nettement en dessous de la moyenne, des campagnes de vaccination ciblées pourraient être nécessaires." source="Santé publique France / Ameli – Taux de couverture vaccinale, 2023" /></h4>
+      <h4 className="text-sm font-semibold text-foreground mb-4 flex items-center gap-1">Vaccination / prévention</h4>
       <ResponsiveContainer width="100%" height={250}>
         <BarChart data={data}>
           <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
@@ -251,7 +237,7 @@ const ServicesMedicoSociauxChart = ({ department, allData }: { department: Depar
 
   return (
     <div className="p-4 rounded-xl bg-card border border-border shadow-card">
-      <h4 className="text-sm font-semibold text-foreground mb-4 flex items-center gap-1">Offre médico-sociale<ChartInfoButton title="Indice d'offre" text="Indice comparatif par rapport à la moyenne nationale (valeur 1). Couvre les aides à domicile, EHPAD et médecins." howToRead="La ligne imaginaire à 1.0 = la moyenne nationale. Au-dessus : le département est mieux doté. En dessous : l'offre est insuffisante. Un indice de 0.5 signifie deux fois moins de ressources que la moyenne." source="DREES – Panorama statistique 2024 (APL SAPA, EHPA, médecins généralistes)" /></h4>
+      <h4 className="text-sm font-semibold text-foreground mb-4 flex items-center gap-1">Offre médico-sociale</h4>
       <ResponsiveContainer width="100%" height={250}>
         <BarChart data={data}>
           <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
@@ -275,7 +261,7 @@ const EhpadCapaciteChart = ({ department, allData }: { department: DepartmentDat
   ];
   return (
     <div className="p-4 rounded-xl bg-card border border-border shadow-card">
-      <h4 className="text-sm font-semibold text-foreground mb-4 flex items-center gap-1">Capacité EHPAD<ChartInfoButton title="Lits EHPAD" text="Nombre total de lits en EHPAD dans le département, comparé à la région et à la moyenne nationale." howToRead="Si la barre du département est bien en dessous de la moyenne, cela peut indiquer un manque de places d'hébergement. À croiser avec la population 75+ pour évaluer le taux de couverture réel." source="DREES – Panorama statistique 2024" /></h4>
+      <h4 className="text-sm font-semibold text-foreground mb-4 flex items-center gap-1">Capacité EHPAD</h4>
       <ResponsiveContainer width="100%" height={200}>
         <BarChart data={data}>
           <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
@@ -302,7 +288,7 @@ const LiviaProjectionsChart = ({ department }: { department: DepartmentData }) =
   }));
   return (
     <div className="p-4 rounded-xl bg-card border border-border shadow-card">
-      <h4 className="text-sm font-semibold text-foreground mb-4 flex items-center gap-1">Prévisions LIVIA (perte d'autonomie)<ChartInfoButton title="Projections LIVIA" text="Nombre projeté de personnes en perte d'autonomie de 2025 à 2050 (scénario 1), ventilé par genre." howToRead="Si les courbes montent fortement, le département devra anticiper un besoin croissant en infrastructure et personnel. L'écart entre femmes et hommes reflète les différences d'espérance de vie." source="Modèle LIVIA (DREES) – Projections de perte d'autonomie, scénario 2 (lieux de vie)" /></h4>
+      <h4 className="text-sm font-semibold text-foreground mb-4 flex items-center gap-1">Prévisions LIVIA (perte d'autonomie)</h4>
       <ResponsiveContainer width="100%" height={250}>
         <LineChart data={data}>
           <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
@@ -338,7 +324,7 @@ const OffreVsBesoinChart = ({ department, allData }: { department: DepartmentDat
 
   return (
     <div className="p-4 rounded-xl bg-card border border-border shadow-card">
-      <h4 className="text-sm font-semibold text-foreground mb-4 flex items-center gap-1">Offre vs Besoin (lits / 75+)<ChartInfoButton title="Ratio offre/besoin" text="Pourcentage de lits EHPAD par rapport à la population 75+. Compare le département à la moyenne France." howToRead="Un ratio de 10 % signifie qu'il y a 10 lits pour 100 personnes de 75+. Si le département est en dessous de la moyenne, la capacité d'accueil est sous-dimensionnée par rapport aux besoins." source="DREES – Panorama statistique 2024 + INSEE RP 2020 (population 75+)" /></h4>
+      <h4 className="text-sm font-semibold text-foreground mb-4 flex items-center gap-1">Offre vs Besoin (lits / 75+)</h4>
       <ResponsiveContainer width="100%" height={200}>
         <BarChart data={data}>
           <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
@@ -395,7 +381,7 @@ const RadarSocialChart = ({ department, allData }: { department: DepartmentData;
   
   return (
     <div className="p-4 rounded-xl bg-card border border-border shadow-card">
-      <h4 className="text-sm font-semibold text-foreground mb-4 flex items-center gap-1">Profil social 60–74 ans (%)<ChartInfoButton title="Radar social" text="Chaque axe représente un indicateur social en % des 60-74 ans : diplôme, immigration, propriété, isolement féminin, accès voiture." howToRead="Le tracé coloré = département, le tracé clair = moyenne France. Si un axe dépasse la moyenne, c'est une spécificité locale. Ex : un axe 'Sans voiture' élevé signale un risque d'enclavement." source="INSEE – Recensement de la population 2020, indicateurs départementaux 60+ et 75+" /></h4>
+      <h4 className="text-sm font-semibold text-foreground mb-4 flex items-center gap-1">Profil social 60–74 ans (%)</h4>
       <ResponsiveContainer width="100%" height={250}>
         <RadarChart data={data}>
           <PolarGrid stroke="hsl(var(--border))" />
@@ -431,7 +417,7 @@ const SansVoitureChart = ({ department, allData }: { department: DepartmentData;
   ];
   return (
     <div className="p-4 rounded-xl bg-card border border-border shadow-card">
-      <h4 className="text-sm font-semibold text-foreground mb-4 flex items-center gap-1">Sans voiture par âge<ChartInfoButton title="Mobilité des seniors" text="Part des seniors sans voiture, ventilée par tranche d'âge (60-74 ans et 75+)." howToRead="Comparez les barres rouges (département) aux grises (moyenne France). Un taux élevé chez les 75+ sans offre de transport adaptée = risque d'isolement et de renoncement aux soins." source="INSEE – Recensement de la population 2020, indicateurs départementaux 75+" /></h4>
+      <h4 className="text-sm font-semibold text-foreground mb-4 flex items-center gap-1">Sans voiture par âge</h4>
       <ResponsiveContainer width="100%" height={200}>
         <BarChart data={data}>
           <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
@@ -505,7 +491,7 @@ const FragiliteNumeriqueChart = ({ department }: { department: DepartmentData })
 
   return (
     <div className="p-4 rounded-xl bg-card border border-border shadow-card">
-      <h4 className="text-sm font-semibold text-foreground mb-2 flex items-center gap-1">Fragilité numérique<ChartInfoButton title="Score de fragilité numérique" text="Score de 0 à 10 mesurant la vulnérabilité numérique de la population senior du département." howToRead="L'aiguille pointe vers la zone verte (0-3 : faible), jaune (3-7 : modéré) ou rouge (7-10 : élevé). Un score élevé signifie que beaucoup de seniors ont un accès limité à Internet et aux démarches en ligne." source="Score composite – INSEE (diplôme, accès Internet) et indicateurs communaux 60+" /></h4>
+      <h4 className="text-sm font-semibold text-foreground mb-2 flex items-center gap-1">Fragilité numérique</h4>
       <div className="flex justify-center">
         <svg viewBox="0 0 240 160" className="w-full max-w-[280px] md:max-w-[300px]">
           {/* Background track */}
@@ -563,7 +549,7 @@ const IsolementSocialChart = ({ department }: { department: DepartmentData }) =>
   const innerData = [{ name: "Hommes isolés", value: Math.max(0, isoles - femmesIsolees) }, { name: "Femmes isolées", value: femmesIsolees }];
   return (
     <div className="p-4 rounded-xl bg-card border border-border shadow-card">
-      <h4 className="text-sm font-semibold text-foreground mb-4 flex items-center gap-1">Isolement social +60 ans<ChartInfoButton title="Isolement social" text="Anneau extérieur : proportion de seniors isolés vs non-isolés. Anneau intérieur : répartition hommes/femmes parmi les personnes isolées." howToRead="Plus la part rouge (isolés) est grande dans l'anneau extérieur, plus le département est touché. L'anneau intérieur montre si les femmes sont plus concernées — ce qui est souvent le cas après le décès du conjoint." source="INSEE – Recensement de la population 2020, indicateurs départementaux 60+ et 75+" /></h4>
+      <h4 className="text-sm font-semibold text-foreground mb-4 flex items-center gap-1">Isolement social +60 ans</h4>
       <ResponsiveContainer width="100%" height={240}>
         <PieChart>
           <Pie data={outerData} cx="50%" cy="50%" outerRadius={65} innerRadius={40} dataKey="value" label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`} labelLine={false} style={{ fontSize: '10px' }}>
@@ -589,7 +575,7 @@ const IsolementParAgeChart = ({ department, allData }: { department: DepartmentD
   ];
   return (
     <div className="p-4 rounded-xl bg-card border border-border shadow-card">
-      <h4 className="text-sm font-semibold text-foreground mb-4 flex items-center gap-1">Seniors vivant seuls par tranche d'âge<ChartInfoButton title="Seniors seuls" text="Nombre de seniors vivant seuls, ventilé par tranche d'âge (60-74 et 75+)." howToRead="Comparez la barre rouge (département) à la grise (moyenne France). Un nombre élevé chez les 75+ est particulièrement préoccupant car ces personnes sont plus vulnérables et dépendantes." source="INSEE – Recensement de la population 2020, indicateurs départementaux 60+ et 75+" /></h4>
+      <h4 className="text-sm font-semibold text-foreground mb-4 flex items-center gap-1">Seniors vivant seuls par tranche d'âge</h4>
       <ResponsiveContainer width="100%" height={200}>
         <BarChart data={data}>
           <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
@@ -614,7 +600,7 @@ const DemographieSeniorsChart = ({ department }: { department: DepartmentData })
   ];
   return (
     <div className="p-4 rounded-xl bg-card border border-border shadow-card">
-      <h4 className="text-sm font-semibold text-foreground mb-4 flex items-center gap-1">Répartition démographique seniors<ChartInfoButton title="Pyramide des âges" text="Effectifs de la population senior répartis par genre (F/H) et tranche d'âge (60-74 et 75+)." howToRead="Les 4 barres permettent de voir l'équilibre du département : un fort décalage entre F et H chez les 75+ reflète l'écart d'espérance de vie. Une dominance des 75+ peut indiquer un vieillissement accéléré." source="INSEE – Recensement de la population 2020, populations départementales 60+ et 75+" /></h4>
+      <h4 className="text-sm font-semibold text-foreground mb-4 flex items-center gap-1">Répartition démographique seniors</h4>
       <ResponsiveContainer width="100%" height={200}>
         <BarChart data={data}>
           <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
@@ -642,7 +628,7 @@ const RevenusChart = ({ department, allData }: { department: DepartmentData; all
   ];
   return (
     <div className="p-4 rounded-xl bg-card border border-border shadow-card">
-      <h4 className="text-sm font-semibold text-foreground mb-4 flex items-center gap-1">Revenu médian (€/mois)<ChartInfoButton title="Revenus médians" text="Revenu médian mensuel par tranche d'âge. La moitié de la population gagne plus, l'autre moitié gagne moins." howToRead="Comparez les barres rouges (département) aux oranges (moyenne nationale). Un revenu plus bas que la moyenne, surtout chez les 75+, signale un risque de précarité et potentiellement de renoncement aux soins." source="FILOSOFI (INSEE) – Revenus fiscaux localisés des ménages, 2020" /></h4>
+      <h4 className="text-sm font-semibold text-foreground mb-4 flex items-center gap-1">Revenu médian (€/mois)</h4>
       <ResponsiveContainer width="100%" height={200}>
         <BarChart data={data}>
           <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
@@ -665,7 +651,7 @@ const LogementChart = ({ department }: { department: DepartmentData }) => {
   const data = [{ name: "Propriétaires", value: proprietaires }, { name: "Locataires", value: Math.max(0, total - proprietaires) }];
   return (
     <div className="p-4 rounded-xl bg-card border border-border shadow-card">
-      <h4 className="text-sm font-semibold text-foreground mb-4 flex items-center gap-1">Propriétaires vs Locataires<ChartInfoButton title="Statut d'occupation" text="Répartition des seniors entre propriétaires et locataires dans le département." howToRead="Un taux élevé de propriétaires indique un meilleur ancrage territorial et moins de charges de logement. À l'inverse, beaucoup de locataires seniors avec des revenus faibles = risque de précarité locative." source="INSEE – Recensement de la population 2020, indicateurs départementaux 60+ et 75+" /></h4>
+      <h4 className="text-sm font-semibold text-foreground mb-4 flex items-center gap-1">Propriétaires vs Locataires</h4>
       <ResponsiveContainer width="100%" height={180}>
         <PieChart>
           <Pie data={data} cx="50%" cy="50%" innerRadius={30} outerRadius={55} dataKey="value" label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`} labelLine={false} style={{ fontSize: '10px', fill: '#222' }}>
@@ -685,7 +671,7 @@ const AspaEvolutionChart = ({ department }: { department: DepartmentData }) => {
   const data = annees.map(annee => ({ annee, value: department[`aspa_effectif_${annee}` as keyof DepartmentData] as number || 0 }));
   return (
     <div className="p-4 rounded-xl bg-card border border-border shadow-card">
-      <h4 className="text-sm font-semibold text-foreground mb-4 flex items-center gap-1">Évolution bénéficiaires ASPA<ChartInfoButton title="Évolution ASPA" text="Nombre de bénéficiaires de l'Allocation de Solidarité aux Personnes Âgées (minimum vieillesse) de 2013 à 2024." howToRead="Une courbe qui monte indique une précarisation croissante des retraités. Si la hausse est plus forte que la moyenne nationale, le département se paupérise plus vite que le reste du pays." source="Caisse des Dépôts / DREES – Effectifs ASPA par département, série annuelle 2013-2024" /></h4>
+      <h4 className="text-sm font-semibold text-foreground mb-4 flex items-center gap-1">Évolution bénéficiaires ASPA</h4>
       <ResponsiveContainer width="100%" height={250}>
         <LineChart data={data}>
           <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
@@ -707,7 +693,7 @@ const AplSapaChart = ({ department, allData }: { department: DepartmentData; all
   ];
   return (
     <div className="p-4 rounded-xl bg-card border border-border shadow-card">
-      <h4 className="text-sm font-semibold text-foreground mb-4 flex items-center gap-1">APL Services d'aide (SAPA)<ChartInfoButton title="APL SAPA" text="Accessibilité Potentielle Localisée aux Services d'Aide et de soins à domicile. Mesure le nombre de professionnels disponibles par habitant." howToRead="Comparez les 3 barres : si le département (rouge) est nettement sous la France (jaune), l'offre de services à domicile est insuffisante pour maintenir les seniors chez eux." source="DREES – Panorama statistique 2024, APL aux Services Autonomie à domicile" /></h4>
+      <h4 className="text-sm font-semibold text-foreground mb-4 flex items-center gap-1">APL Services d'aide (SAPA)</h4>
       <ResponsiveContainer width="100%" height={200}>
         <BarChart data={data}>
           <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
@@ -731,7 +717,7 @@ const AplEhpaChart = ({ department, allData }: { department: DepartmentData; all
   ];
   return (
     <div className="p-4 rounded-xl bg-card border border-border shadow-card">
-      <h4 className="text-sm font-semibold text-foreground mb-4 flex items-center gap-1">APL Établissements (EHPA)<ChartInfoButton title="APL EHPA" text="Accessibilité Potentielle Localisée aux Établissements d'Hébergement pour Personnes Âgées. Mesure la capacité d'accueil par habitant." howToRead="Même lecture que l'APL SAPA : comparez le département à la région et la France. Un écart important signale un déficit de places en établissement sur le territoire." source="DREES – Panorama statistique 2024, APL aux EHPA" /></h4>
+      <h4 className="text-sm font-semibold text-foreground mb-4 flex items-center gap-1">APL Établissements (EHPA)</h4>
       <ResponsiveContainer width="100%" height={200}>
         <BarChart data={data}>
           <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
@@ -774,7 +760,7 @@ const PathologiesGenreChart = ({ department }: { department: DepartmentData }) =
 
   return (
     <div className="p-4 rounded-xl bg-card border border-border shadow-card">
-      <h4 className="text-sm font-semibold text-foreground mb-4 flex items-center gap-1">Diagnostics par genre (top 8) <AmeliSource /><ChartInfoButton title="Diagnostics par genre" text="Compare la prévalence des 8 diagnostics les plus courants entre femmes (rouge) et hommes (orange). Catégories génériques exclues." howToRead="Si une barre rouge est nettement plus longue que l'orange pour un même diagnostic, les femmes sont davantage touchées (et inversement). Cela peut orienter des actions de prévention ciblées par genre." source="Dataset Ameli (CNAM) – Effectif départemental par pathologie, sexe et âge, 2023" /></h4>
+      <h4 className="text-sm font-semibold text-foreground mb-4 flex items-center gap-1">Diagnostics par genre (top 8)</h4>
       <ResponsiveContainer width="100%" height={350}>
         <BarChart data={data} layout="vertical">
           <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
