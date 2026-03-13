@@ -19,14 +19,14 @@ interface DepartmentChartsProps {
 }
 
 const COLORS = {
-  primary: "#C41E3A",
-  secondary: "#FF8C42",
-  tertiary: "#E6A030",
-  quaternary: "#8B4513",
-  accent: "#D2691E",
-  light: "#FFE8B0",
-  muted: "#B8860B",
-  dark: "#A0522D",
+  primary: "#1E40AF",
+  secondary: "#3B82F6",
+  tertiary: "#60A5FA",
+  quaternary: "#1E3A5F",
+  accent: "#2563EB",
+  light: "#DBEAFE",
+  muted: "#6B7280",
+  dark: "#1E3A8A",
 };
 
 const formatAxisK = (value: number) => {
