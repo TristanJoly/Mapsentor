@@ -113,12 +113,14 @@ const Top5MaladiesChart = ({ department }: { department: DepartmentData }) => {
 
 const Top10MaladiesCompareChart = ({ department, allData }: { department: DepartmentData; allData: DepartmentData[] }) => {
   const maladies = department.maladies_65_plus;
+  const total65 = department.total_65_plus || 0;
   if (!maladies || Object.keys(maladies).length === 0) return null;
   const top10 = Object.entries(maladies).filter(([_, value]) => value > 0).sort((a, b) => b[1] - a[1]).slice(0, 10);
   const data = top10.map(([name, value]) => ({
     name: name.substring(0, 22),
     fullName: name,
     departement: value,
+    effectif: total65 > 0 ? Math.round(value * total65 / 100) : 0,
     region: getRegionMaladieAverage(allData, department.region, name),
     france: getFranceMaladieAverage(allData, name),
   }));
@@ -131,7 +133,23 @@ const Top10MaladiesCompareChart = ({ department, allData }: { department: Depart
           <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
           <XAxis type="number" tick={{ fontSize: 10 }} unit="%" />
           <YAxis dataKey="name" type="category" tick={{ fontSize: 8 }} width={130} />
-          <Tooltip formatter={(value: number, name: string) => [`${value.toFixed(1)}%`, name]} labelFormatter={(label) => data.find(d => d.name === label)?.fullName || label} contentStyle={{ background: 'hsl(var(--card))', border: '1px solid hsl(var(--border))', borderRadius: '8px', fontSize: '12px' }} />
+          <Tooltip 
+            content={({ active, payload }) => {
+              if (!active || !payload?.length) return null;
+              const d = payload[0].payload;
+              return (
+                <div className="rounded-lg border border-border bg-card p-2.5 shadow-md text-xs">
+                  <p className="font-medium text-foreground mb-1">{d.fullName}</p>
+                  {payload.map((p: any, i: number) => (
+                    <p key={i} className="text-muted-foreground">
+                      <span style={{ color: p.color }}>●</span> {p.name} : {p.value.toFixed(1)}%
+                      {p.dataKey === 'departement' && d.effectif > 0 && <span className="font-semibold"> (≈ {d.effectif.toLocaleString('fr-FR')} pers.)</span>}
+                    </p>
+                  ))}
+                </div>
+              );
+            }}
+          />
           <Bar dataKey="departement" fill={COLORS.primary} name="Département" />
           <Bar dataKey="region" fill={COLORS.secondary} name="Région" />
           <Bar dataKey="france" fill={COLORS.tertiary} name="France" />
