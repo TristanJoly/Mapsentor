@@ -19,12 +19,12 @@ const CATEGORY_META: Record<string, { label: string; icon: React.ReactNode; colo
 const formatCondition = (condition: { column: keyof DepartmentData | string; direction: "low" | "high"; label: string }, allData: DepartmentData[], department: DepartmentData) => {
   const colName = String(condition.column);
   const value = getDeptValue(department, colName);
-  const d1 = getDecile(allData, colName, 0.10);
-  const d10 = getDecile(allData, colName, 0.90);
+  const q1 = getQuartile(allData, colName, 0.25);
+  const q4 = getQuartile(allData, colName, 0.75);
   const dir = condition.direction === "high" ? "supérieur" : "inférieur";
-  const seuil = condition.direction === "high" ? d10 : d1;
-  const decileLabel = condition.direction === "high" ? "D10 (90%)" : "D1 (10%)";
-  return `${condition.label} = ${value.toFixed(1)} (${dir} au ${decileLabel} = ${seuil.toFixed(1)})`;
+  const seuil = condition.direction === "high" ? q4 : q1;
+  const quartileLabel = condition.direction === "high" ? "Q4 (75%)" : "Q1 (25%)";
+  return `${condition.label} = ${value.toFixed(1)} (${dir} au ${quartileLabel} = ${seuil.toFixed(1)})`;
 };
 
 const AlertCard = ({ alert, allData, department }: { alert: AlertDefinition; allData: DepartmentData[]; department: DepartmentData }) => {
