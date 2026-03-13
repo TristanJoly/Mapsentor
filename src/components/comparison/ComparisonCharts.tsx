@@ -33,8 +33,14 @@ const RadarSocialComparison = ({ dept1, dept2 }: { dept1: DepartmentData; dept2:
 
   return (
     <div className="p-4 rounded-xl bg-card border border-border shadow-card">
-      <h4 className="text-sm font-semibold text-foreground mb-4">
+      <h4 className="text-sm font-semibold text-foreground mb-4 flex items-center gap-1">
         Profil social 60–74 ans
+        <ChartInfoButton
+          title="Profil social comparatif"
+          text="Radar comparant les caractéristiques sociales des 60-74 ans entre les deux départements : diplômes, immigration, propriété, isolement féminin et mobilité."
+          howToRead="Chaque axe représente un indicateur social. Plus le tracé s'étend vers l'extérieur, plus la valeur est élevée. Comparez les deux formes pour identifier les différences de profil social."
+          source="INSEE – Recensement de la population 2020, données départementales"
+        />
       </h4>
       <ResponsiveContainer width="100%" height={280}>
         <RadarChart data={data}>
