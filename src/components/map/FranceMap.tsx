@@ -332,16 +332,16 @@ export const FranceMap = ({ data, selectedMetric, selectedDepartment, onDepartme
             return (
               <Marker key={`idf-marker-${dept.code}`} coordinates={coords}>
                 <g style={{ cursor: 'pointer' }} onClick={() => onDepartmentClick(dept.code)}>
-                  {/* Larger pin for visibility */}
-                  <g transform="translate(-10, -26)">
+                  {/* Large pin for max visibility */}
+                  <g transform="translate(-14, -36)">
                     <path
-                      d="M10 0C4.48 0 0 4.48 0 10c0 7.5 10 16 10 16s10-8.5 10-16c0-5.52-4.48-10-10-10z"
+                      d="M14 0C6.268 0 0 6.268 0 14c0 10.5 14 22 14 22s14-11.5 14-22C28 6.268 21.732 0 14 0z"
                       fill={color}
                       stroke="#fff"
-                      strokeWidth="2"
+                      strokeWidth="2.5"
                     />
-                    <circle cx="10" cy="9" r="5" fill="#fff" opacity="0.95" />
-                    <text textAnchor="middle" x="10" y="12" style={{ fontFamily: "system-ui", fill: color, fontSize: 8, fontWeight: "bold" }}>
+                    <circle cx="14" cy="12" r="8" fill="#fff" opacity="0.95" />
+                    <text textAnchor="middle" x="14" y="16" style={{ fontFamily: "system-ui", fill: color, fontSize: 12, fontWeight: "bold" }}>
                       {alertCount}
                     </text>
                   </g>
