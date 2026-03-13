@@ -351,37 +351,84 @@ const LiviaProjectionsChart = ({ department }: { department: DepartmentData }) =
 
 // Offre VS Besoin (nouveau graphique)
 const OffreVsBesoinChart = ({ department, allData }: { department: DepartmentData; allData: DepartmentData[] }) => {
-  // Besoin = population 75+ * taux EHPAD théorique
-  // Offre = lits EHPAD
+  const regionData = allData.filter(d => d.region === department.region);
   const besoin75 = department.femmes_75_plus + department.hommes_75_plus;
   const offreLits = department.ehpad_nb_lits;
+  const nbEtab = department.ehpad_nb_etab;
   const tauxCouverture = besoin75 > 0 ? (offreLits / besoin75) * 100 : 0;
   
-  const avgTaux = allData.reduce((sum, d) => {
+  // Moyennes médecins et aides à domicile
+  const aplSapa = department.apl_sapa;
+  const aplEhpa = department.apl_ehpa;
+  const medecins = department.access_med_generalistes;
+
+  const calcTaux = (d: DepartmentData) => {
     const b = d.femmes_75_plus + d.hommes_75_plus;
-    return sum + (b > 0 ? (d.ehpad_nb_lits / b) * 100 : 0);
-  }, 0) / allData.length;
+    return b > 0 ? (d.ehpad_nb_lits / b) * 100 : 0;
+  };
+  const avgTaux = allData.reduce((sum, d) => sum + calcTaux(d), 0) / allData.length;
+  const regionTaux = regionData.reduce((sum, d) => sum + calcTaux(d), 0) / (regionData.length || 1);
 
   const data = [
-    { name: "Département", value: tauxCouverture },
-    { name: "Moy. France", value: avgTaux },
+    { 
+      name: "Taux couverture EHPAD", 
+      departement: parseFloat(tauxCouverture.toFixed(1)), 
+      region: parseFloat(regionTaux.toFixed(1)),
+      france: parseFloat(avgTaux.toFixed(1)),
+    },
   ];
 
   return (
     <div className="p-4 rounded-xl bg-card border border-border shadow-card">
-      <h4 className="text-sm font-semibold text-foreground mb-4 flex items-center gap-1">Offre vs Besoin (lits / 75+)<ChartInfoButton title="Ratio offre/besoin" text="Pourcentage de lits EHPAD par rapport à la population 75+. Compare le département à la moyenne France." howToRead="Un ratio de 10 % signifie qu'il y a 10 lits pour 100 personnes de 75+. Si le département est en dessous de la moyenne, la capacité d'accueil est sous-dimensionnée par rapport aux besoins." source="DREES – Panorama statistique 2024 + INSEE RP 2020 (population 75+)" /></h4>
+      <h4 className="text-sm font-semibold text-foreground mb-4 flex items-center gap-1">Offre vs Besoin – Synthèse<ChartInfoButton title="Synthèse offre/besoin" text="Vue d'ensemble de l'adéquation entre l'offre médico-sociale et les besoins du département : taux de couverture EHPAD, distances d'accès aux services." howToRead="Comparez le taux de couverture du département à la région et la France. Le tableau ci-dessous détaille les indicateurs clés pour évaluer si le territoire est bien doté." source="DREES – Panorama statistique 2024 + INSEE RP 2020" /></h4>
       <ResponsiveContainer width="100%" height={200}>
         <BarChart data={data}>
           <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
           <XAxis dataKey="name" tick={{ fontSize: 10 }} />
           <YAxis tick={{ fontSize: 10 }} unit="%" />
-          <Tooltip formatter={(value: number) => `${value.toFixed(1)}%`} contentStyle={{ background: 'hsl(var(--card))', border: '1px solid hsl(var(--border))', borderRadius: '8px', fontSize: '12px' }} />
-          <Bar dataKey="value" radius={[4, 4, 0, 0]}>
-            <Cell fill={COLORS.primary} />
-            <Cell fill={COLORS.muted} />
-          </Bar>
+          <Tooltip 
+            content={({ active, payload }) => {
+              if (!active || !payload?.length) return null;
+              const d = payload[0].payload;
+              return (
+                <div className="rounded-lg border border-border bg-card p-2.5 shadow-md text-xs">
+                  <p className="font-medium text-foreground mb-1">Taux de couverture EHPAD (lits / pop. 75+)</p>
+                  <p className="text-muted-foreground"><span style={{ color: COLORS.primary }}>●</span> Département : {d.departement}%</p>
+                  <p className="text-muted-foreground"><span style={{ color: COLORS.secondary }}>●</span> Région : {d.region}%</p>
+                  <p className="text-muted-foreground"><span style={{ color: COLORS.tertiary }}>●</span> France : {d.france}%</p>
+                </div>
+              );
+            }}
+          />
+          <Bar dataKey="departement" fill={COLORS.primary} name="Département" />
+          <Bar dataKey="region" fill={COLORS.secondary} name="Région" />
+          <Bar dataKey="france" fill={COLORS.tertiary} name="France" />
+          <Legend wrapperStyle={{ fontSize: '11px', color: '#333' }} />
         </BarChart>
       </ResponsiveContainer>
+      {/* Tableau de synthèse */}
+      <div className="mt-4 grid grid-cols-2 gap-2 text-xs">
+        <div className="p-2.5 rounded-lg bg-blue-50/60 border border-blue-100">
+          <p className="text-muted-foreground">Population 75+</p>
+          <p className="font-bold text-foreground">{besoin75.toLocaleString('fr-FR')}</p>
+        </div>
+        <div className="p-2.5 rounded-lg bg-blue-50/60 border border-blue-100">
+          <p className="text-muted-foreground">Lits EHPAD</p>
+          <p className="font-bold text-foreground">{offreLits.toLocaleString('fr-FR')} <span className="font-normal text-muted-foreground">({nbEtab} étab.)</span></p>
+        </div>
+        <div className="p-2.5 rounded-lg bg-blue-50/60 border border-blue-100">
+          <p className="text-muted-foreground">Accès aide à domicile</p>
+          <p className="font-bold text-foreground">{aplSapa.toFixed(1)} min</p>
+        </div>
+        <div className="p-2.5 rounded-lg bg-blue-50/60 border border-blue-100">
+          <p className="text-muted-foreground">Accès EHPA</p>
+          <p className="font-bold text-foreground">{aplEhpa.toFixed(1)} min</p>
+        </div>
+        <div className="p-2.5 rounded-lg bg-blue-50/60 border border-blue-100 col-span-2">
+          <p className="text-muted-foreground">Accès médecin généraliste</p>
+          <p className="font-bold text-foreground">{medecins.toFixed(1)} min</p>
+        </div>
+      </div>
     </div>
   );
 };
