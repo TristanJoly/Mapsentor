@@ -401,6 +401,20 @@ export const loadDepartmentData = async (): Promise<DepartmentData[]> => {
             atmo_jours_tres_mauvais: parseFloat(a.jours_tres_mauvais) || 0,
           };
         })(),
+        // Qualité de l'eau
+        ...(() => {
+          const code = String(row['code_departement'] || row['Code département'] || '').trim();
+          const e = eauMap[code] || {};
+          return {
+            eau_conformite_bacterio: parseFloat(e.conformite_bacterio) || 0,
+            eau_conformite_physicochim: parseFloat(e.conformite_physicochim) || 0,
+            eau_etat_eco_bon: parseFloat(e.etat_eco_bon) || 0,
+            eau_etat_eco_moyen: parseFloat(e.etat_eco_moyen) || 0,
+            eau_etat_eco_mediocre: parseFloat(e.etat_eco_mediocre) || 0,
+            eau_etat_chimique_bon: parseFloat(e.etat_chimique_bon) || 0,
+            eau_pesticides_depassement: parseFloat(e.taux_pesticides_depassement) || 0,
+          };
+        })(),
       };
     }) as DepartmentData[];
 
