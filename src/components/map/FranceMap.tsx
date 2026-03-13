@@ -1,4 +1,5 @@
 import { useState, useMemo } from "react";
+import { ChevronDown, ChevronUp } from "lucide-react";
 import { ComposableMap, Geographies, Geography, ZoomableGroup, Marker } from "react-simple-maps";
 import { scaleLinear } from "d3-scale";
 import { DepartmentData, getMetricRange } from "@/lib/data";
@@ -31,6 +32,17 @@ const DEPARTMENT_CENTERS: { [key: string]: [number, number] } = {
   "92": [2.25, 48.85], "93": [2.45, 48.92], "94": [2.45, 48.78], "95": [2.1, 49.1],
   "2A": [8.9, 41.9], "2B": [9.3, 42.4]
 };
+
+const IDF_DEPARTMENTS = [
+  { code: "75", name: "Paris" },
+  { code: "77", name: "Seine-et-Marne" },
+  { code: "78", name: "Yvelines" },
+  { code: "91", name: "Essonne" },
+  { code: "92", name: "Hauts-de-Seine" },
+  { code: "93", name: "Seine-Saint-Denis" },
+  { code: "94", name: "Val-de-Marne" },
+  { code: "95", name: "Val-d'Oise" },
+];
 
 interface FranceMapProps {
   data: DepartmentData[];
@@ -101,6 +113,7 @@ const FoliumMarker = ({
 };
 
 export const FranceMap = ({ data, selectedMetric, selectedDepartment, onDepartmentClick }: FranceMapProps) => {
+  const [idfOpen, setIdfOpen] = useState(false);
   const [position, setPosition] = useState({ coordinates: [2.5, 46.5] as [number, number], zoom: 1 });
 
   const metricRange = useMemo(() => getMetricRange(data, selectedMetric), [data, selectedMetric]);
@@ -253,13 +266,43 @@ export const FranceMap = ({ data, selectedMetric, selectedDepartment, onDepartme
         >
           ⌂
         </button>
+      </div>
+
+      {/* Île-de-France floating panel */}
+      <div className="absolute top-4 left-4 z-10">
         <button
-          onClick={() => setPosition({ coordinates: [2.35, 48.75], zoom: 12 })}
-          className="w-8 h-8 rounded-lg bg-card border border-border shadow-soft flex items-center justify-center text-[9px] font-bold text-muted-foreground hover:bg-muted transition-colors"
-          title="Zoom Île-de-France"
+          onClick={() => setIdfOpen(!idfOpen)}
+          className="flex items-center gap-1.5 px-3 py-2 rounded-lg bg-card border border-border shadow-soft text-xs font-semibold text-foreground hover:bg-muted transition-colors"
         >
-          IdF
+          Île-de-France
+          {idfOpen ? <ChevronUp className="w-3.5 h-3.5" /> : <ChevronDown className="w-3.5 h-3.5" />}
         </button>
+        {idfOpen && (
+          <div className="mt-1 p-2 rounded-lg bg-card border border-border shadow-elevated max-h-[280px] overflow-y-auto w-[200px]">
+            {IDF_DEPARTMENTS.map(dept => {
+              const alertCount = departmentAlerts[dept.code] || 0;
+              const isSelected = dept.code === selectedDepartment;
+              const color = alertCount > 0 ? getWarningColor(alertCount) : undefined;
+              return (
+                <button
+                  key={dept.code}
+                  onClick={() => { onDepartmentClick(dept.code); setIdfOpen(false); }}
+                  className={`w-full flex items-center gap-2 px-2.5 py-1.5 rounded-md text-left text-xs transition-colors ${
+                    isSelected ? 'bg-primary/10 text-primary font-semibold' : 'text-foreground hover:bg-muted'
+                  }`}
+                >
+                  {alertCount > 0 && (
+                    <span className="w-2.5 h-2.5 rounded-full shrink-0" style={{ backgroundColor: color }} />
+                  )}
+                  <span className="truncate">{dept.code} - {dept.name}</span>
+                  {alertCount > 0 && (
+                    <span className="ml-auto text-[10px] text-muted-foreground">{alertCount} alerte{alertCount > 1 ? 's' : ''}</span>
+                  )}
+                </button>
+              );
+            })}
+          </div>
+        )}
       </div>
 
       {/* Legend */}
