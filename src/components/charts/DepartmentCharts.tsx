@@ -530,7 +530,7 @@ const IsolementSocialChart = ({ department }: { department: DepartmentData }) =>
   const innerData = [{ name: "Hommes isolés", value: Math.max(0, isoles - femmesIsolees) }, { name: "Femmes isolées", value: femmesIsolees }];
   return (
     <div className="p-4 rounded-xl bg-card border border-border shadow-card">
-      <h4 className="text-sm font-semibold text-foreground mb-4 flex items-center gap-1">Isolement social +60 ans<ChartInfoButton text="Anneau extérieur : part des seniors isolés vs non-isolés. Anneau intérieur : répartition hommes/femmes parmi les isolés." /></h4>
+      <h4 className="text-sm font-semibold text-foreground mb-4 flex items-center gap-1">Isolement social +60 ans<ChartInfoButton title="Isolement social" text="Anneau extérieur : proportion de seniors isolés vs non-isolés. Anneau intérieur : répartition hommes/femmes parmi les personnes isolées." howToRead="Plus la part rouge (isolés) est grande dans l'anneau extérieur, plus le département est touché. L'anneau intérieur montre si les femmes sont plus concernées — ce qui est souvent le cas après le décès du conjoint." /></h4>
       <ResponsiveContainer width="100%" height={240}>
         <PieChart>
           <Pie data={outerData} cx="50%" cy="50%" outerRadius={65} innerRadius={40} dataKey="value" label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`} labelLine={false} style={{ fontSize: '10px', fill: '#222' }}>
