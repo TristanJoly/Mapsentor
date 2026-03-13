@@ -1,7 +1,7 @@
 import { AlertTriangle, Wrench, Info, ExternalLink, Sparkles, Heart, Euro, Users, ChevronDown, ChevronUp } from "lucide-react";
 import { useState } from "react";
 import { DepartmentData } from "@/lib/data";
-import { getAllDepartmentAlerts, AlertDefinition, getDecile, getDeptValue } from "@/lib/alertConfig";
+import { getAllDepartmentAlerts, AlertDefinition, getQuartile, getDeptValue } from "@/lib/alertConfig";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 
 interface DepartmentAlertsProps {
@@ -19,12 +19,12 @@ const CATEGORY_META: Record<string, { label: string; icon: React.ReactNode; colo
 const formatCondition = (condition: { column: keyof DepartmentData | string; direction: "low" | "high"; label: string }, allData: DepartmentData[], department: DepartmentData) => {
   const colName = String(condition.column);
   const value = getDeptValue(department, colName);
-  const d1 = getDecile(allData, colName, 0.10);
-  const d10 = getDecile(allData, colName, 0.90);
+  const q1 = getQuartile(allData, colName, 0.25);
+  const q4 = getQuartile(allData, colName, 0.75);
   const dir = condition.direction === "high" ? "supérieur" : "inférieur";
-  const seuil = condition.direction === "high" ? d10 : d1;
-  const decileLabel = condition.direction === "high" ? "D10 (90%)" : "D1 (10%)";
-  return `${condition.label} = ${value.toFixed(1)} (${dir} au ${decileLabel} = ${seuil.toFixed(1)})`;
+  const seuil = condition.direction === "high" ? q4 : q1;
+  const quartileLabel = condition.direction === "high" ? "Q4 (75%)" : "Q1 (25%)";
+  return `${condition.label} = ${value.toFixed(1)} (${dir} au ${quartileLabel} = ${seuil.toFixed(1)})`;
 };
 
 const AlertCard = ({ alert, allData, department }: { alert: AlertDefinition; allData: DepartmentData[]; department: DepartmentData }) => {
@@ -64,7 +64,7 @@ const AlertCard = ({ alert, allData, department }: { alert: AlertDefinition; all
             <div className="pt-2 border-t border-border">
               <p className="text-[11px] font-medium text-primary mb-1">📖 Comment lire cette alerte ?</p>
               <p className="text-xs text-muted-foreground leading-relaxed mb-2">
-                L'alerte se déclenche quand toutes les conditions ci-dessous sont réunies. « Bas » = 1er décile (10% les plus bas), « Haut » = dernier décile (10% les plus hauts).
+                L'alerte se déclenche quand toutes les conditions ci-dessous sont réunies. « Bas » = 1er quartile (25% les plus bas), « Haut » = dernier quartile (25% les plus hauts).
               </p>
               <ul className="text-xs space-y-1 list-disc pl-3">
                 {alert.conditions.map((cond, j) => (
@@ -131,7 +131,7 @@ export const DepartmentAlerts = ({ department, allData }: DepartmentAlertsProps)
       <h3 className="text-sm font-semibold text-foreground flex items-center gap-2">
         <AlertTriangle className="w-4 h-4" />
         {alertCount} alerte{alertCount !== 1 ? 's' : ''} détectée{alertCount !== 1 ? 's' : ''}
-        <span className="text-[10px] font-normal text-muted-foreground">(seuil : déciles D1/D10)</span>
+        <span className="text-[10px] font-normal text-muted-foreground">(seuil : quartiles Q1/Q4)</span>
       </h3>
       
       {alerts.length === 0 ? (
