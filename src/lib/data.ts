@@ -140,7 +140,7 @@ export interface DepartmentData {
 export const metrics = [
   { id: "isoles_60_74", label: "Vulnérabilité sociale (seniors isolés)", unit: "", description: "Nombre de personnes isolées entre 60 et 74 ans" },
   { id: "taux_pauvrete_75", label: "Vulnérabilité économique (seniors démunis)", unit: "%", description: "Taux de pauvreté pour les plus de 75 ans" },
-  { id: "mal_chro_oui", label: "Vulnérabilité sanitaire (seniors malades)", unit: "%", description: "Part des seniors atteints de maladies chroniques" },
+  { id: "mal_chro_oui", label: "Vulnérabilité sanitaire (seniors malades)", unit: "", description: "Nombre moyen de pathologies par personne de 65 ans et plus" },
 ];
 
 let cachedData: DepartmentData[] | null = null;
@@ -284,7 +284,7 @@ export const loadDepartmentData = async (): Promise<DepartmentData[]> => {
           const totalMaladies = Object.keys(row)
             .filter(k => k.startsWith('≥ 65 ans - ') && !k.includes('Total'))
             .reduce((sum, k) => sum + (parseFloat(row[k]) || 0), 0);
-          return total65Plus > 0 ? (totalMaladies / total65Plus) * 100 : 0;
+          return total65Plus > 0 ? totalMaladies / total65Plus : 0;
         })(),
         handicap_oui: (() => {
           const ensemble = parseFloat(row['HANDICAP_Ensemble']) || 0;
