@@ -62,7 +62,7 @@ const Index = () => {
         />
       </div>
       
-      <main className="flex-1 p-4 md:p-6 lg:p-8 overflow-auto w-full">
+      <main className="flex-1 p-3 md:p-6 lg:p-8 overflow-auto w-full">
         {/* Header */}
         <div className="mb-4 md:mb-6 flex items-start gap-3">
           <Button
