@@ -83,7 +83,7 @@ const Top5MaladiesChart = ({ department }: { department: DepartmentData }) => {
 
   return (
     <div className="p-4 rounded-xl bg-card border border-border shadow-card">
-      <h4 className="text-sm font-semibold text-foreground mb-4 flex items-center gap-1">Prévalence des 5 maladies les plus fréquentes <AmeliSource /><ChartInfoButton title="Top 5 maladies" text="Barres horizontales montrant les 5 maladies les plus fréquentes chez les 65+ dans ce département. La valeur est en % de la population senior." howToRead="Plus la barre est longue, plus la maladie touche de personnes. Cherchez les maladies qui dépassent nettement les autres : elles représentent les enjeux de santé prioritaires du territoire." source="Dataset Ameli (CNAM) – Effectif départemental par pathologie, sexe et âge, 2023" /></h4>
+      <h4 className="text-sm font-semibold text-foreground mb-4 flex items-center gap-1">Top 5 diagnostics identifiés chez les 65+ <AmeliSource /><ChartInfoButton title="Top 5 diagnostics" text="Barres horizontales montrant les 5 diagnostics les plus fréquents chez les 65+ dans ce département (catégories génériques exclues). La valeur est en % de la population senior." howToRead="Plus la barre est longue, plus la pathologie touche de personnes. Cherchez les diagnostics qui dépassent nettement les autres : ils représentent les enjeux de santé prioritaires du territoire." source="Dataset Ameli (CNAM) – Effectif départemental par pathologie, sexe et âge, 2023" /></h4>
       <ResponsiveContainer width="100%" height={250}>
         <BarChart data={data} layout="vertical">
           <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
@@ -111,7 +111,7 @@ const Top10MaladiesCompareChart = ({ department, allData }: { department: Depart
 
   return (
     <div className="p-4 rounded-xl bg-card border border-border shadow-card">
-      <h4 className="text-sm font-semibold text-foreground mb-4 flex items-center gap-1">Top 10 pathologies ≥ 65 ans – Comparaison <AmeliSource /><ChartInfoButton title="Comparaison des pathologies" text="Les 10 maladies les plus fréquentes comparées entre le département (rouge), la région (orange) et la France (jaune)." howToRead="Si la barre rouge dépasse l'orange et la jaune, la pathologie est plus répandue localement. Cela peut signaler un besoin de prévention ou de soins renforcés sur le territoire." source="Dataset Ameli (CNAM) – Effectif départemental par pathologie, sexe et âge, 2023" /></h4>
+      <h4 className="text-sm font-semibold text-foreground mb-4 flex items-center gap-1">Top 10 diagnostics ≥ 65 ans – Comparaison <AmeliSource /><ChartInfoButton title="Comparaison des diagnostics" text="Les 10 diagnostics les plus fréquents comparés entre le département (rouge), la région (orange) et la France (jaune). Catégories génériques (« Autres… ») exclues." howToRead="Si la barre rouge dépasse l'orange et la jaune, la pathologie est plus répandue localement. Cela peut signaler un besoin de prévention ou de soins renforcés sur le territoire." source="Dataset Ameli (CNAM) – Effectif départemental par pathologie, sexe et âge, 2023" /></h4>
       <ResponsiveContainer width="100%" height={400}>
         <BarChart data={data} layout="vertical">
           <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
@@ -720,7 +720,7 @@ const PathologiesGenreChart = ({ department }: { department: DepartmentData }) =
 
   return (
     <div className="p-4 rounded-xl bg-card border border-border shadow-card">
-      <h4 className="text-sm font-semibold text-foreground mb-4 flex items-center gap-1">Pathologies par genre (top 8) <AmeliSource /><ChartInfoButton title="Pathologies par genre" text="Compare la prévalence des 8 maladies les plus courantes entre femmes (rouge) et hommes (orange)." howToRead="Si une barre rouge est nettement plus longue que l'orange pour une même maladie, les femmes sont davantage touchées (et inversement). Cela peut orienter des actions de prévention ciblées par genre." source="Dataset Ameli (CNAM) – Effectif départemental par pathologie, sexe et âge, 2023" /></h4>
+      <h4 className="text-sm font-semibold text-foreground mb-4 flex items-center gap-1">Diagnostics par genre (top 8) <AmeliSource /><ChartInfoButton title="Diagnostics par genre" text="Compare la prévalence des 8 diagnostics les plus courants entre femmes (rouge) et hommes (orange). Catégories génériques exclues." howToRead="Si une barre rouge est nettement plus longue que l'orange pour un même diagnostic, les femmes sont davantage touchées (et inversement). Cela peut orienter des actions de prévention ciblées par genre." source="Dataset Ameli (CNAM) – Effectif départemental par pathologie, sexe et âge, 2023" /></h4>
       <ResponsiveContainer width="100%" height={350}>
         <BarChart data={data} layout="vertical">
           <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
@@ -750,8 +750,8 @@ type ChartDef = {
 };
 
 const CHART_REGISTRY: ChartDef[] = [
-  { id: "top5", label: "Top 5 maladies", category: "medical", render: (d) => <Top5MaladiesChart department={d} /> },
-  { id: "patho_genre", label: "Pathologies par genre", category: "medical", render: (d) => <PathologiesGenreChart department={d} /> },
+  { id: "top5", label: "Top 5 diagnostics", category: "medical", render: (d) => <Top5MaladiesChart department={d} /> },
+  { id: "patho_genre", label: "Diagnostics par genre", category: "medical", render: (d) => <PathologiesGenreChart department={d} /> },
   { id: "radar_sante", label: "Zoom état de santé", category: "medical", render: (d, a) => <RadarSanteChart department={d} allData={a} /> },
   { id: "vaccination", label: "Vaccination", category: "medical", render: (d, a) => <VaccinationChart department={d} allData={a} /> },
   { id: "services_medico", label: "Offre médico-sociale", category: "medical", render: (d, a) => <ServicesMedicoSociauxChart department={d} allData={a} /> },
@@ -760,7 +760,7 @@ const CHART_REGISTRY: ChartDef[] = [
   { id: "apl_ehpa", label: "APL EHPA", category: "medical", render: (d, a) => <AplEhpaChart department={d} allData={a} /> },
   { id: "offre_besoin", label: "Offre vs Besoin", category: "medical", render: (d, a) => <OffreVsBesoinChart department={d} allData={a} /> },
   { id: "livia", label: "Prévisions LIVIA", category: "medical", render: (d) => <LiviaProjectionsChart department={d} /> },
-  { id: "top10_compare", label: "Top 10 comparaison", category: "medical", render: (d, a) => <Top10MaladiesCompareChart department={d} allData={a} /> },
+  { id: "top10_compare", label: "Top 10 diagnostics", category: "medical", render: (d, a) => <Top10MaladiesCompareChart department={d} allData={a} /> },
   { id: "radar_social", label: "Profil social 60-74", category: "social", render: (d, a) => <RadarSocialChart department={d} allData={a} /> },
   { id: "isolement_social", label: "Isolement social", category: "social", render: (d) => <IsolementSocialChart department={d} /> },
   { id: "fragilite_num", label: "Fragilité numérique", category: "social", render: (d) => <FragiliteNumeriqueChart department={d} /> },

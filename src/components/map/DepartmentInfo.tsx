@@ -167,7 +167,7 @@ export const DepartmentInfo = ({ department, allData }: DepartmentInfoProps) => 
         <div className="p-4 rounded-xl bg-gradient-to-br from-primary/5 to-primary/10 border border-primary/20">
           <div className="flex items-center gap-2 mb-2">
             <Activity className="w-5 h-5 text-primary" />
-            <span className="text-sm font-medium text-primary/90">Pathologie n°1</span>
+            <span className="text-sm font-medium text-primary/90">Diagnostic n°1</span>
             <TooltipProvider>
               <Tooltip>
                 <TooltipTrigger asChild>
