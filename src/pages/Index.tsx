@@ -119,7 +119,7 @@ const Index = () => {
 
             {/* Metric Selector - juste au-dessus de la carte */}
             <div className="p-4 rounded-xl bg-card border border-border shadow-card">
-              <h4 className="text-sm font-semibold text-foreground mb-3" style={{ color: '#FF8C42' }}>Choix de la métrique</h4>
+              <h4 className="text-sm font-semibold text-foreground mb-3" style={{ color: '#3B82F6' }}>Choix de la métrique</h4>
               <MetricSelector value={selectedMetric} onChange={setSelectedMetric} />
             </div>
 

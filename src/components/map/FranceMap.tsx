@@ -120,7 +120,7 @@ export const FranceMap = ({ data, selectedMetric, selectedDepartment, onDepartme
   const colorScale = useMemo(() => {
     const values = data.map(d => d[selectedMetric] as number).filter(v => !isNaN(v) && v > 0).sort((a, b) => a - b);
     if (values.length === 0) {
-      return scaleLinear<string>().domain([0, 100]).range(["#FFF8DC", "#C41E3A"]);
+      return scaleLinear<string>().domain([0, 100]).range(["#EFF6FF", "#1E40AF"]);
     }
     const [min, max] = [values[0], values[values.length - 1]];
 
@@ -134,7 +134,7 @@ export const FranceMap = ({ data, selectedMetric, selectedDepartment, onDepartme
         if (acc.length === 0 || v > acc[acc.length - 1]) acc.push(v);
         return acc;
       }, []);
-      const colors = ["#FFF8DC", "#FFE4A0", "#FFD580", "#FF8C42", "#D4451A", "#C41E3A"];
+      const colors = ["#EFF6FF", "#DBEAFE", "#93C5FD", "#3B82F6", "#2563EB", "#1E40AF"];
       const selectedColors = domain.length <= 2 
         ? [colors[0], colors[colors.length - 1]]
         : domain.map((_, i) => colors[Math.round(i * (colors.length - 1) / (domain.length - 1))]);
@@ -144,7 +144,7 @@ export const FranceMap = ({ data, selectedMetric, selectedDepartment, onDepartme
     // Linear scale for social and economic
     return scaleLinear<string>()
       .domain([min, (min + max) / 3, (min + max) * 2/3, max])
-      .range(["#FFF8DC", "#FFD580", "#FF8C42", "#C41E3A"]);
+      .range(["#EFF6FF", "#93C5FD", "#3B82F6", "#1E40AF"]);
   }, [data, selectedMetric]);
 
   // Calculate alerts for all departments
@@ -202,7 +202,7 @@ export const FranceMap = ({ data, selectedMetric, selectedDepartment, onDepartme
                         <Geography
                           geography={geo}
                           fill={getFillColor(code)}
-                          stroke={isSelected ? "#C41E3A" : "#e5e5e5"}
+                          stroke={isSelected ? "#1E40AF" : "#e5e5e5"}
                           strokeWidth={isSelected ? 2 : 0.5}
                           style={{
                             default: {
@@ -210,14 +210,14 @@ export const FranceMap = ({ data, selectedMetric, selectedDepartment, onDepartme
                               transition: "all 0.2s",
                             },
                             hover: {
-                              fill: "#FF8C42",
-                              stroke: "#C41E3A",
+                              fill: "#60A5FA",
+                              stroke: "#1E40AF",
                               strokeWidth: 1.5,
                               outline: "none",
                               cursor: "pointer",
                             },
                             pressed: {
-                              fill: "#C41E3A",
+                              fill: "#1E40AF",
                               outline: "none",
                             },
                           }}
@@ -321,12 +321,12 @@ export const FranceMap = ({ data, selectedMetric, selectedDepartment, onDepartme
                         <Geography
                           geography={geo}
                           fill={getFillColor(code)}
-                          stroke={isSelected ? "#C41E3A" : "#64748b"}
+                          stroke={isSelected ? "#1E40AF" : "#64748b"}
                           strokeWidth={isSelected ? 2.5 : 1}
                           style={{
                             default: { outline: "none", transition: "all 0.2s" },
-                            hover: { fill: "#FF8C42", stroke: "#C41E3A", strokeWidth: 2, outline: "none", cursor: "pointer" },
-                            pressed: { fill: "#C41E3A", outline: "none" },
+                            hover: { fill: "#60A5FA", stroke: "#1E40AF", strokeWidth: 2, outline: "none", cursor: "pointer" },
+                            pressed: { fill: "#1E40AF", outline: "none" },
                           }}
                           onClick={() => onDepartmentClick(code)}
                         />
@@ -379,10 +379,10 @@ export const FranceMap = ({ data, selectedMetric, selectedDepartment, onDepartme
       <div className="absolute bottom-4 right-4 glass p-3 rounded-xl shadow-soft">
         <p className="text-xs font-medium text-foreground mb-2">Intensité</p>
         <div className="flex items-center gap-0.5">
-          <div className="h-3 w-6 rounded-l-sm" style={{ background: "#FFF8DC" }}></div>
-          <div className="h-3 w-6" style={{ background: "#FFD580" }}></div>
-          <div className="h-3 w-6" style={{ background: "#FF8C42" }}></div>
-          <div className="h-3 w-6 rounded-r-sm" style={{ background: "#C41E3A" }}></div>
+          <div className="h-3 w-6 rounded-l-sm" style={{ background: "#EFF6FF" }}></div>
+          <div className="h-3 w-6" style={{ background: "#93C5FD" }}></div>
+          <div className="h-3 w-6" style={{ background: "#3B82F6" }}></div>
+          <div className="h-3 w-6 rounded-r-sm" style={{ background: "#1E40AF" }}></div>
         </div>
         {/* Tick values under the scale */}
         <div className="flex justify-between text-[9px] text-muted-foreground mt-0.5 w-[96px]">

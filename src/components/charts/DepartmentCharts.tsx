@@ -19,14 +19,14 @@ interface DepartmentChartsProps {
 }
 
 const COLORS = {
-  primary: "#C41E3A",
-  secondary: "#FF8C42",
-  tertiary: "#E6A030",
-  quaternary: "#8B4513",
-  accent: "#D2691E",
-  light: "#FFE8B0",
-  muted: "#B8860B",
-  dark: "#A0522D",
+  primary: "#1E40AF",
+  secondary: "#3B82F6",
+  tertiary: "#60A5FA",
+  quaternary: "#1E3A5F",
+  accent: "#2563EB",
+  light: "#DBEAFE",
+  muted: "#6B7280",
+  dark: "#1E3A8A",
 };
 
 const formatAxisK = (value: number) => {
@@ -554,12 +554,12 @@ const IsolementSocialChart = ({ department }: { department: DepartmentData }) =>
       <ResponsiveContainer width="100%" height={240}>
         <PieChart>
           <Pie data={outerData} cx="50%" cy="50%" outerRadius={65} innerRadius={40} dataKey="value" label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`} labelLine={false} style={{ fontSize: '10px' }}>
-            <Cell fill="#FFE8B0" />
-            <Cell fill="#C41E3A" />
+            <Cell fill="#DBEAFE" />
+            <Cell fill="#1E40AF" />
           </Pie>
           <Pie data={innerData} cx="50%" cy="50%" outerRadius={35} innerRadius={18} dataKey="value">
-            <Cell fill="#8B4513" />
-            <Cell fill="#FF8C42" />
+            <Cell fill="#1E3A5F" />
+            <Cell fill="#3B82F6" />
           </Pie>
           <Tooltip formatter={(value: number) => value.toLocaleString('fr-FR')} contentStyle={{ background: 'hsl(var(--card))', border: '1px solid hsl(var(--border))', borderRadius: '8px', fontSize: '12px' }} />
           <Legend wrapperStyle={{ fontSize: '11px', color: '#333' }} />
@@ -913,7 +913,7 @@ const QualiteAirAtmoChart = ({ department, allData }: { department: DepartmentDa
 
   const dataJours = [
     { name: "Bon", departement: department.atmo_jours_bon, fill: "#4CAF50" },
-    { name: "Moyen", departement: department.atmo_jours_moyen, fill: "#FFE8B0" },
+    { name: "Moyen", departement: department.atmo_jours_moyen, fill: "#DBEAFE" },
     { name: "Dégradé", departement: department.atmo_jours_degrade, fill: COLORS.secondary },
     { name: "Mauvais", departement: department.atmo_jours_mauvais, fill: COLORS.primary },
     { name: "Très mauvais", departement: department.atmo_jours_tres_mauvais, fill: "#8B0000" },
@@ -1005,7 +1005,7 @@ const EauCoursEauChart = ({ department, allData }: { department: DepartmentData;
 
   const dataEcoEtat = [
     { name: "Bon", value: department.eau_etat_eco_bon, fill: "#4CAF50" },
-    { name: "Moyen", value: department.eau_etat_eco_moyen, fill: "#FFE8B0" },
+    { name: "Moyen", value: department.eau_etat_eco_moyen, fill: "#DBEAFE" },
     { name: "Médiocre", value: department.eau_etat_eco_mediocre, fill: COLORS.primary },
   ];
 
@@ -1083,7 +1083,7 @@ const DEFAULT_SELECTED: Record<string, string[]> = {
 
 const CATEGORY_ICONS: Record<string, React.ReactNode> = {
   medical: <Heart className="w-3.5 h-3.5 text-primary" />,
-  social: <Users className="w-3.5 h-3.5" style={{ color: '#FF8C42' }} />,
+  social: <Users className="w-3.5 h-3.5" style={{ color: '#3B82F6' }} />,
   economic: <Euro className="w-3.5 h-3.5" style={{ color: COLORS.quaternary }} />,
 };
 
