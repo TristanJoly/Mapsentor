@@ -398,7 +398,7 @@ const SansVoitureChart = ({ department, allData }: { department: DepartmentData;
   ];
   return (
     <div className="p-4 rounded-xl bg-card border border-border shadow-card">
-      <h4 className="text-sm font-semibold text-foreground mb-4 flex items-center gap-1">Sans voiture par âge<ChartInfoButton text="Part des seniors sans voiture par tranche d'âge. Comparez avec la moyenne nationale pour évaluer la dépendance aux transports alternatifs." /></h4>
+      <h4 className="text-sm font-semibold text-foreground mb-4 flex items-center gap-1">Sans voiture par âge<ChartInfoButton title="Mobilité des seniors" text="Part des seniors sans voiture, ventilée par tranche d'âge (60-74 ans et 75+)." howToRead="Comparez les barres rouges (département) aux grises (moyenne France). Un taux élevé chez les 75+ sans offre de transport adaptée = risque d'isolement et de renoncement aux soins." /></h4>
       <ResponsiveContainer width="100%" height={200}>
         <BarChart data={data}>
           <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
