@@ -126,6 +126,14 @@ export interface DepartmentData {
   atmo_jours_degrade: number;
   atmo_jours_mauvais: number;
   atmo_jours_tres_mauvais: number;
+  // Qualité de l'eau
+  eau_conformite_bacterio: number;
+  eau_conformite_physicochim: number;
+  eau_etat_eco_bon: number;
+  eau_etat_eco_moyen: number;
+  eau_etat_eco_mediocre: number;
+  eau_etat_chimique_bon: number;
+  eau_pesticides_depassement: number;
   [key: string]: string | number | { [key: string]: number };
 }
 
@@ -141,14 +149,16 @@ export const loadDepartmentData = async (): Promise<DepartmentData[]> => {
   if (cachedData) return cachedData;
 
   try {
-    const [response, pollutionResponse, atmoResponse] = await Promise.all([
+    const [response, pollutionResponse, atmoResponse, eauResponse] = await Promise.all([
       fetch('/data/departements.csv'),
       fetch('/data/pollution_departements.csv'),
       fetch('/data/atmo_departements.csv'),
+      fetch('/data/eau_departements.csv'),
     ]);
     const csvText = await response.text();
     const pollutionText = await pollutionResponse.text();
     const atmoText = await atmoResponse.text();
+    const eauText = await eauResponse.text();
     
     // Parse pollution data
     const pollutionResult = Papa.parse(pollutionText, { header: true, skipEmptyLines: true, delimiter: ';' });
@@ -164,6 +174,14 @@ export const loadDepartmentData = async (): Promise<DepartmentData[]> => {
     atmoResult.data.forEach((row: any) => {
       const code = String(row.code_departement || '').trim();
       if (code) atmoMap[code] = row;
+    });
+
+    // Parse eau data
+    const eauResult = Papa.parse(eauText, { header: true, skipEmptyLines: true, delimiter: ';' });
+    const eauMap: Record<string, any> = {};
+    eauResult.data.forEach((row: any) => {
+      const code = String(row.code_departement || '').trim();
+      if (code) eauMap[code] = row;
     });
     
     const result = Papa.parse(csvText, {
@@ -381,6 +399,20 @@ export const loadDepartmentData = async (): Promise<DepartmentData[]> => {
             atmo_jours_degrade: parseFloat(a.jours_degrade) || 0,
             atmo_jours_mauvais: parseFloat(a.jours_mauvais) || 0,
             atmo_jours_tres_mauvais: parseFloat(a.jours_tres_mauvais) || 0,
+          };
+        })(),
+        // Qualité de l'eau
+        ...(() => {
+          const code = String(row['code_departement'] || row['Code département'] || '').trim();
+          const e = eauMap[code] || {};
+          return {
+            eau_conformite_bacterio: parseFloat(e.conformite_bacterio) || 0,
+            eau_conformite_physicochim: parseFloat(e.conformite_physicochim) || 0,
+            eau_etat_eco_bon: parseFloat(e.etat_eco_bon) || 0,
+            eau_etat_eco_moyen: parseFloat(e.etat_eco_moyen) || 0,
+            eau_etat_eco_mediocre: parseFloat(e.etat_eco_mediocre) || 0,
+            eau_etat_chimique_bon: parseFloat(e.etat_chimique_bon) || 0,
+            eau_pesticides_depassement: parseFloat(e.taux_pesticides_depassement) || 0,
           };
         })(),
       };

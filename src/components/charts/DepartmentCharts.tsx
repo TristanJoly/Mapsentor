@@ -957,6 +957,69 @@ const QualiteAirAtmoChart = ({ department, allData }: { department: DepartmentDa
   );
 };
 
+// ============ GRAPHIQUE QUALITÉ DE L'EAU ============
+
+const QualiteEauChart = ({ department, allData }: { department: DepartmentData; allData: DepartmentData[] }) => {
+  const regionData = allData.filter(d => d.region === department.region);
+  const avg = (arr: DepartmentData[], field: keyof DepartmentData) => arr.reduce((s, d) => s + (d[field] as number), 0) / arr.length;
+
+  const dataConformite = [
+    { name: "Bactériologique", departement: department.eau_conformite_bacterio, region: avg(regionData, 'eau_conformite_bacterio').toFixed(1), france: avg(allData, 'eau_conformite_bacterio').toFixed(1) },
+    { name: "Physico-chimique", departement: department.eau_conformite_physicochim, region: avg(regionData, 'eau_conformite_physicochim').toFixed(1), france: avg(allData, 'eau_conformite_physicochim').toFixed(1) },
+    { name: "État chimique bon", departement: department.eau_etat_chimique_bon, region: avg(regionData, 'eau_etat_chimique_bon').toFixed(1), france: avg(allData, 'eau_etat_chimique_bon').toFixed(1) },
+  ];
+
+  const dataEcoEtat = [
+    { name: "Bon", value: department.eau_etat_eco_bon, fill: "#4CAF50" },
+    { name: "Moyen", value: department.eau_etat_eco_moyen, fill: "#FFE8B0" },
+    { name: "Médiocre", value: department.eau_etat_eco_mediocre, fill: COLORS.primary },
+  ];
+
+  return (
+    <div className="p-4 rounded-xl bg-card border border-border shadow-card">
+      <h4 className="text-sm font-semibold text-foreground mb-4 flex items-center gap-1">
+        Qualité de l'eau
+        <ChartInfoButton 
+          title="Qualité de l'eau – Synthèse" 
+          text="Conformité de l'eau potable (bactériologique et physico-chimique), état écologique des cours d'eau, et taux de dépassement des normes pesticides dans les captages." 
+          howToRead="Des taux de conformité élevés (proches de 100%) indiquent une eau potable de bonne qualité. Un taux de pesticides élevé signale un risque pour la santé, notamment pour les seniors." 
+          source="ARS / SISE-Eaux (eau potable), Naïades / Agences de l'eau (cours d'eau), BNVD (pesticides), 2023" 
+        />
+      </h4>
+      <div className="grid grid-cols-2 gap-2">
+        <div>
+          <p className="text-[10px] text-muted-foreground text-center mb-1 font-medium">Conformité eau potable (%)</p>
+          <ResponsiveContainer width="100%" height={160}>
+            <BarChart data={dataConformite} layout="vertical">
+              <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
+              <XAxis type="number" domain={[80, 100]} tick={{ fontSize: 9 }} />
+              <YAxis dataKey="name" type="category" tick={{ fontSize: 9 }} width={75} />
+              <Tooltip formatter={(value: number) => `${value}%`} contentStyle={{ background: 'hsl(var(--card))', border: '1px solid hsl(var(--border))', borderRadius: '8px', fontSize: '11px' }} />
+              <Bar dataKey="departement" fill="#4CAF50" name="Département" />
+            </BarChart>
+          </ResponsiveContainer>
+        </div>
+        <div>
+          <p className="text-[10px] text-muted-foreground text-center mb-1 font-medium">État écologique cours d'eau (%)</p>
+          <ResponsiveContainer width="100%" height={160}>
+            <PieChart>
+              <Pie data={dataEcoEtat} cx="50%" cy="50%" innerRadius={30} outerRadius={55} dataKey="value" label={({ name, value }) => `${name}: ${value}%`} labelLine={false}>
+                {dataEcoEtat.map((entry, index) => (
+                  <Cell key={`cell-${index}`} fill={entry.fill} />
+                ))}
+              </Pie>
+              <Tooltip formatter={(value: number) => `${value}%`} contentStyle={{ background: 'hsl(var(--card))', border: '1px solid hsl(var(--border))', borderRadius: '8px', fontSize: '11px' }} />
+            </PieChart>
+          </ResponsiveContainer>
+        </div>
+      </div>
+      <p className="text-[10px] text-muted-foreground text-center mt-1">
+        Pesticides : <strong>{department.eau_pesticides_depassement}%</strong> de dépassement (Région : {avg(regionData, 'eau_pesticides_depassement').toFixed(1)}% · France : {avg(allData, 'eau_pesticides_depassement').toFixed(1)}%)
+      </p>
+    </div>
+  );
+};
+
 // Main component
 // Chart registry
 type ChartDef = {
@@ -987,6 +1050,7 @@ const CHART_REGISTRY: ChartDef[] = [
   { id: "emissions_air", label: "Émissions air (IREP)", category: "social", render: (d, a) => <EmissionsAirChart department={d} allData={a} /> },
   { id: "sites_polluants", label: "Sites polluants (IREP)", category: "social", render: (d, a) => <SitesPolluantsChart department={d} allData={a} /> },
   { id: "qualite_air_atmo", label: "Qualité air (ATMO)", category: "social", render: (d, a) => <QualiteAirAtmoChart department={d} allData={a} /> },
+  { id: "qualite_eau", label: "Qualité de l'eau", category: "social", render: (d, a) => <QualiteEauChart department={d} allData={a} /> },
   { id: "revenus", label: "Revenus médians", category: "economic", render: (d, a) => <RevenusChart department={d} allData={a} /> },
   { id: "logement", label: "Propriétaires vs Locataires", category: "economic", render: (d) => <LogementChart department={d} /> },
   { id: "aspa", label: "Évolution ASPA", category: "economic", render: (d) => <AspaEvolutionChart department={d} /> },
