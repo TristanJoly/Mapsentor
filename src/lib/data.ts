@@ -149,10 +149,11 @@ export const loadDepartmentData = async (): Promise<DepartmentData[]> => {
   if (cachedData) return cachedData;
 
   try {
-    const [response, pollutionResponse, atmoResponse] = await Promise.all([
+    const [response, pollutionResponse, atmoResponse, eauResponse] = await Promise.all([
       fetch('/data/departements.csv'),
       fetch('/data/pollution_departements.csv'),
       fetch('/data/atmo_departements.csv'),
+      fetch('/data/eau_departements.csv'),
     ]);
     const csvText = await response.text();
     const pollutionText = await pollutionResponse.text();
