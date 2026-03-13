@@ -176,8 +176,8 @@ export const FranceMap = ({ data, selectedMetric, selectedDepartment, onDepartme
         <ComposableMap
           projection="geoMercator"
           projectionConfig={{
-            center: [2.5, 46.5],
-            scale: 2200,
+            center: [2.5, 46.8],
+            scale: 1800,
           }}
           style={{ width: "100%", height: "100%" }}
         >
