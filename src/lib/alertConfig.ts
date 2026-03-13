@@ -129,6 +129,7 @@ export const ALERT_DEFINITIONS: AlertDefinition[] = [
       { column: "total_75_plus", direction: "high", label: "Population 75+" },
     ],
     explanation: "Nombre élevé de personnes très âgées avec très peu d'aides à domicile disponibles. Risque de placements en EHPAD par défaut ou de situations de maltraitance par négligence.",
+    source: "APL SAPA : DREES – Panorama statistique 2024 · Population 75+ : INSEE RP 2020",
     levers: [
       {
         title: "Plateforme Territoriale des Métiers de l'Autonomie",
