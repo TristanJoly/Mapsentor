@@ -4,6 +4,7 @@ import {
   PolarGrid, PolarAngleAxis, PolarRadiusAxis 
 } from "recharts";
 import { DepartmentData, getAverage } from "@/lib/data";
+import { ChartInfoButton } from "@/components/charts/ChartInfoButton";
 
 interface ComparisonChartsProps {
   departments: DepartmentData[];
@@ -37,7 +38,10 @@ const RadarSocialComparison = ({ departments }: { departments: DepartmentData[] 
 
   return (
     <div className="p-4 rounded-xl bg-card border border-border shadow-card">
-      <h4 className="text-sm font-semibold text-foreground mb-4">Profil social 60–74 ans</h4>
+      <h4 className="text-sm font-semibold text-foreground mb-4 flex items-center gap-1">
+        Profil social 60–74 ans
+        <ChartInfoButton title="Profil social comparatif" text="Radar comparant les caractéristiques sociales des 60-74 ans entre les départements." howToRead="Chaque axe représente un indicateur social. Plus le tracé s'étend vers l'extérieur, plus la valeur est élevée." source="INSEE – Recensement de la population 2020" />
+      </h4>
       <ResponsiveContainer width="100%" height={280}>
         <RadarChart data={data}>
           <PolarGrid stroke="hsl(var(--border))" />
@@ -71,7 +75,10 @@ const RadarSanteComparison = ({ departments, allData }: { departments: Departmen
 
   return (
     <div className="p-4 rounded-xl bg-card border border-border shadow-card">
-      <h4 className="text-sm font-semibold text-foreground mb-4">Radar santé</h4>
+      <h4 className="text-sm font-semibold text-foreground mb-4 flex items-center gap-1">
+        Radar santé
+        <ChartInfoButton title="Radar santé comparatif" text="Compare les indicateurs de santé entre les départements et la moyenne France." howToRead="Plus le tracé est étendu, plus la situation est préoccupante. Le tracé beige (France) sert de référence." source="Enquête VQS 2021 – DREES" />
+      </h4>
       <ResponsiveContainer width="100%" height={280}>
         <RadarChart data={data}>
           <PolarGrid stroke="hsl(var(--border))" />
@@ -102,7 +109,10 @@ const VaccinationComparison = ({ departments, allData }: { departments: Departme
 
   return (
     <div className="p-4 rounded-xl bg-card border border-border shadow-card">
-      <h4 className="text-sm font-semibold text-foreground mb-4">Taux de vaccination</h4>
+      <h4 className="text-sm font-semibold text-foreground mb-4 flex items-center gap-1">
+        Taux de vaccination
+        <ChartInfoButton title="Vaccination comparée" text="Taux de vaccination Covid et Grippe chez les 65+." howToRead="Plus la barre est haute, meilleure est la couverture vaccinale." source="Santé publique France / Ameli, 2023" />
+      </h4>
       <ResponsiveContainer width="100%" height={250}>
         <BarChart data={data}>
           <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
@@ -133,7 +143,10 @@ const RevenusComparison = ({ departments, allData }: { departments: DepartmentDa
 
   return (
     <div className="p-4 rounded-xl bg-card border border-border shadow-card">
-      <h4 className="text-sm font-semibold text-foreground mb-4">Revenus médians</h4>
+      <h4 className="text-sm font-semibold text-foreground mb-4 flex items-center gap-1">
+        Revenus médians
+        <ChartInfoButton title="Revenus médians comparés" text="Revenu médian annuel par tranche d'âge." howToRead="Plus la barre est haute, plus le revenu est élevé." source="INSEE – FILOSOFI 2021" />
+      </h4>
       <ResponsiveContainer width="100%" height={250}>
         <BarChart data={data}>
           <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
@@ -176,7 +189,10 @@ const IsolementComparison = ({ departments }: { departments: DepartmentData[] })
 
   return (
     <div className="p-4 rounded-xl bg-card border border-border shadow-card">
-      <h4 className="text-sm font-semibold text-foreground mb-4">Isolement social (%)</h4>
+      <h4 className="text-sm font-semibold text-foreground mb-4 flex items-center gap-1">
+        Isolement social (%)
+        <ChartInfoButton title="Isolement social comparé" text="Taux de personnes isolées par tranche d'âge et genre." howToRead="Plus la barre est longue, plus le taux d'isolement est élevé." source="INSEE – Recensement 2020" />
+      </h4>
       <ResponsiveContainer width="100%" height={departments.length > 2 ? 300 : 250}>
         <BarChart data={data} layout="vertical">
           <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
@@ -205,7 +221,10 @@ const LiviaComparison = ({ departments }: { departments: DepartmentData[] }) => 
 
   return (
     <div className="p-4 rounded-xl bg-card border border-border shadow-card">
-      <h4 className="text-sm font-semibold text-foreground mb-4">Projections LIVIA (Femmes)</h4>
+      <h4 className="text-sm font-semibold text-foreground mb-4 flex items-center gap-1">
+        Projections LIVIA (Femmes)
+        <ChartInfoButton title="Projections LIVIA" text="Évolution projetée du nombre de femmes en perte d'autonomie (scénario 1) de 2025 à 2050." howToRead="La courbe montante indique une augmentation des besoins." source="Modèle LIVIA – DREES / INSEE, scénario 1" />
+      </h4>
       <ResponsiveContainer width="100%" height={250}>
         <LineChart data={data}>
           <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
@@ -235,7 +254,10 @@ const AspaComparison = ({ departments }: { departments: DepartmentData[] }) => {
 
   return (
     <div className="p-4 rounded-xl bg-card border border-border shadow-card">
-      <h4 className="text-sm font-semibold text-foreground mb-4">Évolution ASPA</h4>
+      <h4 className="text-sm font-semibold text-foreground mb-4 flex items-center gap-1">
+        Évolution ASPA
+        <ChartInfoButton title="Évolution ASPA" text="Nombre de bénéficiaires ASPA de 2013 à 2024." howToRead="Une courbe ascendante indique un nombre croissant de seniors en précarité." source="CNAV / Caisse des Dépôts, 2013-2024" />
+      </h4>
       <ResponsiveContainer width="100%" height={250}>
         <LineChart data={data}>
           <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
@@ -273,7 +295,10 @@ const ServicesComparison = ({ departments, allData }: { departments: DepartmentD
 
   return (
     <div className="p-4 rounded-xl bg-card border border-border shadow-card">
-      <h4 className="text-sm font-semibold text-foreground mb-4">Offre médico-sociale (indice)</h4>
+      <h4 className="text-sm font-semibold text-foreground mb-4 flex items-center gap-1">
+        Offre médico-sociale (indice)
+        <ChartInfoButton title="Offre médico-sociale comparée" text="Indice comparatif de l'offre par rapport à la moyenne nationale (indice 1)." howToRead="1 = moyenne nationale. Au-dessus : mieux doté. En dessous : offre insuffisante." source="DREES – Panorama statistique 2024" />
+      </h4>
       <ResponsiveContainer width="100%" height={250}>
         <BarChart data={data}>
           <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
