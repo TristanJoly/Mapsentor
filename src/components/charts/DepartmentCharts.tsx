@@ -409,21 +409,36 @@ const SansVoitureChart = ({ department, allData }: { department: DepartmentData;
 
 const FragiliteNumeriqueChart = ({ department }: { department: DepartmentData }) => {
   const score = department.score_fragilite_numerique || 0;
+  const [animatedScore, setAnimatedScore] = useState(0);
+  
+  useEffect(() => {
+    setAnimatedScore(0);
+    const duration = 1200;
+    const startTime = performance.now();
+    const animate = (now: number) => {
+      const elapsed = now - startTime;
+      const progress = Math.min(elapsed / duration, 1);
+      // Ease-out cubic
+      const eased = 1 - Math.pow(1 - progress, 3);
+      setAnimatedScore(eased * score);
+      if (progress < 1) requestAnimationFrame(animate);
+    };
+    requestAnimationFrame(animate);
+  }, [score]);
+
   const getColor = (s: number) => s <= 3.3 ? '#22c55e' : s <= 6.6 ? '#f59e0b' : '#ef4444';
   const getLabel = (s: number) => s <= 3.3 ? 'Faible' : s <= 6.6 ? 'Modéré' : 'Élevé';
   
-  // SVG gauge parameters
   const cx = 120, cy = 110, r = 80;
-  const startAngle = 225, endAngle = -45; // 270° arc
+  const startAngle = 225, endAngle = -45;
   const totalAngle = startAngle - endAngle;
-  const scoreAngle = startAngle - (score / 10) * totalAngle;
+  const currentAngle = startAngle - (animatedScore / 10) * totalAngle;
   
   const polarToCartesian = (angle: number, radius: number) => ({
     x: cx + radius * Math.cos((angle * Math.PI) / 180),
     y: cy - radius * Math.sin((angle * Math.PI) / 180),
   });
 
-  // Arc path helper
   const describeArc = (startA: number, endA: number, radius: number) => {
     const start = polarToCartesian(startA, radius);
     const end = polarToCartesian(endA, radius);
@@ -431,7 +446,6 @@ const FragiliteNumeriqueChart = ({ department }: { department: DepartmentData })
     return `M ${start.x} ${start.y} A ${radius} ${radius} 0 ${largeArc} 1 ${end.x} ${end.y}`;
   };
 
-  // Tick marks
   const ticks = Array.from({ length: 11 }, (_, i) => {
     const angle = startAngle - (i / 10) * totalAngle;
     const inner = polarToCartesian(angle, r - 8);
@@ -440,11 +454,9 @@ const FragiliteNumeriqueChart = ({ department }: { department: DepartmentData })
     return { inner, outer, labelPos, value: i, isMajor: i % 5 === 0 };
   });
 
-  // Needle endpoint
-  const needleEnd = polarToCartesian(scoreAngle, r - 16);
-  const needleColor = getColor(score);
+  const needleEnd = polarToCartesian(currentAngle, r - 16);
+  const needleColor = getColor(animatedScore);
 
-  // Gradient segments (green → yellow → red)
   const segments = [
     { start: startAngle, end: startAngle - totalAngle * 0.33, color: '#22c55e' },
     { start: startAngle - totalAngle * 0.33, end: startAngle - totalAngle * 0.66, color: '#f59e0b' },
@@ -455,7 +467,7 @@ const FragiliteNumeriqueChart = ({ department }: { department: DepartmentData })
     <div className="p-4 rounded-xl bg-card border border-border shadow-card">
       <h4 className="text-sm font-semibold text-foreground mb-2 flex items-center gap-1">Fragilité numérique<ChartInfoButton text="Score de 0 à 10 : plus le score est élevé, plus la population est vulnérable face au numérique (faible accès, peu d'usages)." /></h4>
       <div className="flex justify-center">
-        <svg viewBox="0 0 240 160" width="100%" style={{ maxWidth: 280 }}>
+        <svg viewBox="0 0 240 160" className="w-full max-w-[280px] md:max-w-[300px]">
           {/* Background track */}
           <path d={describeArc(startAngle, endAngle, r)} fill="none" stroke="hsl(var(--muted))" strokeWidth={14} strokeLinecap="round" />
           
@@ -464,9 +476,9 @@ const FragiliteNumeriqueChart = ({ department }: { department: DepartmentData })
             <path key={i} d={describeArc(seg.start, seg.end, r)} fill="none" stroke={seg.color} strokeWidth={14} strokeLinecap="round" opacity={0.2} />
           ))}
           
-          {/* Active arc */}
-          {score > 0 && (
-            <path d={describeArc(startAngle, scoreAngle, r)} fill="none" stroke={needleColor} strokeWidth={14} strokeLinecap="round"
+          {/* Active arc (animated) */}
+          {animatedScore > 0.01 && (
+            <path d={describeArc(startAngle, currentAngle, r)} fill="none" stroke={needleColor} strokeWidth={14} strokeLinecap="round"
               style={{ filter: `drop-shadow(0 0 6px ${needleColor}50)` }} />
           )}
 
@@ -483,17 +495,16 @@ const FragiliteNumeriqueChart = ({ department }: { department: DepartmentData })
             </g>
           ))}
 
-          {/* Needle */}
+          {/* Needle (animated) */}
           <line x1={cx} y1={cy} x2={needleEnd.x} y2={needleEnd.y}
             stroke={needleColor} strokeWidth={3} strokeLinecap="round"
             style={{ filter: `drop-shadow(0 1px 3px ${needleColor}80)` }} />
-          {/* Center dot */}
           <circle cx={cx} cy={cy} r={6} fill={needleColor} />
           <circle cx={cx} cy={cy} r={3} fill="hsl(var(--card))" />
 
           {/* Score text */}
           <text x={cx} y={cy + 28} textAnchor="middle" fontSize={22} fontWeight={700} fill={needleColor}>
-            {score.toFixed(1)}
+            {animatedScore.toFixed(1)}
           </text>
           <text x={cx} y={cy + 42} textAnchor="middle" fontSize={11} fill="hsl(var(--muted-foreground))">
             /10 — {getLabel(score)}
