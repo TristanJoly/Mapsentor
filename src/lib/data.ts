@@ -104,6 +104,9 @@ export interface DepartmentData {
   vol_glob_s3_h_2045: number;
   vol_glob_s3_h_2050: number;
   // Maladies 65+
+  total_65_plus: number;
+  total_femmes_65_plus: number;
+  total_hommes_65_plus: number;
   maladies_65_plus: { [key: string]: number };
   // Maladies par genre
   maladies_femmes: { [key: string]: number };
