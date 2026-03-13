@@ -1050,6 +1050,7 @@ const CHART_REGISTRY: ChartDef[] = [
   { id: "emissions_air", label: "Émissions air (IREP)", category: "social", render: (d, a) => <EmissionsAirChart department={d} allData={a} /> },
   { id: "sites_polluants", label: "Sites polluants (IREP)", category: "social", render: (d, a) => <SitesPolluantsChart department={d} allData={a} /> },
   { id: "qualite_air_atmo", label: "Qualité air (ATMO)", category: "social", render: (d, a) => <QualiteAirAtmoChart department={d} allData={a} /> },
+  { id: "qualite_eau", label: "Qualité de l'eau", category: "social", render: (d, a) => <QualiteEauChart department={d} allData={a} /> },
   { id: "revenus", label: "Revenus médians", category: "economic", render: (d, a) => <RevenusChart department={d} allData={a} /> },
   { id: "logement", label: "Propriétaires vs Locataires", category: "economic", render: (d) => <LogementChart department={d} /> },
   { id: "aspa", label: "Évolution ASPA", category: "economic", render: (d) => <AspaEvolutionChart department={d} /> },
