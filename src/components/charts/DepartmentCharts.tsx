@@ -554,12 +554,12 @@ const IsolementSocialChart = ({ department }: { department: DepartmentData }) =>
       <ResponsiveContainer width="100%" height={240}>
         <PieChart>
           <Pie data={outerData} cx="50%" cy="50%" outerRadius={65} innerRadius={40} dataKey="value" label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`} labelLine={false} style={{ fontSize: '10px' }}>
-            <Cell fill="#FFE8B0" />
-            <Cell fill="#C41E3A" />
+            <Cell fill="#DBEAFE" />
+            <Cell fill="#1E40AF" />
           </Pie>
           <Pie data={innerData} cx="50%" cy="50%" outerRadius={35} innerRadius={18} dataKey="value">
-            <Cell fill="#8B4513" />
-            <Cell fill="#FF8C42" />
+            <Cell fill="#1E3A5F" />
+            <Cell fill="#3B82F6" />
           </Pie>
           <Tooltip formatter={(value: number) => value.toLocaleString('fr-FR')} contentStyle={{ background: 'hsl(var(--card))', border: '1px solid hsl(var(--border))', borderRadius: '8px', fontSize: '12px' }} />
           <Legend wrapperStyle={{ fontSize: '11px', color: '#333' }} />
