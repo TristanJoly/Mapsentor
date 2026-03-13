@@ -118,11 +118,20 @@ export const FranceMap = ({ data, selectedMetric, selectedDepartment, onDepartme
   const metricRange = useMemo(() => getMetricRange(data, selectedMetric), [data, selectedMetric]);
 
   const colorScale = useMemo(() => {
-    const [min, max] = metricRange;
+    // Use quantile-based breakpoints for better contrast
+    const values = data.map(d => d[selectedMetric] as number).filter(v => !isNaN(v) && v > 0).sort((a, b) => a - b);
+    if (values.length === 0) {
+      return scaleLinear<string>().domain([0, 100]).range(["#FFF8DC", "#C41E3A"]);
+    }
+    const q25 = values[Math.floor(values.length * 0.25)];
+    const q50 = values[Math.floor(values.length * 0.50)];
+    const q75 = values[Math.floor(values.length * 0.75)];
+    const min = values[0];
+    const max = values[values.length - 1];
     return scaleLinear<string>()
-      .domain([min, (min + max) / 3, (min + max) * 2/3, max])
-      .range(["#FFF8DC", "#FFD580", "#FF8C42", "#C41E3A"]);
-  }, [metricRange]);
+      .domain([min, q25, q50, q75, max])
+      .range(["#FFF8DC", "#FFD580", "#FF8C42", "#D4451A", "#C41E3A"]);
+  }, [data, selectedMetric]);
 
   // Calculate alerts for all departments
   const departmentAlerts = useMemo(() => {
