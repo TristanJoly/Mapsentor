@@ -394,8 +394,14 @@ const ServicesComparison = ({ dept1, dept2, allData }: { dept1: DepartmentData; 
 
   return (
     <div className="p-4 rounded-xl bg-card border border-border shadow-card">
-      <h4 className="text-sm font-semibold text-foreground mb-4">
+      <h4 className="text-sm font-semibold text-foreground mb-4 flex items-center gap-1">
         Offre médico-sociale (indice)
+        <ChartInfoButton
+          title="Offre médico-sociale comparée"
+          text="Indice comparatif de l'offre (aides à domicile, EHPAD, médecins) par rapport à la moyenne nationale (indice 1)."
+          howToRead="La valeur 1 = moyenne nationale. Au-dessus : le département est mieux doté. En dessous : l'offre est insuffisante. Un indice de 0.5 signifie deux fois moins de ressources que la moyenne."
+          source="DREES – Panorama statistique 2024 (APL SAPA, EHPA, médecins généralistes)"
+        />
       </h4>
       <ResponsiveContainer width="100%" height={250}>
         <BarChart data={data}>
