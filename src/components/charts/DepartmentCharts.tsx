@@ -159,7 +159,7 @@ const RadarSanteChart = ({ department, allData }: { department: DepartmentData; 
 
   return (
     <div className="p-4 rounded-xl bg-card border border-border shadow-card">
-      <h4 className="text-sm font-semibold text-foreground mb-4 flex items-center gap-1">Zoom sur l'état de santé <AmeliSource /><ChartInfoButton text="Radar : chaque axe représente un indicateur de santé. Plus le tracé est étendu, plus la situation est préoccupante. Le tracé clair représente la moyenne nationale pour comparaison." /></h4>
+      <h4 className="text-sm font-semibold text-foreground mb-4 flex items-center gap-1">Zoom sur l'état de santé <AmeliSource /><ChartInfoButton title="Radar santé" text="Chaque axe représente un indicateur de santé (vue, audition, maladies chroniques…). Le tracé coloré = département, le tracé clair = moyenne France." howToRead="Plus le tracé est étendu vers l'extérieur, plus la situation est préoccupante. Si un axe dépasse nettement la moyenne nationale (tracé clair), c'est un point de vigilance à prioriser." /></h4>
       <ResponsiveContainer width="100%" height={280}>
         <RadarChart data={data}>
           <PolarGrid stroke="hsl(var(--border))" />
