@@ -134,6 +134,17 @@ export interface DepartmentData {
   eau_etat_eco_mediocre: number;
   eau_etat_chimique_bon: number;
   eau_pesticides_depassement: number;
+  // Pesticides détaillés
+  pest_nodu_total_tonnes: number;
+  pest_glyphosate_tonnes: number;
+  pest_prosulfocarbe_tonnes: number;
+  pest_metolachlore_tonnes: number;
+  pest_folpel_tonnes: number;
+  pest_soufre_tonnes: number;
+  pest_ift_moyen: number;
+  pest_taux_depassement_eau: number;
+  pest_nb_substances_detectees: number;
+  pest_part_bio_sau: number;
   [key: string]: string | number | { [key: string]: number };
 }
 
