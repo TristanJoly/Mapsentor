@@ -151,7 +151,7 @@ export const FranceMap = ({ data, selectedMetric, selectedDepartment, onDepartme
             zoom={position.zoom}
             onMoveEnd={({ coordinates, zoom }) => setPosition({ coordinates: coordinates as [number, number], zoom })}
             minZoom={0.3}
-            maxZoom={8}
+            maxZoom={16}
           >
             <Geographies geography={GEO_URL}>
               {({ geographies }) =>
@@ -235,7 +235,7 @@ export const FranceMap = ({ data, selectedMetric, selectedDepartment, onDepartme
       {/* Zoom Controls */}
       <div className="absolute bottom-4 left-4 flex flex-col gap-2">
         <button
-          onClick={() => setPosition(prev => ({ ...prev, zoom: Math.min(prev.zoom * 1.5, 8) }))}
+          onClick={() => setPosition(prev => ({ ...prev, zoom: Math.min(prev.zoom * 1.5, 16) }))}
           className="w-8 h-8 rounded-lg bg-card border border-border shadow-soft flex items-center justify-center text-foreground hover:bg-muted transition-colors"
         >
           +
@@ -249,8 +249,16 @@ export const FranceMap = ({ data, selectedMetric, selectedDepartment, onDepartme
         <button
           onClick={() => setPosition({ coordinates: [2.5, 46.5], zoom: 1 })}
           className="w-8 h-8 rounded-lg bg-card border border-border shadow-soft flex items-center justify-center text-xs text-muted-foreground hover:bg-muted transition-colors"
+          title="Vue France"
         >
           ⌂
+        </button>
+        <button
+          onClick={() => setPosition({ coordinates: [2.35, 48.75], zoom: 12 })}
+          className="w-8 h-8 rounded-lg bg-card border border-border shadow-soft flex items-center justify-center text-[9px] font-bold text-muted-foreground hover:bg-muted transition-colors"
+          title="Zoom Île-de-France"
+        >
+          IdF
         </button>
       </div>
 
