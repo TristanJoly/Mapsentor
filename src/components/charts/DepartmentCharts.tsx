@@ -698,7 +698,7 @@ const AplEhpaChart = ({ department, allData }: { department: DepartmentData; all
   ];
   return (
     <div className="p-4 rounded-xl bg-card border border-border shadow-card">
-      <h4 className="text-sm font-semibold text-foreground mb-4 flex items-center gap-1">APL Établissements (EHPA)<ChartInfoButton text="Accessibilité potentielle localisée aux établissements d'hébergement. Compare le département à la région et la moyenne nationale." /></h4>
+      <h4 className="text-sm font-semibold text-foreground mb-4 flex items-center gap-1">APL Établissements (EHPA)<ChartInfoButton title="APL EHPA" text="Accessibilité Potentielle Localisée aux Établissements d'Hébergement pour Personnes Âgées. Mesure la capacité d'accueil par habitant." howToRead="Même lecture que l'APL SAPA : comparez le département à la région et la France. Un écart important signale un déficit de places en établissement sur le territoire." /></h4>
       <ResponsiveContainer width="100%" height={200}>
         <BarChart data={data}>
           <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
