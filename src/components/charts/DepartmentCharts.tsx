@@ -218,7 +218,7 @@ const ServicesMedicoSociauxChart = ({ department, allData }: { department: Depar
 
   return (
     <div className="p-4 rounded-xl bg-card border border-border shadow-card">
-      <h4 className="text-sm font-semibold text-foreground mb-4 flex items-center gap-1">Offre médico-sociale<ChartInfoButton text="Indice comparatif : une valeur de 1 = moyenne nationale. Au-dessus de 1 = offre supérieure à la moyenne, en dessous = offre inférieure." /></h4>
+      <h4 className="text-sm font-semibold text-foreground mb-4 flex items-center gap-1">Offre médico-sociale<ChartInfoButton title="Indice d'offre" text="Indice comparatif par rapport à la moyenne nationale (valeur 1). Couvre les aides à domicile, EHPAD et médecins." howToRead="La ligne imaginaire à 1.0 = la moyenne nationale. Au-dessus : le département est mieux doté. En dessous : l'offre est insuffisante. Un indice de 0.5 signifie deux fois moins de ressources que la moyenne." /></h4>
       <ResponsiveContainer width="100%" height={250}>
         <BarChart data={data}>
           <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
