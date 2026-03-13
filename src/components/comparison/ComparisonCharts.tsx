@@ -183,8 +183,14 @@ const RevenusComparison = ({ dept1, dept2, allData }: { dept1: DepartmentData; d
 
   return (
     <div className="p-4 rounded-xl bg-card border border-border shadow-card">
-      <h4 className="text-sm font-semibold text-foreground mb-4">
+      <h4 className="text-sm font-semibold text-foreground mb-4 flex items-center gap-1">
         Revenus médians
+        <ChartInfoButton
+          title="Revenus médians comparés"
+          text="Revenu médian annuel des 60-74 ans et des 75+ pour les deux départements, comparé à la moyenne nationale."
+          howToRead="Plus la barre est haute, plus le revenu médian est élevé. Un écart important entre les deux départements peut indiquer des inégalités économiques territoriales."
+          source="INSEE – FILOSOFI 2021, revenus médians par tranche d'âge"
+        />
       </h4>
       <ResponsiveContainer width="100%" height={250}>
         <BarChart data={data}>
