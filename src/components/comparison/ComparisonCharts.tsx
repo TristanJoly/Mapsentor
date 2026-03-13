@@ -332,8 +332,14 @@ const AspaComparison = ({ dept1, dept2 }: { dept1: DepartmentData; dept2: Depart
 
   return (
     <div className="p-4 rounded-xl bg-card border border-border shadow-card">
-      <h4 className="text-sm font-semibold text-foreground mb-4">
+      <h4 className="text-sm font-semibold text-foreground mb-4 flex items-center gap-1">
         Évolution ASPA
+        <ChartInfoButton
+          title="Évolution ASPA"
+          text="Nombre de bénéficiaires de l'Allocation de Solidarité aux Personnes Âgées (ASPA) de 2013 à 2024 pour les deux départements."
+          howToRead="Une courbe ascendante indique un nombre croissant de seniors en situation de précarité. Si un département augmente plus vite que l'autre, la pauvreté des seniors y progresse plus rapidement."
+          source="CNAV / Caisse des Dépôts – Effectifs ASPA par département, série annuelle 2013-2024"
+        />
       </h4>
       <ResponsiveContainer width="100%" height={250}>
         <LineChart data={data}>
