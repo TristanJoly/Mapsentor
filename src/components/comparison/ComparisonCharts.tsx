@@ -131,8 +131,14 @@ const VaccinationComparison = ({ dept1, dept2, allData }: { dept1: DepartmentDat
 
   return (
     <div className="p-4 rounded-xl bg-card border border-border shadow-card">
-      <h4 className="text-sm font-semibold text-foreground mb-4">
+      <h4 className="text-sm font-semibold text-foreground mb-4 flex items-center gap-1">
         Taux de vaccination
+        <ChartInfoButton
+          title="Vaccination comparée"
+          text="Taux de vaccination Covid et Grippe chez les 65+ pour les deux départements, comparés à la moyenne nationale."
+          howToRead="Plus la barre est haute, meilleure est la couverture vaccinale. Si un département est nettement en dessous de la France, des campagnes ciblées pourraient être nécessaires."
+          source="Santé publique France / Ameli – Taux de couverture vaccinale, 2023"
+        />
       </h4>
       <ResponsiveContainer width="100%" height={250}>
         <BarChart data={data}>
