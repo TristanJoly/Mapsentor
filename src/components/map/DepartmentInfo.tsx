@@ -85,7 +85,7 @@ export const DepartmentInfo = ({ department, allData }: DepartmentInfoProps) => 
   });
 
   const part65Plus = department.part_60_plus;
-  const tauxPauvrete75 = department.taux_pauvrete_75;
+  const tauxPauvrete65 = department.taux_pauvrete_60;
   const niveauVieMensuel = Math.round(department.niveau_vie_median / 12);
   const avgNiveauVieMensuel = Math.round(avgNiveauVie / 12);
   const esperanceVie = department.esperance_vie;
