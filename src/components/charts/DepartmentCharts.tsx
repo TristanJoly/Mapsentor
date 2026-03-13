@@ -720,7 +720,7 @@ const PathologiesGenreChart = ({ department }: { department: DepartmentData }) =
 
   return (
     <div className="p-4 rounded-xl bg-card border border-border shadow-card">
-      <h4 className="text-sm font-semibold text-foreground mb-4 flex items-center gap-1">Pathologies par genre (top 8) <AmeliSource /><ChartInfoButton title="Pathologies par genre" text="Compare la prévalence des 8 maladies les plus courantes entre femmes (rouge) et hommes (orange)." howToRead="Si une barre rouge est nettement plus longue que l'orange pour une même maladie, les femmes sont davantage touchées (et inversement). Cela peut orienter des actions de prévention ciblées par genre." source="Dataset Ameli (CNAM) – Effectif départemental par pathologie, sexe et âge, 2023" /></h4>
+      <h4 className="text-sm font-semibold text-foreground mb-4 flex items-center gap-1">Diagnostics par genre (top 8) <AmeliSource /><ChartInfoButton title="Diagnostics par genre" text="Compare la prévalence des 8 diagnostics les plus courants entre femmes (rouge) et hommes (orange). Catégories génériques exclues." howToRead="Si une barre rouge est nettement plus longue que l'orange pour un même diagnostic, les femmes sont davantage touchées (et inversement). Cela peut orienter des actions de prévention ciblées par genre." source="Dataset Ameli (CNAM) – Effectif départemental par pathologie, sexe et âge, 2023" /></h4>
       <ResponsiveContainer width="100%" height={350}>
         <BarChart data={data} layout="vertical">
           <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
