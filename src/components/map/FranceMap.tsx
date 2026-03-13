@@ -202,7 +202,7 @@ export const FranceMap = ({ data, selectedMetric, selectedDepartment, onDepartme
                         <Geography
                           geography={geo}
                           fill={getFillColor(code)}
-                          stroke={isSelected ? "#C41E3A" : "#e5e5e5"}
+                          stroke={isSelected ? "#1E40AF" : "#e5e5e5"}
                           strokeWidth={isSelected ? 2 : 0.5}
                           style={{
                             default: {
@@ -210,14 +210,14 @@ export const FranceMap = ({ data, selectedMetric, selectedDepartment, onDepartme
                               transition: "all 0.2s",
                             },
                             hover: {
-                              fill: "#FF8C42",
-                              stroke: "#C41E3A",
+                              fill: "#60A5FA",
+                              stroke: "#1E40AF",
                               strokeWidth: 1.5,
                               outline: "none",
                               cursor: "pointer",
                             },
                             pressed: {
-                              fill: "#C41E3A",
+                              fill: "#1E40AF",
                               outline: "none",
                             },
                           }}
