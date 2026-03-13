@@ -674,7 +674,7 @@ const AplSapaChart = ({ department, allData }: { department: DepartmentData; all
   ];
   return (
     <div className="p-4 rounded-xl bg-card border border-border shadow-card">
-      <h4 className="text-sm font-semibold text-foreground mb-4 flex items-center gap-1">APL Services d'aide (SAPA)<ChartInfoButton text="Accessibilité potentielle localisée aux services d'aide à domicile. Compare le département à la région et la moyenne nationale." /></h4>
+      <h4 className="text-sm font-semibold text-foreground mb-4 flex items-center gap-1">APL Services d'aide (SAPA)<ChartInfoButton title="APL SAPA" text="Accessibilité Potentielle Localisée aux Services d'Aide et de soins à domicile. Mesure le nombre de professionnels disponibles par habitant." howToRead="Comparez les 3 barres : si le département (rouge) est nettement sous la France (jaune), l'offre de services à domicile est insuffisante pour maintenir les seniors chez eux." /></h4>
       <ResponsiveContainer width="100%" height={200}>
         <BarChart data={data}>
           <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
