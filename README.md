@@ -1,73 +1,143 @@
-# Welcome to your Lovable project
+# 🗺️ Mapsentor — Tableau de bord du vieillissement en France
 
-## Project info
+**Mapsentor** est une application web interactive qui visualise les indicateurs du vieillissement par département en France métropolitaine. Elle permet d'explorer les données démographiques, sanitaires, économiques et sociales à travers une carte interactive, des graphiques détaillés et un système d'alertes intelligent.
 
-**URL**: https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID
+🔗 **Accès en ligne** : [clean-map-charm.lovable.app](https://clean-map-charm.lovable.app)
 
-## How can I edit this code?
+---
 
-There are several ways of editing your application.
+## 📸 Fonctionnalités
 
-**Use Lovable**
+### 🗺️ Carte Interactive
+- Visualisation choroplèthe des 96 départements métropolitains
+- Sélection de métriques (taux de pauvreté, APL médecins, isolement social, etc.)
+- Clic sur un département pour afficher ses données détaillées
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID) and start prompting.
+### 📊 Graphiques
+- Graphiques comparatifs par département (barres, radar, etc.)
+- Visualisation des indicateurs clés vs. moyenne nationale
 
-Changes made via Lovable will be committed automatically to this repo.
+### ⚖️ Comparaison
+- Comparaison côte à côte de plusieurs départements
+- Analyse multi-critères
 
-**Use your preferred IDE**
+### 🚨 Système d'Alertes (Déciles)
+Un département déclenche une alerte s'il se trouve dans le **1er décile** (10 % les plus bas) ou le **dernier décile** (10 % les plus hauts) sur les indicateurs concernés.
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
+#### 🏥 Alertes Sanitaires
+| Alerte | Condition | Leviers |
+|--------|-----------|---------|
+| **Désertification médicale critique** | APL médecins (Bas) + Prévalence pathologies (Haut) | Téléconsultation en officine, IPA libéraux |
+| **Rupture de maintien à domicile** | Aides à domicile (Bas) + Population âgée (Haut) | Plateforme recrutement, Baluchonnage |
+| **Fragilité préventive** | Vaccination (Bas) + Indice vieillissement (Haut) | Campagnes mobiles, Programme ICOPE |
 
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
+#### 💰 Alertes Économiques
+| Alerte | Condition | Leviers |
+|--------|-----------|---------|
+| **Précarité locative** | Bénéficiaires ASPA (Haut) + Propriétaires (Bas) | FSL ciblé seniors, Habitat inclusif (AVP) |
+| **Renoncement aux soins** | APL médecins (Bas) + Taux pauvreté (Haut) | Chèques mobilité, Data-mining C2S |
+| **Paupérisation structurelle** | ASPA (Haut) + Indice vieillissement (Haut) | Pacte des Solidarités, Conférence des Financeurs |
 
-Follow these steps:
+#### 🤝 Alertes Sociales
+| Alerte | Condition | Leviers |
+|--------|-----------|---------|
+| **Enfermement rural** | Isolement (Haut) + Sans voiture (Haut) | Réseau MONALISA, Veiller sur mes parents |
+| **Exclusion numérique** | Isolement (Haut) + Fragilité numérique (Haut) | Conseillers numériques itinérants, Aidants Connect |
+| **Enclavement sanitaire** | APL médecins (Bas) + Sans voiture (Haut) | Transport à la demande, Équipes mobiles gériatrie |
 
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
+---
 
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
+## 🛠️ Stack Technique
 
-# Step 3: Install the necessary dependencies.
-npm i
+| Technologie | Usage |
+|-------------|-------|
+| **React 18** + **TypeScript** | Framework UI |
+| **Vite** | Bundler et serveur de développement |
+| **Tailwind CSS** | Styles utilitaires |
+| **shadcn/ui** | Composants UI (Radix UI) |
+| **Recharts** | Graphiques et visualisations |
+| **react-simple-maps** | Carte SVG interactive |
+| **d3-scale** | Échelles de couleurs choroplèthes |
+| **PapaParse** | Parsing du fichier CSV des données |
 
-# Step 4: Start the development server with auto-reloading and an instant preview.
+---
+
+## 📁 Structure du projet
+
+```
+src/
+├── components/
+│   ├── charts/             # Graphiques par département
+│   ├── comparison/         # Module de comparaison
+│   ├── layout/             # Sidebar, navigation
+│   ├── map/                # Carte, sélecteurs, alertes, infos
+│   └── ui/                 # Composants shadcn/ui
+├── hooks/                  # Hooks React personnalisés
+├── lib/
+│   ├── data.ts             # Chargement et typage des données CSV
+│   ├── alertConfig.ts      # Configuration des 9 alertes (déciles)
+│   ├── pathologyConfig.ts  # Configuration des pathologies
+│   └── utils.ts            # Utilitaires
+├── pages/
+│   └── Index.tsx           # Page principale (carte, graphiques, comparaison)
+└── main.tsx                # Point d'entrée
+
+public/
+└── data/
+    └── departements.csv    # Données source (96 départements)
+```
+
+---
+
+## 🚀 Installation et lancement
+
+```bash
+# 1. Cloner le dépôt
+git clone https://github.com/TristanJoly/Lattitudes_cartes.git
+
+# 2. Accéder au répertoire
+cd Lattitudes_cartes
+
+# 3. Installer les dépendances
+npm install
+
+# 4. Lancer le serveur de développement
 npm run dev
 ```
 
-**Edit a file directly in GitHub**
+L'application sera accessible sur `http://localhost:5173`.
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+### Autres commandes
 
-**Use GitHub Codespaces**
+```bash
+npm run build       # Build de production
+npm run preview     # Prévisualiser le build
+npm run test        # Lancer les tests
+npm run lint        # Vérifier le code (ESLint)
+```
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
+---
 
-## What technologies are used for this project?
+## 📊 Sources de données
 
-This project is built with:
+- [Caisse des Dépôts — 75 ans et plus](https://opendata.caissedesdepots.fr/explore/dataset/75-ans-et-plus-indicateurs-de-vieillissement-par-departement/information/)
+- [DREES — Vie quotidienne et santé 2021](https://data.drees.solidarites-sante.gouv.fr/explore/dataset/enquete-vie-quotidienne-et-sante-2021-donnees-detaillees/information/)
+- [Caisse des Dépôts — 60 ans et plus](https://opendata.caissedesdepots.fr/explore/dataset/60-et-plus_indicateurs-au-niveau-de-la-commune/table/)
 
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
+---
 
-## How can I deploy this project?
+## 👥 Équipe
 
-Simply open [Lovable](https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID) and click on Share -> Publish.
+- [Hanae Benrabh](https://www.linkedin.com/in/hanae-c%C3%A9line-benrabh-3a4b04326/)
+- [Othmane Nammous](https://www.linkedin.com/in/othmane-nammous-400330297/)
+- [Charlotte Gaspalou](https://www.linkedin.com/in/charlotte-gaspalou-367b84347/)
+- [Charlotte Ravelomanana](https://www.linkedin.com/in/charlotte-ravelomanana-gonzalo-1b974830b/)
+- [Tristan Joly](https://www.linkedin.com/in/tristan-joly-10179034a/)
 
-## Can I connect a custom domain to my Lovable project?
+📧 Contact : datavislattitudescpes@gmail.com
 
-Yes, you can!
+---
 
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
+## 📄 Licence
 
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/features/custom-domain#custom-domain)
+Projet académique — Sciences Po / Lattitudes.
