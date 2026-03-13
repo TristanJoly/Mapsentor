@@ -101,7 +101,7 @@ export const DepartmentInfo = ({ department, allData }: DepartmentInfoProps) => 
       {/* Header */}
       <div className="flex items-center gap-3 mb-5">
         <div className="w-14 h-14 rounded-xl flex items-center justify-center text-white font-bold text-lg shadow-soft" 
-          style={{ background: 'linear-gradient(135deg, #FF8C42, #C41E3A)' }}>
+          style={{ background: 'linear-gradient(135deg, #3B82F6, #1E40AF)' }}>
           {department.code_departement}
         </div>
         <div className="flex-1">
