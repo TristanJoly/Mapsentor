@@ -151,7 +151,7 @@ export const FranceMap = ({ data, selectedMetric, selectedDepartment, onDepartme
             zoom={position.zoom}
             onMoveEnd={({ coordinates, zoom }) => setPosition({ coordinates: coordinates as [number, number], zoom })}
             minZoom={0.3}
-            maxZoom={8}
+            maxZoom={16}
           >
             <Geographies geography={GEO_URL}>
               {({ geographies }) =>
