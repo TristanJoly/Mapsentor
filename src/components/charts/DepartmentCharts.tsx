@@ -258,33 +258,33 @@ const ServicesMedicoSociauxChart = ({ department, allData }: { department: Depar
 const EhpadCapaciteChart = ({ department, allData }: { department: DepartmentData; allData: DepartmentData[] }) => {
   const regionData = allData.filter(d => d.region === department.region);
   
-  // Taux pour 1000 habitants 75+
-  const pop75Dept = department.femmes_75_plus + department.hommes_75_plus;
-  const tauxDept = pop75Dept > 0 ? (department.ehpad_nb_lits / pop75Dept) * 1000 : 0;
+  // Taux pour 1000 habitants 65+
+  const pop65Dept = department.total_65_plus || 0;
+  const tauxDept = pop65Dept > 0 ? (department.ehpad_nb_lits / pop65Dept) * 1000 : 0;
   
   const regionLits = getAverage(regionData, 'ehpad_nb_lits');
-  const regionPop75 = regionData.reduce((s, d) => s + d.femmes_75_plus + d.hommes_75_plus, 0) / regionData.length;
-  const tauxRegion = regionPop75 > 0 ? (regionLits / regionPop75) * 1000 : 0;
+  const regionPop65 = regionData.reduce((s, d) => s + (d.total_65_plus || 0), 0) / regionData.length;
+  const tauxRegion = regionPop65 > 0 ? (regionLits / regionPop65) * 1000 : 0;
   
   const franceLits = getAverage(allData, 'ehpad_nb_lits');
-  const francePop75 = allData.reduce((s, d) => s + d.femmes_75_plus + d.hommes_75_plus, 0) / allData.length;
-  const tauxFrance = francePop75 > 0 ? (franceLits / francePop75) * 1000 : 0;
+  const francePop65 = allData.reduce((s, d) => s + (d.total_65_plus || 0), 0) / allData.length;
+  const tauxFrance = francePop65 > 0 ? (franceLits / francePop65) * 1000 : 0;
 
   const data = [
     { 
-      name: "Lits / 1 000 hab. 75+", 
+      name: "Lits / 1 000 hab. 65+", 
       departement: parseFloat(tauxDept.toFixed(1)), 
       region: parseFloat(tauxRegion.toFixed(1)), 
       france: parseFloat(tauxFrance.toFixed(1)),
       litsDept: department.ehpad_nb_lits,
       litsRegion: Math.round(regionLits),
       litsFrance: Math.round(franceLits),
-      pop75Dept,
+      pop65Dept,
     },
   ];
   return (
     <div className="p-4 rounded-xl bg-card border border-border shadow-card">
-      <h4 className="text-sm font-semibold text-foreground mb-4 flex items-center gap-1">Capacité EHPAD (taux)<ChartInfoButton title="Lits EHPAD pour 1 000 hab. 75+" text="Nombre de lits EHPAD rapporté à la population de 75 ans et plus (pour 1 000 habitants). Permet une comparaison équitable entre territoires." howToRead="Plus le taux est élevé, plus la couverture est bonne. Cliquez sur une barre pour voir le nombre absolu de lits. Si le département est sous la moyenne, la capacité d'accueil est insuffisante." source="DREES – Panorama statistique 2024 + INSEE RP 2020" /></h4>
+      <h4 className="text-sm font-semibold text-foreground mb-4 flex items-center gap-1">Capacité EHPAD (taux)<ChartInfoButton title="Lits EHPAD pour 1 000 hab. 65+" text="Nombre de lits EHPAD rapporté à la population de 65 ans et plus (pour 1 000 habitants). Permet une comparaison équitable entre territoires." howToRead="Plus le taux est élevé, plus la couverture est bonne. Survolez une barre pour voir le nombre absolu de lits. Si le département est sous la moyenne, la capacité d'accueil est insuffisante." source="DREES – Panorama statistique 2024 + INSEE RP 2020" /></h4>
       <ResponsiveContainer width="100%" height={220}>
         <BarChart data={data}>
           <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
@@ -296,10 +296,10 @@ const EhpadCapaciteChart = ({ department, allData }: { department: DepartmentDat
               const d = payload[0].payload;
               return (
                 <div className="rounded-lg border border-border bg-card p-2.5 shadow-md text-xs">
-                  <p className="font-medium text-foreground mb-1">Lits EHPAD pour 1 000 hab. 75+</p>
+                  <p className="font-medium text-foreground mb-1">Lits EHPAD pour 1 000 hab. 65+</p>
                   <p className="text-muted-foreground">
                     <span style={{ color: COLORS.primary }}>●</span> Département : {d.departement} ‰
-                    <span className="font-semibold"> ({d.litsDept.toLocaleString('fr-FR')} lits pour {d.pop75Dept.toLocaleString('fr-FR')} hab. 75+)</span>
+                    <span className="font-semibold"> ({d.litsDept.toLocaleString('fr-FR')} lits pour {d.pop65Dept.toLocaleString('fr-FR')} hab. 65+)</span>
                   </p>
                   <p className="text-muted-foreground">
                     <span style={{ color: COLORS.secondary }}>●</span> Région : {d.region} ‰
