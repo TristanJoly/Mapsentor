@@ -126,6 +126,14 @@ export interface DepartmentData {
   atmo_jours_degrade: number;
   atmo_jours_mauvais: number;
   atmo_jours_tres_mauvais: number;
+  // Qualité de l'eau
+  eau_conformite_bacterio: number;
+  eau_conformite_physicochim: number;
+  eau_etat_eco_bon: number;
+  eau_etat_eco_moyen: number;
+  eau_etat_eco_mediocre: number;
+  eau_etat_chimique_bon: number;
+  eau_pesticides_depassement: number;
   [key: string]: string | number | { [key: string]: number };
 }
 
