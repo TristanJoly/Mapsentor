@@ -64,6 +64,7 @@ const getFranceMaladieAverage = (allData: DepartmentData[], maladieName: string)
 
 const Top5MaladiesChart = ({ department }: { department: DepartmentData }) => {
   const maladies = department.maladies_65_plus;
+  const total65 = department.total_65_plus || 0;
   if (!maladies || Object.keys(maladies).length === 0) {
     return (
       <div className="p-4 rounded-xl bg-card border border-border shadow-card h-[300px] flex items-center justify-center">
@@ -78,7 +79,8 @@ const Top5MaladiesChart = ({ department }: { department: DepartmentData }) => {
   
   const data = maladieEntries.map(([name, value], index) => ({ 
     name: `${index + 1}. ${name}`, 
-    value 
+    value,
+    effectif: total65 > 0 ? Math.round(value * total65 / 100) : 0,
   }));
 
   return (
@@ -89,7 +91,19 @@ const Top5MaladiesChart = ({ department }: { department: DepartmentData }) => {
           <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
           <XAxis type="number" tick={{ fontSize: 10 }} />
           <YAxis dataKey="name" type="category" tick={{ fontSize: 8 }} width={220} />
-          <Tooltip formatter={(value: number) => `${value.toFixed(1)}%`} contentStyle={{ background: 'hsl(var(--card))', border: '1px solid hsl(var(--border))', borderRadius: '8px', fontSize: '12px' }} />
+          <Tooltip 
+            content={({ active, payload }) => {
+              if (!active || !payload?.length) return null;
+              const d = payload[0].payload;
+              return (
+                <div className="rounded-lg border border-border bg-card p-2.5 shadow-md text-xs">
+                  <p className="font-medium text-foreground mb-1">{d.name}</p>
+                  <p className="text-muted-foreground">{d.value.toFixed(1)}% des 65+</p>
+                  <p className="text-muted-foreground font-semibold">≈ {d.effectif.toLocaleString('fr-FR')} personnes</p>
+                </div>
+              );
+            }}
+          />
           <Bar dataKey="value" fill={COLORS.secondary} radius={[0, 4, 4, 0]} />
         </BarChart>
       </ResponsiveContainer>
