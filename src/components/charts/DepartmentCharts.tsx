@@ -637,7 +637,7 @@ const LogementChart = ({ department }: { department: DepartmentData }) => {
   const data = [{ name: "Propriétaires", value: proprietaires }, { name: "Locataires", value: Math.max(0, total - proprietaires) }];
   return (
     <div className="p-4 rounded-xl bg-card border border-border shadow-card">
-      <h4 className="text-sm font-semibold text-foreground mb-4 flex items-center gap-1">Propriétaires vs Locataires<ChartInfoButton title="Statut d'occupation" text="Répartition des seniors entre propriétaires et locataires dans le département." howToRead="Un taux élevé de propriétaires indique un meilleur ancrage territorial et moins de charges de logement. À l'inverse, beaucoup de locataires seniors avec des revenus faibles = risque de précarité locative." /></h4>
+      <h4 className="text-sm font-semibold text-foreground mb-4 flex items-center gap-1">Propriétaires vs Locataires<ChartInfoButton title="Statut d'occupation" text="Répartition des seniors entre propriétaires et locataires dans le département." howToRead="Un taux élevé de propriétaires indique un meilleur ancrage territorial et moins de charges de logement. À l'inverse, beaucoup de locataires seniors avec des revenus faibles = risque de précarité locative." source="INSEE – Recensement de la population 2020, indicateurs départementaux 60+ et 75+" /></h4>
       <ResponsiveContainer width="100%" height={180}>
         <PieChart>
           <Pie data={data} cx="50%" cy="50%" innerRadius={30} outerRadius={55} dataKey="value" label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`} labelLine={false} style={{ fontSize: '10px', fill: '#222' }}>
