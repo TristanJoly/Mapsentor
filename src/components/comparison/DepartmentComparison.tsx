@@ -62,9 +62,9 @@ const getColumnsForMetric = (metricId: string) => {
     ],
     "esperance_vie": [
       { key: "esperance_vie", label: "Espérance vie", format: (v: number) => `${v.toFixed(1)} ans` },
-      { key: "mal_chro_oui", label: "Maladies chroniques", format: (v: number) => v.toFixed(1) },
-      { key: "handicap_oui", label: "Handicap", format: (v: number) => v.toFixed(1) },
-      { key: "etat_sante_mauvais", label: "Mauvais état santé", format: (v: number) => v.toFixed(1) },
+      { key: "mal_chro_oui", label: "Maladies chroniques", format: (v: number) => `${v.toFixed(1)}%` },
+      { key: "handicap_oui", label: "Handicap", format: (v: number) => `${v.toFixed(1)}%` },
+      { key: "etat_sante_mauvais", label: "Mauvais état santé", format: (v: number) => `${v.toFixed(1)}%` },
     ],
   };
 

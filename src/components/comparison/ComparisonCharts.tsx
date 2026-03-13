@@ -216,49 +216,56 @@ const RevenusComparison = ({ dept1, dept2, allData }: { dept1: DepartmentData; d
   );
 };
 
-// Isolement comparatif
+// Isolement comparatif (en taux %)
 const IsolementComparison = ({ dept1, dept2 }: { dept1: DepartmentData; dept2: DepartmentData }) => {
+  const pop6074_1 = dept1.femmes_60_74_ans + dept1.hommes_60_74_ans;
+  const pop75_1 = dept1.femmes_75_plus + dept1.hommes_75_plus;
+  const pop6074_2 = dept2.femmes_60_74_ans + dept2.hommes_60_74_ans;
+  const pop75_2 = dept2.femmes_75_plus + dept2.hommes_75_plus;
+
+  const toRate = (val: number, pop: number) => pop > 0 ? (val / pop) * 100 : 0;
+
   const data = [
     { 
-      name: "Isolés 60-74", 
-      [dept1.departement]: dept1.isoles_60_74,
-      [dept2.departement]: dept2.isoles_60_74,
+      name: "Isolés 60-74 (%)", 
+      [dept1.departement]: toRate(dept1.isoles_60_74, pop6074_1),
+      [dept2.departement]: toRate(dept2.isoles_60_74, pop6074_2),
     },
     { 
-      name: "Isolés 75+", 
-      [dept1.departement]: dept1.isoles_75_plus,
-      [dept2.departement]: dept2.isoles_75_plus,
+      name: "Isolés 75+ (%)", 
+      [dept1.departement]: toRate(dept1.isoles_75_plus, pop75_1),
+      [dept2.departement]: toRate(dept2.isoles_75_plus, pop75_2),
     },
     { 
-      name: "Femmes 60-74 isolées", 
-      [dept1.departement]: dept1.femmes_60_74_isolees,
-      [dept2.departement]: dept2.femmes_60_74_isolees,
+      name: "Femmes 60-74 isolées (%)", 
+      [dept1.departement]: dept1.femmes_60_74_ans > 0 ? toRate(dept1.femmes_60_74_isolees, dept1.femmes_60_74_ans) : 0,
+      [dept2.departement]: dept2.femmes_60_74_ans > 0 ? toRate(dept2.femmes_60_74_isolees, dept2.femmes_60_74_ans) : 0,
     },
     { 
-      name: "Femmes 75+ isolées", 
-      [dept1.departement]: dept1.femmes_75_plus_isolees,
-      [dept2.departement]: dept2.femmes_75_plus_isolees,
+      name: "Femmes 75+ isolées (%)", 
+      [dept1.departement]: dept1.femmes_75_plus > 0 ? toRate(dept1.femmes_75_plus_isolees, dept1.femmes_75_plus) : 0,
+      [dept2.departement]: dept2.femmes_75_plus > 0 ? toRate(dept2.femmes_75_plus_isolees, dept2.femmes_75_plus) : 0,
     },
   ];
 
   return (
     <div className="p-4 rounded-xl bg-card border border-border shadow-card">
       <h4 className="text-sm font-semibold text-foreground mb-4 flex items-center gap-1">
-        Isolement social
+        Isolement social (%)
         <ChartInfoButton
           title="Isolement social comparé"
-          text="Nombre de personnes isolées par tranche d'âge et par genre, comparé entre les deux départements."
-          howToRead="Plus la barre est longue, plus il y a de personnes isolées. Les femmes isolées de 75+ sont souvent les plus vulnérables. Comparez les proportions entre départements pour identifier les territoires les plus fragiles."
+          text="Taux de personnes isolées par tranche d'âge et par genre, comparé entre les deux départements. Les valeurs sont en pourcentage de la population de chaque tranche d'âge."
+          howToRead="Plus la barre est longue, plus le taux d'isolement est élevé. Les femmes isolées de 75+ sont souvent les plus vulnérables. Comparez les proportions entre départements pour identifier les territoires les plus fragiles."
           source="INSEE – Recensement de la population 2020, indicateurs de vieillissement"
         />
       </h4>
       <ResponsiveContainer width="100%" height={250}>
         <BarChart data={data} layout="vertical">
           <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
-          <XAxis type="number" tick={{ fontSize: 10 }} />
-          <YAxis dataKey="name" type="category" tick={{ fontSize: 9 }} width={100} />
+          <XAxis type="number" tick={{ fontSize: 10 }} tickFormatter={(v) => `${v.toFixed(0)}%`} />
+          <YAxis dataKey="name" type="category" tick={{ fontSize: 9 }} width={120} />
           <Tooltip 
-            formatter={(value: number) => value.toLocaleString('fr-FR')}
+            formatter={(value: number) => `${value.toFixed(1)}%`}
             contentStyle={{ 
               background: 'hsl(var(--card))', 
               border: '1px solid hsl(var(--border))',
