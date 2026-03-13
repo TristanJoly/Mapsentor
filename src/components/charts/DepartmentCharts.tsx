@@ -129,7 +129,7 @@ const Top10MaladiesCompareChart = ({ department, allData }: { department: Depart
 
   return (
     <div className="p-4 rounded-xl bg-card border border-border shadow-card">
-      <h4 className="text-sm font-semibold text-foreground mb-4 flex items-center gap-1">Top 10 pathologies ≥ 65 ans – Comparaison <AmeliSource /><ChartInfoButton text="Compare la prévalence des 10 maladies les plus fréquentes entre le département (rouge), la région (orange) et la moyenne nationale (jaune). Plus la barre est longue, plus la pathologie est répandue." /></h4>
+      <h4 className="text-sm font-semibold text-foreground mb-4 flex items-center gap-1">Top 10 pathologies ≥ 65 ans – Comparaison <AmeliSource /><ChartInfoButton title="Comparaison des pathologies" text="Les 10 maladies les plus fréquentes comparées entre le département (rouge), la région (orange) et la France (jaune)." howToRead="Si la barre rouge dépasse l'orange et la jaune, la pathologie est plus répandue localement. Cela peut signaler un besoin de prévention ou de soins renforcés sur le territoire." /></h4>
       <ResponsiveContainer width="100%" height={400}>
         <BarChart data={data} layout="vertical">
           <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
