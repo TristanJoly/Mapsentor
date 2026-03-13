@@ -655,7 +655,7 @@ const LogementChart = ({ department }: { department: DepartmentData }) => {
       <h4 className="text-sm font-semibold text-foreground mb-4 flex items-center gap-1">Propriétaires vs Locataires<ChartInfoButton title="Statut d'occupation" text="Répartition des seniors entre propriétaires et locataires dans le département." howToRead="Un taux élevé de propriétaires indique un meilleur ancrage territorial et moins de charges de logement. À l'inverse, beaucoup de locataires seniors avec des revenus faibles = risque de précarité locative." source="INSEE – Recensement de la population 2020, indicateurs départementaux 60+ et 75+" /></h4>
       <ResponsiveContainer width="100%" height={180}>
         <PieChart>
-          <Pie data={data} cx="50%" cy="50%" innerRadius={30} outerRadius={55} dataKey="value" label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`} labelLine={false} stroke="none">
+          <Pie data={data} cx="50%" cy="50%" innerRadius={30} outerRadius={55} dataKey="value" label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`} labelLine={false} fontSize={10} fill="#1e293b" stroke="none">
             <Cell fill="#60A5FA" />
             <Cell fill="#DBEAFE" />
           </Pie>
