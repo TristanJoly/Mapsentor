@@ -119,6 +119,13 @@ export interface DepartmentData {
   irep_emission_sol_tonnes: number;
   irep_nb_polluants_air: number;
   irep_nb_polluants_eau: number;
+  // Qualité de l'air ATMO
+  atmo_indice_moyen: number;
+  atmo_jours_bon: number;
+  atmo_jours_moyen: number;
+  atmo_jours_degrade: number;
+  atmo_jours_mauvais: number;
+  atmo_jours_tres_mauvais: number;
   [key: string]: string | number | { [key: string]: number };
 }
 
