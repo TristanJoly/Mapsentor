@@ -196,7 +196,14 @@ export const loadDepartmentData = async (): Promise<DepartmentData[]> => {
       const code = String(row.code_departement || '').trim();
       if (code) eauMap[code] = row;
     });
-    
+    // Parse pesticides data
+    const pesticidesResult = Papa.parse(pesticidesText, { header: true, skipEmptyLines: true, delimiter: ';' });
+    const pesticidesMap: Record<string, any> = {};
+    pesticidesResult.data.forEach((row: any) => {
+      const code = String(row.code_departement || '').trim();
+      if (code) pesticidesMap[code] = row;
+    });
+
     const result = Papa.parse(csvText, {
       header: true,
       skipEmptyLines: true,
