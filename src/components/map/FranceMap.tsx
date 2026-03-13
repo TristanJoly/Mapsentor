@@ -118,19 +118,28 @@ export const FranceMap = ({ data, selectedMetric, selectedDepartment, onDepartme
   const metricRange = useMemo(() => getMetricRange(data, selectedMetric), [data, selectedMetric]);
 
   const colorScale = useMemo(() => {
-    // Use quantile-based breakpoints for better contrast
     const values = data.map(d => d[selectedMetric] as number).filter(v => !isNaN(v) && v > 0).sort((a, b) => a - b);
     if (values.length === 0) {
       return scaleLinear<string>().domain([0, 100]).range(["#FFF8DC", "#C41E3A"]);
     }
-    const q25 = values[Math.floor(values.length * 0.25)];
-    const q50 = values[Math.floor(values.length * 0.50)];
-    const q75 = values[Math.floor(values.length * 0.75)];
     const min = values[0];
     const max = values[values.length - 1];
-    return scaleLinear<string>()
-      .domain([min, q25, q50, q75, max])
-      .range(["#FFF8DC", "#FFD580", "#FF8C42", "#D4451A", "#C41E3A"]);
+    // Use percentile-based spread for better contrast
+    const p20 = values[Math.floor(values.length * 0.20)];
+    const p40 = values[Math.floor(values.length * 0.40)];
+    const p60 = values[Math.floor(values.length * 0.60)];
+    const p80 = values[Math.floor(values.length * 0.80)];
+    // Ensure strictly increasing domain
+    const domain = [min, p20, p40, p60, p80, max].reduce<number[]>((acc, v) => {
+      if (acc.length === 0 || v > acc[acc.length - 1]) acc.push(v);
+      return acc;
+    }, []);
+    const colors = ["#FFF8DC", "#FFE4A0", "#FFD580", "#FF8C42", "#D4451A", "#C41E3A"];
+    // Match colors to domain length
+    const selectedColors = domain.length <= 2 
+      ? [colors[0], colors[colors.length - 1]]
+      : domain.map((_, i) => colors[Math.round(i * (colors.length - 1) / (domain.length - 1))]);
+    return scaleLinear<string>().domain(domain).range(selectedColors);
   }, [data, selectedMetric]);
 
   // Calculate alerts for all departments
