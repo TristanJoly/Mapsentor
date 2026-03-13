@@ -141,12 +141,14 @@ export const loadDepartmentData = async (): Promise<DepartmentData[]> => {
   if (cachedData) return cachedData;
 
   try {
-    const [response, pollutionResponse] = await Promise.all([
+    const [response, pollutionResponse, atmoResponse] = await Promise.all([
       fetch('/data/departements.csv'),
       fetch('/data/pollution_departements.csv'),
+      fetch('/data/atmo_departements.csv'),
     ]);
     const csvText = await response.text();
     const pollutionText = await pollutionResponse.text();
+    const atmoText = await atmoResponse.text();
     
     // Parse pollution data
     const pollutionResult = Papa.parse(pollutionText, { header: true, skipEmptyLines: true, delimiter: ';' });
