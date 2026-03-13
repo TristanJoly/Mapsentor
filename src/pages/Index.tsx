@@ -124,13 +124,18 @@ const Index = () => {
             </div>
 
             {/* Map */}
-            <div className="h-[60vh] md:h-[calc(100vh-600px)] min-h-[350px] mb-16">
+            <div className="h-[60vh] md:h-[calc(100vh-600px)] min-h-[350px]">
               <FranceMap 
                 data={data}
                 selectedMetric={selectedMetric}
                 selectedDepartment={selectedDepartment}
                 onDepartmentClick={setSelectedDepartment}
               />
+            </div>
+
+            {/* Bandeau Mapsentor */}
+            <div className="w-full py-4 bg-card rounded-xl border border-border shadow-card text-center mb-16">
+              <span className="text-lg md:text-xl font-bold text-foreground tracking-wide">Mapsentor</span>
             </div>
           </TabsContent>
 
