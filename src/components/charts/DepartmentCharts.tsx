@@ -904,6 +904,59 @@ const SitesPolluantsChart = ({ department, allData }: { department: DepartmentDa
   );
 };
 
+// ============ GRAPHIQUE QUALITÉ DE L'AIR (ATMO) ============
+
+const QualiteAirAtmoChart = ({ department, allData }: { department: DepartmentData; allData: DepartmentData[] }) => {
+  const regionData = allData.filter(d => d.region === department.region);
+  const avgRegion = regionData.reduce((s, d) => s + d.atmo_indice_moyen, 0) / regionData.length;
+  const avgFrance = allData.reduce((s, d) => s + d.atmo_indice_moyen, 0) / allData.length;
+
+  const dataJours = [
+    { name: "Bon", departement: department.atmo_jours_bon, fill: "#4CAF50" },
+    { name: "Moyen", departement: department.atmo_jours_moyen, fill: "#FFE8B0" },
+    { name: "Dégradé", departement: department.atmo_jours_degrade, fill: COLORS.secondary },
+    { name: "Mauvais", departement: department.atmo_jours_mauvais, fill: COLORS.primary },
+    { name: "Très mauvais", departement: department.atmo_jours_tres_mauvais, fill: "#8B0000" },
+  ];
+
+  const getQualiteLabel = (indice: number) => {
+    if (indice <= 2) return "Bonne";
+    if (indice <= 3) return "Moyenne";
+    if (indice <= 4) return "Dégradée";
+    return "Mauvaise";
+  };
+
+  return (
+    <div className="p-4 rounded-xl bg-card border border-border shadow-card">
+      <h4 className="text-sm font-semibold text-foreground mb-4 flex items-center gap-1">
+        Qualité de l'air (Indice ATMO)
+        <ChartInfoButton 
+          title="Qualité de l'air – Indice ATMO" 
+          text="Répartition des jours de l'année selon la qualité de l'air (indice ATMO : 1=Bon à 5=Très mauvais). L'indice moyen synthétise la qualité sur l'année." 
+          howToRead="Plus il y a de jours 'Bon' (vert), meilleure est la qualité de l'air. Les jours mauvais/très mauvais (rouge) signalent un risque accru pour la santé respiratoire des seniors." 
+          source="Associations agréées de surveillance de la qualité de l'air (AASQA) – Atmo France, 2023" 
+        />
+      </h4>
+      <ResponsiveContainer width="100%" height={220}>
+        <BarChart data={dataJours} layout="vertical">
+          <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
+          <XAxis type="number" tick={{ fontSize: 10 }} label={{ value: "Jours/an", position: "insideBottom", offset: -2, fontSize: 10 }} />
+          <YAxis dataKey="name" type="category" tick={{ fontSize: 10 }} width={80} />
+          <Tooltip formatter={(value: number) => `${value} jours`} contentStyle={{ background: 'hsl(var(--card))', border: '1px solid hsl(var(--border))', borderRadius: '8px', fontSize: '12px' }} />
+          <Bar dataKey="departement" name="Jours">
+            {dataJours.map((entry, index) => (
+              <Cell key={`cell-${index}`} fill={entry.fill} />
+            ))}
+          </Bar>
+        </BarChart>
+      </ResponsiveContainer>
+      <p className="text-[10px] text-muted-foreground text-center mt-1">
+        Indice moyen : <strong>{department.atmo_indice_moyen.toFixed(1)}</strong> ({getQualiteLabel(department.atmo_indice_moyen)}) · Région : {avgRegion.toFixed(1)} · France : {avgFrance.toFixed(1)}
+      </p>
+    </div>
+  );
+};
+
 // Main component
 // Chart registry
 type ChartDef = {
