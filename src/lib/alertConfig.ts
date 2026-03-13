@@ -256,6 +256,7 @@ export const ALERT_DEFINITIONS: AlertDefinition[] = [
       { column: "sans_voiture_75_plus", direction: "high", label: "Sans voiture (75+)" },
     ],
     explanation: "Ces personnes sont seules chez elles et ne peuvent pas en sortir physiquement : pas de médecin, pas de courses, pas de lien social. C'est la mort sociale.",
+    source: "Isolement : INSEE RP 2020 · Sans voiture : INSEE RP 2020, indicateurs 75+",
     levers: [
       {
         title: "Réseau MONALISA (Équipes Citoyennes)",
