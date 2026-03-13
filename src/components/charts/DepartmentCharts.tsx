@@ -115,15 +115,27 @@ const Top10MaladiesCompareChart = ({ department, allData }: { department: Depart
   const maladies = department.maladies_65_plus;
   const total65 = department.total_65_plus || 0;
   if (!maladies || Object.keys(maladies).length === 0) return null;
+
+  // Totaux région et France pour estimer les effectifs
+  const regionData = allData.filter(d => d.region === department.region);
+  const totalRegion65 = regionData.reduce((s, d) => s + (d.total_65_plus || 0), 0);
+  const totalFrance65 = allData.reduce((s, d) => s + (d.total_65_plus || 0), 0);
+
   const top10 = Object.entries(maladies).filter(([_, value]) => value > 0).sort((a, b) => b[1] - a[1]).slice(0, 10);
-  const data = top10.map(([name, value]) => ({
-    name: name.substring(0, 22),
-    fullName: name,
-    departement: value,
-    effectif: total65 > 0 ? Math.round(value * total65 / 100) : 0,
-    region: getRegionMaladieAverage(allData, department.region, name),
-    france: getFranceMaladieAverage(allData, name),
-  }));
+  const data = top10.map(([name, value]) => {
+    const regionPct = getRegionMaladieAverage(allData, department.region, name);
+    const francePct = getFranceMaladieAverage(allData, name);
+    return {
+      name: name.substring(0, 22),
+      fullName: name,
+      departement: value,
+      effectifDept: total65 > 0 ? Math.round(value * total65 / 100) : 0,
+      region: regionPct,
+      effectifRegion: totalRegion65 > 0 ? Math.round(regionPct * totalRegion65 / 100) : 0,
+      france: francePct,
+      effectifFrance: totalFrance65 > 0 ? Math.round(francePct * totalFrance65 / 100) : 0,
+    };
+  });
 
   return (
     <div className="p-4 rounded-xl bg-card border border-border shadow-card">
@@ -140,12 +152,18 @@ const Top10MaladiesCompareChart = ({ department, allData }: { department: Depart
               return (
                 <div className="rounded-lg border border-border bg-card p-2.5 shadow-md text-xs">
                   <p className="font-medium text-foreground mb-1">{d.fullName}</p>
-                  {payload.map((p: any, i: number) => (
-                    <p key={i} className="text-muted-foreground">
-                      <span style={{ color: p.color }}>●</span> {p.name} : {p.value.toFixed(1)}%
-                      {p.dataKey === 'departement' && d.effectif > 0 && <span className="font-semibold"> (≈ {d.effectif.toLocaleString('fr-FR')} pers.)</span>}
-                    </p>
-                  ))}
+                  <p className="text-muted-foreground">
+                    <span style={{ color: COLORS.primary }}>●</span> Département : {d.departement.toFixed(1)}%
+                    {d.effectifDept > 0 && <span className="font-semibold"> (≈ {d.effectifDept.toLocaleString('fr-FR')} pers.)</span>}
+                  </p>
+                  <p className="text-muted-foreground">
+                    <span style={{ color: COLORS.secondary }}>●</span> Région : {d.region.toFixed(1)}%
+                    {d.effectifRegion > 0 && <span className="font-semibold"> (≈ {d.effectifRegion.toLocaleString('fr-FR')} pers.)</span>}
+                  </p>
+                  <p className="text-muted-foreground">
+                    <span style={{ color: COLORS.tertiary }}>●</span> France : {d.france.toFixed(1)}%
+                    {d.effectifFrance > 0 && <span className="font-semibold"> (≈ {d.effectifFrance.toLocaleString('fr-FR')} pers.)</span>}
+                  </p>
                 </div>
               );
             }}
