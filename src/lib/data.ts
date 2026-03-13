@@ -111,6 +111,14 @@ export interface DepartmentData {
   // Maladies par genre
   maladies_femmes: { [key: string]: number };
   maladies_hommes: { [key: string]: number };
+  // Pollution IREP
+  irep_nb_sites: number;
+  irep_nb_emetteurs: number;
+  irep_emission_air_tonnes: number;
+  irep_emission_eau_tonnes: number;
+  irep_emission_sol_tonnes: number;
+  irep_nb_polluants_air: number;
+  irep_nb_polluants_eau: number;
   [key: string]: string | number | { [key: string]: number };
 }
 
