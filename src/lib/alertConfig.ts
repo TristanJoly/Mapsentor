@@ -280,6 +280,7 @@ export const ALERT_DEFINITIONS: AlertDefinition[] = [
       { column: "score_fragilite_numerique", direction: "high", label: "Fragilité numérique" },
     ],
     explanation: "Personne seule + ne sait pas utiliser Internet. Cette personne ne demandera jamais les aides auxquelles elle a droit et ne prendra pas RDV sur Doctolib. Elle est invisible administrativement.",
+    source: "Isolement : INSEE RP 2020 · Fragilité numérique : score composite INSEE (diplôme, accès Internet)",
     levers: [
       {
         title: "Conseillers Numériques France Services Itinérants",
