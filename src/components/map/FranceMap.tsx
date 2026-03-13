@@ -267,41 +267,72 @@ export const FranceMap = ({ data, selectedMetric, selectedDepartment, onDepartme
         </button>
       </div>
 
-      {/* Île-de-France floating panel */}
-      <div className="absolute top-4 left-4 z-10">
-        <button
-          onClick={() => setIdfOpen(!idfOpen)}
-          className="flex items-center gap-1.5 px-3 py-2 rounded-lg bg-card border border-border shadow-soft text-xs font-semibold text-foreground hover:bg-muted transition-colors"
+      {/* Île-de-France inset map */}
+      <div 
+        className="absolute top-3 left-3 w-[140px] h-[140px] md:w-[180px] md:h-[180px] rounded-xl bg-card border-2 border-border shadow-elevated overflow-hidden z-10"
+      >
+        <p className="absolute top-1 left-0 right-0 text-center text-[9px] md:text-[10px] font-semibold text-foreground z-10 pointer-events-none">Île-de-France</p>
+        <ComposableMap
+          projection="geoMercator"
+          projectionConfig={{
+            center: [2.5, 48.75],
+            scale: 28000,
+          }}
+          style={{ width: "100%", height: "100%" }}
         >
-          Île-de-France
-          {idfOpen ? <ChevronUp className="w-3.5 h-3.5" /> : <ChevronDown className="w-3.5 h-3.5" />}
-        </button>
-        {idfOpen && (
-          <div className="mt-1 p-2 rounded-lg bg-card border border-border shadow-elevated max-h-[280px] overflow-y-auto w-[200px]">
-            {IDF_DEPARTMENTS.map(dept => {
-              const alertCount = departmentAlerts[dept.code] || 0;
-              const isSelected = dept.code === selectedDepartment;
-              const color = alertCount > 0 ? getWarningColor(alertCount) : undefined;
-              return (
-                <button
-                  key={dept.code}
-                  onClick={() => { onDepartmentClick(dept.code); setIdfOpen(false); }}
-                  className={`w-full flex items-center gap-2 px-2.5 py-1.5 rounded-md text-left text-xs transition-colors ${
-                    isSelected ? 'bg-primary/10 text-primary font-semibold' : 'text-foreground hover:bg-muted'
-                  }`}
-                >
-                  {alertCount > 0 && (
-                    <span className="w-2.5 h-2.5 rounded-full shrink-0" style={{ backgroundColor: color }} />
-                  )}
-                  <span className="truncate">{dept.code} - {dept.name}</span>
-                  {alertCount > 0 && (
-                    <span className="ml-auto text-[10px] text-muted-foreground">{alertCount} alerte{alertCount > 1 ? 's' : ''}</span>
-                  )}
-                </button>
-              );
-            })}
-          </div>
-        )}
+          <Geographies geography={GEO_URL}>
+            {({ geographies }) =>
+              geographies
+                .filter(geo => {
+                  const code = geo.properties.code?.padStart(2, '0');
+                  return IDF_DEPARTMENTS.some(d => d.code === code);
+                })
+                .map((geo) => {
+                  const code = geo.properties.code?.padStart(2, '0');
+                  const isSelected = code === selectedDepartment;
+                  return (
+                    <Geography
+                      key={geo.rsmKey}
+                      geography={geo}
+                      fill={getFillColor(code)}
+                      stroke={isSelected ? "#C41E3A" : "#94a3b8"}
+                      strokeWidth={isSelected ? 2 : 0.8}
+                      style={{
+                        default: { outline: "none", transition: "all 0.2s" },
+                        hover: { fill: "#FF8C42", stroke: "#C41E3A", strokeWidth: 1.5, outline: "none", cursor: "pointer" },
+                        pressed: { fill: "#C41E3A", outline: "none" },
+                      }}
+                      onClick={() => onDepartmentClick(code)}
+                    />
+                  );
+                })
+            }
+          </Geographies>
+          {/* Alert markers for IdF */}
+          {IDF_DEPARTMENTS.map(dept => {
+            const alertCount = departmentAlerts[dept.code] || 0;
+            if (alertCount === 0) return null;
+            const coords = DEPARTMENT_CENTERS[dept.code];
+            if (!coords) return null;
+            return (
+              <Marker key={`idf-marker-${dept.code}`} coordinates={coords}>
+                <circle 
+                  r={4} 
+                  fill={getWarningColor(alertCount)} 
+                  stroke="#fff" 
+                  strokeWidth={1.5} 
+                  style={{ cursor: 'pointer' }}
+                  onClick={() => onDepartmentClick(dept.code)}
+                />
+                {alertCount > 1 && (
+                  <text textAnchor="middle" y={3.5} style={{ fontFamily: "system-ui", fill: "#fff", fontSize: 6, fontWeight: "bold" }}>
+                    {alertCount}
+                  </text>
+                )}
+              </Marker>
+            );
+          })}
+        </ComposableMap>
       </div>
 
       {/* Legend */}
