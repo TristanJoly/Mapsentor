@@ -134,8 +134,20 @@ export const loadDepartmentData = async (): Promise<DepartmentData[]> => {
   if (cachedData) return cachedData;
 
   try {
-    const response = await fetch('/data/departements.csv');
+    const [response, pollutionResponse] = await Promise.all([
+      fetch('/data/departements.csv'),
+      fetch('/data/pollution_departements.csv'),
+    ]);
     const csvText = await response.text();
+    const pollutionText = await pollutionResponse.text();
+    
+    // Parse pollution data
+    const pollutionResult = Papa.parse(pollutionText, { header: true, skipEmptyLines: true, delimiter: ';' });
+    const pollutionMap: Record<string, any> = {};
+    pollutionResult.data.forEach((row: any) => {
+      const code = String(row.code_departement || '').trim();
+      if (code) pollutionMap[code] = row;
+    });
     
     const result = Papa.parse(csvText, {
       header: true,
