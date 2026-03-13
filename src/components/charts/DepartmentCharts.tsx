@@ -64,6 +64,7 @@ const getFranceMaladieAverage = (allData: DepartmentData[], maladieName: string)
 
 const Top5MaladiesChart = ({ department }: { department: DepartmentData }) => {
   const maladies = department.maladies_65_plus;
+  const total65 = department.total_65_plus || 0;
   if (!maladies || Object.keys(maladies).length === 0) {
     return (
       <div className="p-4 rounded-xl bg-card border border-border shadow-card h-[300px] flex items-center justify-center">
@@ -78,7 +79,8 @@ const Top5MaladiesChart = ({ department }: { department: DepartmentData }) => {
   
   const data = maladieEntries.map(([name, value], index) => ({ 
     name: `${index + 1}. ${name}`, 
-    value 
+    value,
+    effectif: total65 > 0 ? Math.round(value * total65 / 100) : 0,
   }));
 
   return (
@@ -89,7 +91,19 @@ const Top5MaladiesChart = ({ department }: { department: DepartmentData }) => {
           <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
           <XAxis type="number" tick={{ fontSize: 10 }} />
           <YAxis dataKey="name" type="category" tick={{ fontSize: 8 }} width={220} />
-          <Tooltip formatter={(value: number) => `${value.toFixed(1)}%`} contentStyle={{ background: 'hsl(var(--card))', border: '1px solid hsl(var(--border))', borderRadius: '8px', fontSize: '12px' }} />
+          <Tooltip 
+            content={({ active, payload }) => {
+              if (!active || !payload?.length) return null;
+              const d = payload[0].payload;
+              return (
+                <div className="rounded-lg border border-border bg-card p-2.5 shadow-md text-xs">
+                  <p className="font-medium text-foreground mb-1">{d.name}</p>
+                  <p className="text-muted-foreground">{d.value.toFixed(1)}% des 65+</p>
+                  <p className="text-muted-foreground font-semibold">≈ {d.effectif.toLocaleString('fr-FR')} personnes</p>
+                </div>
+              );
+            }}
+          />
           <Bar dataKey="value" fill={COLORS.secondary} radius={[0, 4, 4, 0]} />
         </BarChart>
       </ResponsiveContainer>
@@ -99,12 +113,14 @@ const Top5MaladiesChart = ({ department }: { department: DepartmentData }) => {
 
 const Top10MaladiesCompareChart = ({ department, allData }: { department: DepartmentData; allData: DepartmentData[] }) => {
   const maladies = department.maladies_65_plus;
+  const total65 = department.total_65_plus || 0;
   if (!maladies || Object.keys(maladies).length === 0) return null;
   const top10 = Object.entries(maladies).filter(([_, value]) => value > 0).sort((a, b) => b[1] - a[1]).slice(0, 10);
   const data = top10.map(([name, value]) => ({
     name: name.substring(0, 22),
     fullName: name,
     departement: value,
+    effectif: total65 > 0 ? Math.round(value * total65 / 100) : 0,
     region: getRegionMaladieAverage(allData, department.region, name),
     france: getFranceMaladieAverage(allData, name),
   }));
@@ -117,7 +133,23 @@ const Top10MaladiesCompareChart = ({ department, allData }: { department: Depart
           <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
           <XAxis type="number" tick={{ fontSize: 10 }} unit="%" />
           <YAxis dataKey="name" type="category" tick={{ fontSize: 8 }} width={130} />
-          <Tooltip formatter={(value: number, name: string) => [`${value.toFixed(1)}%`, name]} labelFormatter={(label) => data.find(d => d.name === label)?.fullName || label} contentStyle={{ background: 'hsl(var(--card))', border: '1px solid hsl(var(--border))', borderRadius: '8px', fontSize: '12px' }} />
+          <Tooltip 
+            content={({ active, payload }) => {
+              if (!active || !payload?.length) return null;
+              const d = payload[0].payload;
+              return (
+                <div className="rounded-lg border border-border bg-card p-2.5 shadow-md text-xs">
+                  <p className="font-medium text-foreground mb-1">{d.fullName}</p>
+                  {payload.map((p: any, i: number) => (
+                    <p key={i} className="text-muted-foreground">
+                      <span style={{ color: p.color }}>●</span> {p.name} : {p.value.toFixed(1)}%
+                      {p.dataKey === 'departement' && d.effectif > 0 && <span className="font-semibold"> (≈ {d.effectif.toLocaleString('fr-FR')} pers.)</span>}
+                    </p>
+                  ))}
+                </div>
+              );
+            }}
+          />
           <Bar dataKey="departement" fill={COLORS.primary} name="Département" />
           <Bar dataKey="region" fill={COLORS.secondary} name="Région" />
           <Bar dataKey="france" fill={COLORS.tertiary} name="France" />
@@ -701,8 +733,9 @@ const AplEhpaChart = ({ department, allData }: { department: DepartmentData; all
 const PathologiesGenreChart = ({ department }: { department: DepartmentData }) => {
   const femmes = department.maladies_femmes || {};
   const hommes = department.maladies_hommes || {};
+  const totalF = department.total_femmes_65_plus || 0;
+  const totalH = department.total_hommes_65_plus || 0;
   
-  // Get top pathologies from 65+ then show F vs H
   const maladies65 = department.maladies_65_plus || {};
   const top8 = Object.entries(maladies65)
     .filter(([_, v]) => v > 0)
@@ -714,6 +747,8 @@ const PathologiesGenreChart = ({ department }: { department: DepartmentData }) =
     fullName: name,
     femmes: femmes[name] || 0,
     hommes: hommes[name] || 0,
+    effectifF: totalF > 0 ? Math.round((femmes[name] || 0) * totalF / 100) : 0,
+    effectifH: totalH > 0 ? Math.round((hommes[name] || 0) * totalH / 100) : 0,
   }));
 
   if (data.length === 0) return null;
@@ -727,9 +762,17 @@ const PathologiesGenreChart = ({ department }: { department: DepartmentData }) =
           <XAxis type="number" tick={{ fontSize: 10 }} unit="%" />
           <YAxis dataKey="name" type="category" tick={{ fontSize: 8 }} width={130} />
           <Tooltip 
-            formatter={(value: number, name: string) => [`${value.toFixed(2)}%`, name]} 
-            labelFormatter={(label) => data.find(d => d.name === label)?.fullName || label}
-            contentStyle={{ background: 'hsl(var(--card))', border: '1px solid hsl(var(--border))', borderRadius: '8px', fontSize: '12px' }} 
+            content={({ active, payload }) => {
+              if (!active || !payload?.length) return null;
+              const d = payload[0].payload;
+              return (
+                <div className="rounded-lg border border-border bg-card p-2.5 shadow-md text-xs">
+                  <p className="font-medium text-foreground mb-1">{d.fullName}</p>
+                  <p className="text-muted-foreground"><span style={{ color: COLORS.primary }}>●</span> Femmes : {d.femmes.toFixed(2)}%{d.effectifF > 0 && <span className="font-semibold"> (≈ {d.effectifF.toLocaleString('fr-FR')})</span>}</p>
+                  <p className="text-muted-foreground"><span style={{ color: COLORS.secondary }}>●</span> Hommes : {d.hommes.toFixed(2)}%{d.effectifH > 0 && <span className="font-semibold"> (≈ {d.effectifH.toLocaleString('fr-FR')})</span>}</p>
+                </div>
+              );
+            }}
           />
           <Bar dataKey="femmes" fill={COLORS.primary} name="Femmes" />
           <Bar dataKey="hommes" fill={COLORS.secondary} name="Hommes" />
