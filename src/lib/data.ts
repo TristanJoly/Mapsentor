@@ -157,6 +157,14 @@ export const loadDepartmentData = async (): Promise<DepartmentData[]> => {
       const code = String(row.code_departement || '').trim();
       if (code) pollutionMap[code] = row;
     });
+
+    // Parse ATMO data
+    const atmoResult = Papa.parse(atmoText, { header: true, skipEmptyLines: true, delimiter: ';' });
+    const atmoMap: Record<string, any> = {};
+    atmoResult.data.forEach((row: any) => {
+      const code = String(row.code_departement || '').trim();
+      if (code) atmoMap[code] = row;
+    });
     
     const result = Papa.parse(csvText, {
       header: true,
