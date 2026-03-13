@@ -106,7 +106,7 @@ const Top5MaladiesChart = ({ department }: { department: DepartmentData }) => {
 
   return (
     <div className="p-4 rounded-xl bg-card border border-border shadow-card">
-      <h4 className="text-sm font-semibold text-foreground mb-4 flex items-center gap-1">Prévalence des 5 maladies les plus fréquentes <AmeliSource /><ChartInfoButton title="Top 5 maladies" text="Barres horizontales montrant les 5 maladies les plus fréquentes chez les 65+ dans ce département. La valeur est en % de la population senior." howToRead="Plus la barre est longue, plus la maladie touche de personnes. Cherchez les maladies qui dépassent nettement les autres : elles représentent les enjeux de santé prioritaires du territoire." /></h4>
+      <h4 className="text-sm font-semibold text-foreground mb-4 flex items-center gap-1">Prévalence des 5 maladies les plus fréquentes <AmeliSource /><ChartInfoButton title="Top 5 maladies" text="Barres horizontales montrant les 5 maladies les plus fréquentes chez les 65+ dans ce département. La valeur est en % de la population senior." howToRead="Plus la barre est longue, plus la maladie touche de personnes. Cherchez les maladies qui dépassent nettement les autres : elles représentent les enjeux de santé prioritaires du territoire." source="Dataset Ameli (CNAM) – Effectif départemental par pathologie, sexe et âge, 2023" /></h4>
       <ResponsiveContainer width="100%" height={250}>
         <BarChart data={data} layout="vertical">
           <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
