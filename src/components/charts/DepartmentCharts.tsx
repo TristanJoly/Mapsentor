@@ -581,7 +581,7 @@ const DemographieSeniorsChart = ({ department }: { department: DepartmentData })
   ];
   return (
     <div className="p-4 rounded-xl bg-card border border-border shadow-card">
-      <h4 className="text-sm font-semibold text-foreground mb-4 flex items-center gap-1">Répartition démographique seniors<ChartInfoButton text="Effectifs de la population senior répartis par genre et tranche d'âge (60-74 ans et 75+). Permet de visualiser la pyramide des âges locale." /></h4>
+      <h4 className="text-sm font-semibold text-foreground mb-4 flex items-center gap-1">Répartition démographique seniors<ChartInfoButton title="Pyramide des âges" text="Effectifs de la population senior répartis par genre (F/H) et tranche d'âge (60-74 et 75+)." howToRead="Les 4 barres permettent de voir l'équilibre du département : un fort décalage entre F et H chez les 75+ reflète l'écart d'espérance de vie. Une dominance des 75+ peut indiquer un vieillissement accéléré." /></h4>
       <ResponsiveContainer width="100%" height={200}>
         <BarChart data={data}>
           <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
