@@ -70,7 +70,7 @@ export const DepartmentInfo = ({ department, allData }: DepartmentInfoProps) => 
   }
 
   // Moyennes nationales
-  const avgPauvrete75 = getAverage(allData, 'taux_pauvrete_75');
+  const avgPauvrete65 = getAverage(allData, 'taux_pauvrete_60');
   const avgPart65 = getAverage(allData, 'part_60_plus');
   const avgNiveauVie = getAverage(allData, 'niveau_vie_median');
   const avgEsperanceVie = getAverage(allData, 'esperance_vie');
