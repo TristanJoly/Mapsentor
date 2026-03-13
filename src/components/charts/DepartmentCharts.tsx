@@ -1113,7 +1113,57 @@ const EauCoursEauChart = ({ department, allData }: { department: DepartmentData;
   );
 };
 
-// Chart registry
+// ============ GRAPHIQUE PESTICIDES ============
+
+const PesticidesChart = ({ department, allData }: { department: DepartmentData; allData: DepartmentData[] }) => {
+  const regionData = allData.filter(d => d.region === department.region);
+  const avg = (arr: DepartmentData[], field: keyof DepartmentData) => {
+    const vals = arr.map(d => d[field] as number).filter(v => !isNaN(v) && v > 0);
+    return vals.length > 0 ? vals.reduce((a, b) => a + b, 0) / vals.length : 0;
+  };
+
+  const dataSubstances = [
+    { name: "Glyphosate", departement: department.pest_glyphosate_tonnes, region: parseFloat(avg(regionData, 'pest_glyphosate_tonnes').toFixed(1)), france: parseFloat(avg(allData, 'pest_glyphosate_tonnes').toFixed(1)) },
+    { name: "Prosulfocarbe", departement: department.pest_prosulfocarbe_tonnes, region: parseFloat(avg(regionData, 'pest_prosulfocarbe_tonnes').toFixed(1)), france: parseFloat(avg(allData, 'pest_prosulfocarbe_tonnes').toFixed(1)) },
+    { name: "Métolachlore", departement: department.pest_metolachlore_tonnes, region: parseFloat(avg(regionData, 'pest_metolachlore_tonnes').toFixed(1)), france: parseFloat(avg(allData, 'pest_metolachlore_tonnes').toFixed(1)) },
+    { name: "Folpel", departement: department.pest_folpel_tonnes, region: parseFloat(avg(regionData, 'pest_folpel_tonnes').toFixed(1)), france: parseFloat(avg(allData, 'pest_folpel_tonnes').toFixed(1)) },
+    { name: "Soufre", departement: department.pest_soufre_tonnes, region: parseFloat(avg(regionData, 'pest_soufre_tonnes').toFixed(1)), france: parseFloat(avg(allData, 'pest_soufre_tonnes').toFixed(1)) },
+  ];
+
+  return (
+    <div className="p-4 rounded-xl bg-card border border-border shadow-card">
+      <h4 className="text-sm font-semibold text-foreground mb-4 flex items-center gap-1">
+        Pesticides – Substances achetées (tonnes)
+        <ChartInfoButton 
+          title="Achats de pesticides par département" 
+          text="Quantités de substances actives pesticides achetées (en tonnes) par les exploitations du département. Les 5 principales substances sont affichées." 
+          howToRead="Plus les barres sont hautes, plus le département utilise cette substance. Comparez avec la moyenne régionale et nationale." 
+          source="BNVD / Géophyto – Ministère de la Transition écologique, 2023" 
+        />
+      </h4>
+      <ResponsiveContainer width="100%" height={260}>
+        <BarChart data={dataSubstances}>
+          <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
+          <XAxis dataKey="name" tick={{ fontSize: 10 }} />
+          <YAxis tick={{ fontSize: 10 }} />
+          <Tooltip formatter={(value: number) => `${value} t`} contentStyle={{ background: 'hsl(var(--card))', border: '1px solid hsl(var(--border))', borderRadius: '8px', fontSize: '12px' }} />
+          <Bar dataKey="departement" fill="#EF4444" name="Département" />
+          <Bar dataKey="region" fill="#F59E0B" name="Région" />
+          <Bar dataKey="france" fill={COLORS.muted} name="France" />
+          <Legend wrapperStyle={{ fontSize: '11px' }} />
+        </BarChart>
+      </ResponsiveContainer>
+      <div className="grid grid-cols-2 gap-2 mt-3 text-[10px] text-muted-foreground">
+        <p>NODU total : <strong className="text-foreground">{department.pest_nodu_total_tonnes} t</strong> (France : {avg(allData, 'pest_nodu_total_tonnes').toFixed(0)} t)</p>
+        <p>IFT moyen : <strong className="text-foreground">{department.pest_ift_moyen}</strong> (France : {avg(allData, 'pest_ift_moyen').toFixed(1)})</p>
+        <p>Dépassement eau : <strong className="text-foreground">{department.pest_taux_depassement_eau}%</strong> (France : {avg(allData, 'pest_taux_depassement_eau').toFixed(1)}%)</p>
+        <p>Part bio SAU : <strong className="text-foreground">{department.pest_part_bio_sau}%</strong> (France : {avg(allData, 'pest_part_bio_sau').toFixed(1)}%)</p>
+      </div>
+    </div>
+  );
+};
+
+
 type ChartDef = {
   id: string;
   label: string;
