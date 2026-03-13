@@ -2,8 +2,7 @@ import { AlertTriangle, Wrench, Info, ExternalLink, Sparkles, Heart, Euro, Users
 import { useState } from "react";
 import { DepartmentData } from "@/lib/data";
 import { getAllDepartmentAlerts, AlertDefinition, getDecile, getDeptValue } from "@/lib/alertConfig";
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 
 interface DepartmentAlertsProps {
   department: DepartmentData | undefined;
@@ -33,79 +32,91 @@ const AlertCard = ({ alert, allData, department }: { alert: AlertDefinition; all
   const meta = CATEGORY_META[alert.category];
 
   return (
-    <TooltipProvider delayDuration={200}>
-      <div className={`rounded-xl border ${meta.borderClass} ${meta.bgClass} overflow-hidden`}>
-        {/* Header */}
-        <Tooltip>
-          <TooltipTrigger asChild>
-            <button
-              onClick={() => setExpanded(!expanded)}
-              className="w-full text-left p-3 flex items-start gap-2 cursor-pointer hover:opacity-80 transition-opacity"
-            >
-              <AlertTriangle className={`h-4 w-4 mt-0.5 shrink-0 ${meta.colorClass}`} />
-              <div className="flex-1 min-w-0">
-                <div className="flex items-center gap-1.5 flex-wrap">
-                  <span className={`text-xs font-medium px-1.5 py-0.5 rounded ${meta.bgClass} ${meta.colorClass} border ${meta.borderClass}`}>
-                    {meta.label}
-                  </span>
-                  <span className="text-sm font-semibold text-foreground">{alert.label}</span>
-                  <Info className="w-3 h-3 text-muted-foreground shrink-0" />
-                </div>
-                <p className="text-xs text-muted-foreground mt-1 line-clamp-2">{alert.explanation}</p>
-              </div>
-              {expanded ? <ChevronUp className="w-4 h-4 text-muted-foreground shrink-0 mt-0.5" /> : <ChevronDown className="w-4 h-4 text-muted-foreground shrink-0 mt-0.5" />}
+    <div className={`rounded-xl border ${meta.borderClass} ${meta.bgClass} overflow-hidden`}>
+      {/* Header */}
+      <div className="flex items-start">
+        <button
+          onClick={() => setExpanded(!expanded)}
+          className="flex-1 text-left p-3 flex items-start gap-2 cursor-pointer hover:opacity-80 transition-opacity min-w-0"
+        >
+          <AlertTriangle className={`h-4 w-4 mt-0.5 shrink-0 ${meta.colorClass}`} />
+          <div className="flex-1 min-w-0">
+            <div className="flex items-center gap-1.5 flex-wrap">
+              <span className={`text-xs font-medium px-1.5 py-0.5 rounded ${meta.bgClass} ${meta.colorClass} border ${meta.borderClass}`}>
+                {meta.label}
+              </span>
+              <span className="text-sm font-semibold text-foreground">{alert.label}</span>
+            </div>
+            <p className="text-xs text-muted-foreground mt-1 line-clamp-2">{alert.explanation}</p>
+          </div>
+          {expanded ? <ChevronUp className="w-4 h-4 text-muted-foreground shrink-0 mt-0.5" /> : <ChevronDown className="w-4 h-4 text-muted-foreground shrink-0 mt-0.5" />}
+        </button>
+        {/* Info Popover */}
+        <Popover>
+          <PopoverTrigger asChild>
+            <button className="shrink-0 p-2 mt-1 mr-1 rounded-full hover:bg-muted/50 transition-colors focus:outline-none focus:ring-2 focus:ring-primary/30">
+              <Info className="w-3.5 h-3.5 text-muted-foreground/50" />
             </button>
-          </TooltipTrigger>
-          <TooltipContent side="left" className="max-w-xs p-3 space-y-1.5">
-            <p className="font-semibold text-xs">Méthode de calcul (Déciles) :</p>
-            <p className="text-xs text-muted-foreground">
-              L'alerte se déclenche quand toutes ces conditions sont réunies. « Bas » = 1er décile (10% les plus bas), « Haut » = dernier décile (10% les plus hauts) :
-            </p>
-            <ul className="text-xs space-y-1 list-disc pl-3">
-              {alert.conditions.map((cond, j) => (
-                <li key={j} className="text-muted-foreground">
-                  {formatCondition(cond, allData, department)}
-                </li>
-              ))}
-            </ul>
-          </TooltipContent>
-        </Tooltip>
+          </PopoverTrigger>
+          <PopoverContent side="left" align="start" className="max-w-[320px] w-[90vw] sm:w-[320px] p-4 space-y-3">
+            <p className="text-sm font-semibold text-foreground">{alert.label}</p>
+            <p className="text-xs text-muted-foreground leading-relaxed">{alert.explanation}</p>
+            <div className="pt-2 border-t border-border">
+              <p className="text-[11px] font-medium text-primary mb-1">📖 Comment lire cette alerte ?</p>
+              <p className="text-xs text-muted-foreground leading-relaxed mb-2">
+                L'alerte se déclenche quand toutes les conditions ci-dessous sont réunies. « Bas » = 1er décile (10% les plus bas), « Haut » = dernier décile (10% les plus hauts).
+              </p>
+              <ul className="text-xs space-y-1 list-disc pl-3">
+                {alert.conditions.map((cond, j) => (
+                  <li key={j} className="text-muted-foreground">
+                    {formatCondition(cond, allData, department)}
+                  </li>
+                ))}
+              </ul>
+            </div>
+            {alert.source && (
+              <div className="pt-2 border-t border-border">
+                <p className="text-[11px] font-medium text-muted-foreground/70">📂 Source : {alert.source}</p>
+              </div>
+            )}
+          </PopoverContent>
+        </Popover>
+      </div>
 
-        {/* Expanded: Levers */}
-        {expanded && (
-          <div className="px-3 pb-3 space-y-2 border-t border-border/30 pt-2">
-            {alert.levers.map((lever, i) => (
-              <div key={i} className="flex items-start gap-2 p-2 rounded-lg bg-card/60">
-                <Wrench className="w-3.5 h-3.5 mt-0.5 text-primary shrink-0" />
-                <div className="min-w-0 flex-1">
-                  <div className="flex items-center gap-1.5 flex-wrap">
-                    <span className="text-xs font-semibold text-foreground">Levier {i + 1} :</span>
-                    <span className="text-xs font-medium text-primary">{lever.title}</span>
-                    {lever.isNew && (
-                      <span className="inline-flex items-center gap-0.5 text-[10px] font-medium px-1.5 py-0.5 rounded-full bg-primary/10 text-primary">
-                        <Sparkles className="w-2.5 h-2.5" />
-                        Nouveau
-                      </span>
-                    )}
-                  </div>
-                  <p className="text-xs text-muted-foreground mt-1 leading-relaxed">{lever.detail}</p>
-                  {lever.url && (
-                    <a
-                      href={lever.url}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="inline-flex items-center gap-1 text-[11px] text-primary hover:underline mt-1"
-                    >
-                      En savoir plus <ExternalLink className="w-3 h-3" />
-                    </a>
+      {/* Expanded: Levers */}
+      {expanded && (
+        <div className="px-3 pb-3 space-y-2 border-t border-border/30 pt-2">
+          {alert.levers.map((lever, i) => (
+            <div key={i} className="flex items-start gap-2 p-2 rounded-lg bg-card/60">
+              <Wrench className="w-3.5 h-3.5 mt-0.5 text-primary shrink-0" />
+              <div className="min-w-0 flex-1">
+                <div className="flex items-center gap-1.5 flex-wrap">
+                  <span className="text-xs font-semibold text-foreground">Levier {i + 1} :</span>
+                  <span className="text-xs font-medium text-primary">{lever.title}</span>
+                  {lever.isNew && (
+                    <span className="inline-flex items-center gap-0.5 text-[10px] font-medium px-1.5 py-0.5 rounded-full bg-primary/10 text-primary">
+                      <Sparkles className="w-2.5 h-2.5" />
+                      Nouveau
+                    </span>
                   )}
                 </div>
+                <p className="text-xs text-muted-foreground mt-1 leading-relaxed">{lever.detail}</p>
+                {lever.url && (
+                  <a
+                    href={lever.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-1 text-[11px] text-primary hover:underline mt-1"
+                  >
+                    En savoir plus <ExternalLink className="w-3 h-3" />
+                  </a>
+                )}
               </div>
-            ))}
-          </div>
-        )}
-      </div>
-    </TooltipProvider>
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
   );
 };
 
@@ -114,13 +125,6 @@ export const DepartmentAlerts = ({ department, allData }: DepartmentAlertsProps)
 
   const alerts = getAllDepartmentAlerts(department, allData);
   const alertCount = alerts.length;
-
-  // Group by category
-  const grouped: Record<string, AlertDefinition[]> = {};
-  alerts.forEach(a => {
-    if (!grouped[a.category]) grouped[a.category] = [];
-    grouped[a.category].push(a);
-  });
 
   return (
     <div className="space-y-3">

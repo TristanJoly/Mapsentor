@@ -20,7 +20,8 @@ export interface AlertDefinition {
   conditions: AlertCondition[];
   explanation: string;
   levers: AlertLever[];
-  headerNote?: string; // Note displayed above alerts for the category
+  headerNote?: string;
+  source?: string;
 }
 
 // ==========================================
@@ -106,6 +107,7 @@ export const ALERT_DEFINITIONS: AlertDefinition[] = [
       { column: "top5_prevalence", direction: "high", label: "Prévalence Top 5 Pathologies" },
     ],
     explanation: "Forte charge de maladies chroniques dans un territoire en désert médical. Les patients n'ont pas de médecin traitant à proximité pour gérer leurs pathologies.",
+    source: "APL médecins : DREES – Panorama statistique 2024 · Prévalence pathologies : Ameli (CNAM) 2023",
     levers: [
       {
         title: "Cabines de téléconsultation assistée en officine",
@@ -127,6 +129,7 @@ export const ALERT_DEFINITIONS: AlertDefinition[] = [
       { column: "total_75_plus", direction: "high", label: "Population 75+" },
     ],
     explanation: "Nombre élevé de personnes très âgées avec très peu d'aides à domicile disponibles. Risque de placements en EHPAD par défaut ou de situations de maltraitance par négligence.",
+    source: "APL SAPA : DREES – Panorama statistique 2024 · Population 75+ : INSEE RP 2020",
     levers: [
       {
         title: "Plateforme Territoriale des Métiers de l'Autonomie",
@@ -149,6 +152,7 @@ export const ALERT_DEFINITIONS: AlertDefinition[] = [
       { column: "part_75_plus", direction: "high", label: "Indice de vieillissement" },
     ],
     explanation: "Population très âgée insuffisamment vaccinée. Le risque de complications graves (grippe, Covid) est majoré, pouvant saturer les urgences hospitalières locales.",
+    source: "Vaccination : Santé publique France / Ameli 2023 · Vieillissement : INSEE RP 2020",
     levers: [
       {
         title: "Campagnes mobiles « Aller-vers »",
@@ -176,6 +180,7 @@ export const ALERT_DEFINITIONS: AlertDefinition[] = [
       { column: "proprietaires_75_plus", direction: "low", label: "Part de propriétaires" },
     ],
     explanation: "Si pauvre + loyer : le reste à vivre pour manger ou se soigner est minime/insuffisant. Ces seniors cumulent faibles revenus et charges locatives.",
+    source: "ASPA : Caisse des Dépôts / DREES 2024 · Propriétaires : INSEE RP 2020",
     levers: [
       {
         title: "Renforcement ciblé du FSL (Fonds de Solidarité Logement)",
@@ -199,6 +204,7 @@ export const ALERT_DEFINITIONS: AlertDefinition[] = [
       { column: "taux_pauvrete_60", direction: "high", label: "Taux de pauvreté" },
     ],
     explanation: "C'est le cumul des barrières : il faut aller loin (donc payer de l'essence) avec des revenus faibles. Beaucoup renoncent purement et simplement à se soigner.",
+    source: "APL médecins : DREES – Panorama statistique 2024 · Pauvreté : FILOSOFI (INSEE) 2020",
     levers: [
       {
         title: "Dispositif « Sortir Plus » et Chèques Mobilité",
@@ -222,6 +228,7 @@ export const ALERT_DEFINITIONS: AlertDefinition[] = [
       { column: "part_75_plus", direction: "high", label: "Indice de vieillissement" },
     ],
     explanation: "Le département vieillit et s'appauvrit simultanément. Les ressources fiscales vont diminuer alors que les besoins d'aides sociales vont augmenter.",
+    source: "ASPA : Caisse des Dépôts / DREES 2024 · Vieillissement : INSEE RP 2020",
     levers: [
       {
         title: "Contractualisation via le Pacte des Solidarités",
@@ -249,6 +256,7 @@ export const ALERT_DEFINITIONS: AlertDefinition[] = [
       { column: "sans_voiture_75_plus", direction: "high", label: "Sans voiture (75+)" },
     ],
     explanation: "Ces personnes sont seules chez elles et ne peuvent pas en sortir physiquement : pas de médecin, pas de courses, pas de lien social. C'est la mort sociale.",
+    source: "Isolement : INSEE RP 2020 · Sans voiture : INSEE RP 2020, indicateurs 75+",
     levers: [
       {
         title: "Réseau MONALISA (Équipes Citoyennes)",
@@ -272,6 +280,7 @@ export const ALERT_DEFINITIONS: AlertDefinition[] = [
       { column: "score_fragilite_numerique", direction: "high", label: "Fragilité numérique" },
     ],
     explanation: "Personne seule + ne sait pas utiliser Internet. Cette personne ne demandera jamais les aides auxquelles elle a droit et ne prendra pas RDV sur Doctolib. Elle est invisible administrativement.",
+    source: "Isolement : INSEE RP 2020 · Fragilité numérique : score composite INSEE (diplôme, accès Internet)",
     levers: [
       {
         title: "Conseillers Numériques France Services Itinérants",
@@ -294,6 +303,7 @@ export const ALERT_DEFINITIONS: AlertDefinition[] = [
       { column: "sans_voiture_75_plus", direction: "high", label: "Sans voiture (75+)" },
     ],
     explanation: "L'APL est basse (médecins loin) et les gens n'ont pas de voiture. Si pas de transports en commun ou d'ambulances, l'accès au soin est physiquement impossible.",
+    source: "APL médecins : DREES – Panorama statistique 2024 · Sans voiture : INSEE RP 2020",
     levers: [
       {
         title: "Transport à la Demande (TAD) zonal",
