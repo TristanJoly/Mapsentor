@@ -3,17 +3,17 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/comp
 import { DepartmentData, getAverage } from "@/lib/data";
 
 const getRanking = (allData: DepartmentData[], code: string, key: keyof DepartmentData, ascending = false) => {
-  const sorted = [...allData]
-    .filter(d => (d[key] as number) > 0)
-    .sort((a, b) => ascending 
-      ? (a[key] as number) - (b[key] as number) 
-      : (b[key] as number) - (a[key] as number)
-    );
-  const rank = sorted.findIndex(d => d.code_departement === code) + 1;
+  const sorted = [...allData].
+  filter((d) => d[key] as number > 0).
+  sort((a, b) => ascending ?
+  (a[key] as number) - (b[key] as number) :
+  (b[key] as number) - (a[key] as number)
+  );
+  const rank = sorted.findIndex((d) => d.code_departement === code) + 1;
   return { rank, total: sorted.length };
 };
 
-const RankBadge = ({ rank, total }: { rank: number; total: number }) => {
+const RankBadge = ({ rank, total }: {rank: number;total: number;}) => {
   const isTop = rank <= 10;
   const isBottom = rank > total - 10;
   return (
@@ -21,8 +21,8 @@ const RankBadge = ({ rank, total }: { rank: number; total: number }) => {
       <span className={`text-[10px] font-medium ${isTop ? 'text-amber-600' : isBottom ? 'text-rose-500' : 'text-muted-foreground/70'}`}>
         {rank}<sup>e</sup>/{total}
       </span>
-    </div>
-  );
+    </div>);
+
 };
 
 interface DepartmentInfoProps {
@@ -30,7 +30,7 @@ interface DepartmentInfoProps {
   allData: DepartmentData[];
 }
 
-const ComparisonBadge = ({ value, avg, unit = "pts", invert = false }: { value: number; avg: number; unit?: string; invert?: boolean }) => {
+const ComparisonBadge = ({ value, avg, unit = "pts", invert = false }: {value: number;avg: number;unit?: string;invert?: boolean;}) => {
   const diff = value - avg;
   // invert: lower is better (e.g. poverty)
   const isGood = invert ? diff < -1 : diff > 1;
@@ -41,23 +41,23 @@ const ComparisonBadge = ({ value, avg, unit = "pts", invert = false }: { value: 
       <div className="flex items-center gap-1 mt-1.5">
         <Minus className="w-3.5 h-3.5 text-muted-foreground" />
         <span className="text-xs text-muted-foreground">≈ moy. nationale</span>
-      </div>
-    );
+      </div>);
+
   }
 
   return (
     <div className="flex items-center gap-1 mt-1.5">
-      {diff > 0 ? (
-        <ArrowUp className={`w-3.5 h-3.5 ${isBad ? 'text-rose-600' : 'text-emerald-600'}`} />
-      ) : (
-        <ArrowDown className={`w-3.5 h-3.5 ${isGood ? 'text-emerald-600' : 'text-rose-600'}`} />
-      )}
+      {diff > 0 ?
+      <ArrowUp className={`w-3.5 h-3.5 ${isBad ? 'text-rose-600' : 'text-emerald-600'}`} /> :
+
+      <ArrowDown className={`w-3.5 h-3.5 ${isGood ? 'text-emerald-600' : 'text-rose-600'}`} />
+      }
       <span className={`text-xs font-medium ${isBad ? 'text-rose-600' : isGood ? 'text-emerald-600' : 'text-muted-foreground'}`}>
         {diff > 0 ? '+' : ''}{unit === '%' ? diff.toFixed(1) + ' pts' : Math.round(diff).toLocaleString('fr-FR') + (unit ? ' ' + unit : '')}
       </span>
       <span className="text-xs text-muted-foreground/70">vs FR</span>
-    </div>
-  );
+    </div>);
+
 };
 
 export const DepartmentInfo = ({ department, allData }: DepartmentInfoProps) => {
@@ -65,8 +65,8 @@ export const DepartmentInfo = ({ department, allData }: DepartmentInfoProps) => 
     return (
       <div className="p-5 rounded-xl bg-card border border-border shadow-card">
         <p className="text-sm text-muted-foreground">Sélectionnez un département</p>
-      </div>
-    );
+      </div>);
+
   }
 
   // Moyennes nationales
@@ -100,8 +100,8 @@ export const DepartmentInfo = ({ department, allData }: DepartmentInfoProps) => 
     <div className="p-5 rounded-xl bg-card border border-border shadow-card">
       {/* Header */}
       <div className="flex items-center gap-3 mb-5">
-        <div className="w-14 h-14 rounded-xl flex items-center justify-center text-white font-bold text-lg shadow-soft" 
-          style={{ background: 'linear-gradient(135deg, #3B82F6, #1E40AF)' }}>
+        <div className="w-14 h-14 rounded-xl flex items-center justify-center text-white font-bold text-lg shadow-soft"
+        style={{ background: 'linear-gradient(135deg, #3B82F6, #1E40AF)' }}>
           {department.code_departement}
         </div>
         <div className="flex-1">
@@ -171,9 +171,9 @@ export const DepartmentInfo = ({ department, allData }: DepartmentInfoProps) => 
             <span className="text-sm font-medium text-primary/90">Diagnostic n°1</span>
             <TooltipProvider>
               <Tooltip>
-                <TooltipTrigger asChild>
-                  <HelpCircle className="w-3.5 h-3.5 text-muted-foreground/60 cursor-help" />
-                </TooltipTrigger>
+                
+
+                
                 <TooltipContent side="top" className="max-w-[220px] text-xs">
                   <p>Source : <strong>Ameli (CNAM) – 2023</strong>. Prévalence chez les ≥ 65 ans.</p>
                 </TooltipContent>
@@ -186,6 +186,6 @@ export const DepartmentInfo = ({ department, allData }: DepartmentInfoProps) => 
           <p className="text-sm font-semibold text-primary/70 mt-1">{topMaladie.value.toFixed(1)}% des 65+</p>
         </div>
       </div>
-    </div>
-  );
+    </div>);
+
 };
