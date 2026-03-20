@@ -98,7 +98,7 @@ public/
 git clone https://github.com/TristanJoly/Mapsentor.git
 
 # 2. Accéder au répertoire
-cd Lattitudes_cartes
+cd Mapsentor
 
 # 3. Installer les dépendances
 npm install
