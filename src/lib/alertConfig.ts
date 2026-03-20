@@ -311,6 +311,48 @@ export const ALERT_DEFINITIONS: AlertDefinition[] = [
       },
     ],
   },
+
+  // ============================
+  // 4. ALERTES ENVIRONNEMENTALES
+  // ============================
+  {
+    id: "economique_D",
+    label: "Précarité de l'Habitat (Exposition aux polluants)",
+    category: "economique",
+    conditions: [
+      { column: "eau_conformite_bacterio", direction: "low", label: "Qualité de l'eau (conformité bactério)" },
+      { column: "aspa_effectif_2024", direction: "high", label: "Bénéficiaires ASPA" },
+    ],
+    explanation: "Eau de mauvaise qualité dans un territoire où les seniors les plus précaires (bénéficiaires de l'ASPA) n'ont pas les moyens de financer des travaux de plomberie ou des systèmes de filtration. Ils boivent une eau potentiellement non conforme.",
+    source: "Qualité de l'eau : ARS / SISE-Eaux 2023 · ASPA : Caisse des Dépôts / DREES 2024",
+    levers: [
+      {
+        title: "Campagne de diagnostics gratuits",
+        detail: "Le département mandate des techniciens pour tester gratuitement l'eau au robinet chez les bénéficiaires de l'ASPA, avec une aide financière (fonds d'amélioration de l'habitat) si des travaux de plomberie sont impératifs pour la santé.",
+        url: "https://cmei-france.fr/",
+        isNew: true,
+      },
+    ],
+  },
+  {
+    id: "sanitaire_D",
+    label: "Vulnérabilité Cardio-Respiratoire Environnementale",
+    category: "sanitaire",
+    conditions: [
+      { column: "atmo_indice_moyen", direction: "high", label: "Indice ATMO moyen (qualité de l'air)" },
+      { column: "top5_prevalence", direction: "high", label: "Prévalence Top 5 Pathologies" },
+    ],
+    explanation: "Air très pollué dans un département où la charge de maladies chroniques (cardio-vasculaires, respiratoires) est élevée. Les pics de pollution aggravent les pathologies existantes et multiplient les hospitalisations d'urgence chez les seniors.",
+    source: "Qualité de l'air : ATMO France / Géod'Air 2023 · Prévalence pathologies : Ameli (CNAM) 2023",
+    levers: [
+      {
+        title: "Déploiement d'espaces refuges « Air pur et Climatisation »",
+        detail: "Les pics de pollution étant souvent liés aux fortes chaleurs, la collectivité peut cartographier et ouvrir des bâtiments publics (médiathèques, salles des fêtes) équipés de purificateurs d'air haute performance et de climatisation pour accueillir les seniors pendant la journée.",
+        url: "https://www.adaptaville.fr/espaces-refuges",
+        isNew: true,
+      },
+    ],
+  },
 ];
 
 // Map metrics to alert categories
