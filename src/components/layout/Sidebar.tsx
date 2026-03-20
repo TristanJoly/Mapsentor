@@ -118,6 +118,14 @@ export const Sidebar = ({ collapsed = false, onToggle }: SidebarProps) => {
       {/* Footer Links */}
       <div className="mt-auto pt-6 border-t border-border space-y-1">
         <a
+          href="/data/Dictionnaire_Variables_Mapsentor.docx"
+          download
+          className="sidebar-link"
+        >
+          <BookOpen className="w-4 h-4" />
+          <span>Dictionnaire des variables</span>
+        </a>
+        <a
           href="mailto:datavislattitudescpes@gmail.com"
           className="sidebar-link"
         >
@@ -125,7 +133,7 @@ export const Sidebar = ({ collapsed = false, onToggle }: SidebarProps) => {
           <span>Contact</span>
         </a>
         <a
-          href="https://github.com/TristanJoly/Lattitudes_cartes/"
+          href="https://github.com/TristanJoly/Mapsentor"
           target="_blank"
           rel="noopener noreferrer"
           className="sidebar-link"
