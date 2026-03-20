@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { MapPin, Database, Users, Github, Mail, ExternalLink, ChevronLeft, ChevronRight, Info } from "lucide-react";
+import { MapPin, Database, Users, Github, Mail, ExternalLink, ChevronLeft, ChevronRight, Info, BookOpen } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 const sources = [
