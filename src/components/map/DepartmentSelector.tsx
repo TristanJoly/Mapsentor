@@ -11,7 +11,7 @@ export const DepartmentSelector = ({ value, onChange, departments }: DepartmentS
   const selectedDept = departments.find(d => d.code_departement === value);
 
   return (
-    <div className="metric-card">
+    <div className="metric-card max-w-[50%]">
       <div className="flex items-center gap-2 mb-3">
         <div className="w-8 h-8 rounded-lg bg-accent/10 flex items-center justify-center">
           <MapPin className="w-4 h-4 text-accent" />
