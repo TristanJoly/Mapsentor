@@ -165,14 +165,12 @@ export const DepartmentInfo = ({ department, allData }: DepartmentInfoProps) => 
         </div>
 
         {/* Pathologie principale */}
-        <div className="p-4 rounded-xl bg-gradient-to-br from-primary/5 to-primary/10 border border-primary/20">
+        <div className="p-4 rounded-xl bg-blue-50/60 border border-blue-100">
           <div className="flex items-center gap-2 mb-2">
-            <Activity className="w-5 h-5 text-primary" />
-            <span className="text-sm font-medium text-primary/90">Diagnostic n°1</span>
+            <Activity className="w-5 h-5 text-blue-600" />
+            <span className="text-sm font-medium text-foreground">Diagnostic n°1</span>
             <TooltipProvider>
               <Tooltip>
-                
-
                 
                 <TooltipContent side="top" className="max-w-[220px] text-xs">
                   <p>Source : <strong>Ameli (CNAM) – 2023</strong>. Prévalence chez les ≥ 65 ans.</p>
@@ -180,10 +178,10 @@ export const DepartmentInfo = ({ department, allData }: DepartmentInfoProps) => 
               </Tooltip>
             </TooltipProvider>
           </div>
-          <p className="text-lg font-bold text-primary leading-tight" title={topMaladie.name}>
+          <p className="text-lg font-bold text-foreground leading-tight" title={topMaladie.name}>
             {topMaladie.name.length > 20 ? topMaladie.name.substring(0, 20) + "…" : topMaladie.name}
           </p>
-          <p className="text-sm font-semibold text-primary/70 mt-1">{topMaladie.value.toFixed(1)}% des 65+</p>
+          <p className="text-sm font-semibold text-muted-foreground mt-1">{topMaladie.value.toFixed(1)}% des 65+</p>
         </div>
       </div>
     </div>);
