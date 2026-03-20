@@ -4,6 +4,8 @@
 
 🔗 **Accès en ligne** : [MAPSENTOR](mapsentor.fr)
 
+📖 **Dictionnaire des variables** : [Consulter le dictionnaire](./Dictionnaire_Variables_Mapsentor.docx) — Référence complète des variables, types, sources et bases de données utilisées.
+
 ---
 
 ## 📸 Fonctionnalités
