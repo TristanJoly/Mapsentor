@@ -4,6 +4,8 @@
 
 🔗 **Accès en ligne** : [MAPSENTOR](mapsentor.fr)
 
+📖 **Dictionnaire des variables** : [Consulter le dictionnaire](./Dictionnaire_Variables_Mapsentor.docx) — Référence complète des variables, types, sources et bases de données utilisées.
+
 ---
 
 ## 📸 Fonctionnalités
@@ -93,10 +95,10 @@ public/
 
 ```bash
 # 1. Cloner le dépôt
-git clone https://github.com/TristanJoly/Lattitudes_cartes.git
+git clone https://github.com/TristanJoly/Mapsentor.git
 
 # 2. Accéder au répertoire
-cd Lattitudes_cartes
+cd Mapsentor
 
 # 3. Installer les dépendances
 npm install
