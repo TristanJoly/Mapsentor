@@ -95,7 +95,7 @@ public/
 
 ```bash
 # 1. Cloner le dépôt
-git clone https://github.com/TristanJoly/Lattitudes_cartes.git
+git clone https://github.com/TristanJoly/Mapsentor.git
 
 # 2. Accéder au répertoire
 cd Lattitudes_cartes
