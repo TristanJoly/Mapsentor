@@ -2,7 +2,7 @@
 
 **Mapsentor** est une application web interactive qui visualise les indicateurs du vieillissement par département en France métropolitaine. Elle permet d'explorer les données démographiques, sanitaires, économiques et sociales à travers une carte interactive, des graphiques détaillés et un système d'alertes intelligent.
 
-🔗 **Accès en ligne** : [clean-map-charm.lovable.app](https://clean-map-charm.lovable.app)
+🔗 **Accès en ligne** : [MAPSENTOR](mapsentor.fr)
 
 ---
 
@@ -140,4 +140,4 @@ npm run lint        # Vérifier le code (ESLint)
 
 ## 📄 Licence
 
-Projet académique — Sciences Po / Lattitudes.
+Projet académique — Lattitudes.
