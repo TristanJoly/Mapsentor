@@ -21,8 +21,8 @@
 - Comparaison côte à côte de plusieurs départements
 - Analyse multi-critères
 
-### 🚨 Système d'Alertes (Déciles)
-Un département déclenche une alerte s'il se trouve dans le **1er décile** (10 % les plus bas) ou le **dernier décile** (10 % les plus hauts) sur les indicateurs concernés.
+### 🚨 Système d'Alertes (Quintiles)
+Un département déclenche une alerte s'il se trouve dans le **1er Quintile** (20 % les plus bas) ou le **dernier Quintile** (20 % les plus hauts) sur les indicateurs concernés.
 
 #### 🏥 Alertes Sanitaires
 | Alerte | Condition | Leviers |
