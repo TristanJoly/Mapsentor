@@ -41,17 +41,10 @@ const AlertCard = ({ alert, allData, department }: { alert: AlertDefinition; all
         >
           <AlertTriangle className={`h-4 w-4 mt-0.5 shrink-0 ${meta.colorClass}`} />
           <div className="flex-1 min-w-0">
-            <div className="flex items-center gap-1.5 flex-wrap">
-              <span className={`text-xs font-medium px-1.5 py-0.5 rounded ${meta.bgClass} ${meta.colorClass} border ${meta.borderClass}`}>
-                {meta.label}
-              </span>
-              <span className="text-sm font-semibold text-foreground">{alert.label}</span>
+            <div className="flex items-center gap-1.5">
+              <Zap className="w-3 h-3 text-foreground shrink-0" />
+              <span className="text-xs font-medium text-foreground">Action : {alert.action}</span>
             </div>
-            <div className="flex items-center gap-1.5 mt-1.5">
-              <Zap className="w-3 h-3 text-primary shrink-0" />
-              <span className="text-xs font-medium text-primary">Action : {alert.action}</span>
-            </div>
-            <p className="text-xs text-muted-foreground mt-1 line-clamp-2">{alert.explanation}</p>
           </div>
           {expanded ? <ChevronUp className="w-4 h-4 text-muted-foreground shrink-0 mt-0.5" /> : <ChevronDown className="w-4 h-4 text-muted-foreground shrink-0 mt-0.5" />}
         </button>
