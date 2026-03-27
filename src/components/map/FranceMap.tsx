@@ -114,7 +114,7 @@ const FoliumMarker = ({
   );
 };
 
-export const FranceMap = ({ data, selectedMetric, selectedDepartment, onDepartmentClick }: FranceMapProps) => {
+export const FranceMap = ({ data, selectedMetric, selectedDepartment, onDepartmentClick, enabledCategories, onToggleCategory }: FranceMapProps) => {
   
   const [position, setPosition] = useState({ coordinates: [2.5, 46.5] as [number, number], zoom: 1 });
 
@@ -150,15 +150,15 @@ export const FranceMap = ({ data, selectedMetric, selectedDepartment, onDepartme
       .range(["#EFF6FF", "#93C5FD", "#3B82F6", "#1E40AF"]);
   }, [data, selectedMetric]);
 
-  // Calculate alerts for all departments
+  // Calculate alerts for all departments (filtered by enabled categories)
   const departmentAlerts = useMemo(() => {
     const alerts: { [key: string]: number } = {};
     data.forEach(dept => {
-      const deptAlerts = getAllDepartmentAlerts(dept, data);
+      const deptAlerts = getAllDepartmentAlerts(dept, data, enabledCategories);
       alerts[dept.code_departement] = deptAlerts.length;
     });
     return alerts;
-  }, [data]);
+  }, [data, enabledCategories]);
 
   const getDataForCode = (code: string): DepartmentData | undefined => {
     const normalizedCode = code.padStart(2, '0');
