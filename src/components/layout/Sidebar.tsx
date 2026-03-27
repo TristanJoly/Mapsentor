@@ -118,8 +118,18 @@ export const Sidebar = ({ collapsed = false, onToggle }: SidebarProps) => {
       {/* Footer Links */}
       <div className="mt-auto pt-6 border-t border-border space-y-1">
         <a
-          href="/data/Dictionnaire_Variables_Mapsentor.docx"
-          download
+          href="/data/Infos_sur_donnees_manquantes.pdf"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="sidebar-link"
+        >
+          <BookOpen className="w-4 h-4" />
+          <span>Données manquantes</span>
+        </a>
+        <a
+          href="/data/Dictionnaire_Variables_Mapsentor.pdf"
+          target="_blank"
+          rel="noopener noreferrer"
           className="sidebar-link"
         >
           <BookOpen className="w-4 h-4" />
