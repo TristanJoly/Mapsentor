@@ -20,6 +20,7 @@ const Index = () => {
   const [data, setData] = useState<DepartmentData[]>([]);
   const [loading, setLoading] = useState(true);
   const [sidebarCollapsed, setSidebarCollapsed] = useState(true);
+  const [enabledCategories, setEnabledCategories] = useState<Set<string>>(new Set(["sanitaire", "economique", "social"]));
 
   useEffect(() => {
     loadDepartmentData().then(departmentData => {
@@ -46,7 +47,6 @@ const Index = () => {
 
   return (
     <div className="flex min-h-screen w-full bg-background relative">
-      {/* Mobile overlay */}
       {isMobile && !sidebarCollapsed && (
         <div 
           className="fixed inset-0 bg-black/50 z-40"
@@ -54,7 +54,6 @@ const Index = () => {
         />
       )}
       
-      {/* Sidebar - overlay on mobile */}
       <div className={`${isMobile ? 'fixed z-50 h-full' : ''} ${isMobile && sidebarCollapsed ? '-translate-x-full' : 'translate-x-0'} transition-transform duration-300`}>
         <Sidebar 
           collapsed={isMobile ? false : sidebarCollapsed} 
@@ -63,7 +62,6 @@ const Index = () => {
       </div>
       
       <main className="flex-1 p-3 md:p-6 lg:p-8 overflow-auto w-full">
-        {/* Header */}
         <div className="mb-4 md:mb-6 flex items-start gap-3">
           <Button
             variant="ghost"
@@ -79,8 +77,6 @@ const Index = () => {
             </h1>
           </div>
         </div>
-
-        {/* Tabs */}
 
         <Tabs defaultValue="map" className="space-y-4 md:space-y-6">
           <TabsList className="bg-muted/50 w-full h-11 md:h-12">
@@ -98,32 +94,27 @@ const Index = () => {
             </TabsTrigger>
           </TabsList>
 
-          {/* Onglet Carte */}
           <TabsContent value="map" className="space-y-6">
-            {/* Department Selector */}
             <DepartmentSelector 
               value={selectedDepartment} 
               onChange={setSelectedDepartment}
               departments={data}
             />
 
-            {/* Department Info + Alerts */}
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
               <div className="lg:col-span-2">
                 <DepartmentInfo department={selectedDeptData} allData={data} />
               </div>
               <div>
-                <DepartmentAlerts department={selectedDeptData} allData={data} />
+                <DepartmentAlerts department={selectedDeptData} allData={data} enabledCategories={enabledCategories} />
               </div>
             </div>
 
-            {/* Metric Selector - juste au-dessus de la carte */}
             <div className="p-4 rounded-xl bg-card border border-border shadow-card">
               <h4 className="text-sm font-semibold text-foreground mb-3" style={{ color: '#3B82F6' }}>Choix de la métrique</h4>
               <MetricSelector value={selectedMetric} onChange={setSelectedMetric} />
             </div>
 
-            {/* Map */}
             <div className="rounded-xl border border-border bg-card shadow-card overflow-hidden">
               <div className="h-[70vh] md:h-[calc(100vh-400px)] min-h-[400px] md:min-h-[500px]">
                 <FranceMap 
@@ -131,35 +122,35 @@ const Index = () => {
                   selectedMetric={selectedMetric}
                   selectedDepartment={selectedDepartment}
                   onDepartmentClick={setSelectedDepartment}
+                  enabledCategories={enabledCategories}
+                  onToggleCategory={(cat) => {
+                    setEnabledCategories(prev => {
+                      const next = new Set(prev);
+                      if (next.has(cat)) next.delete(cat);
+                      else next.add(cat);
+                      return next;
+                    });
+                  }}
                 />
               </div>
             </div>
 
           </TabsContent>
 
-          {/* Onglet Graphiques */}
           <TabsContent value="charts" className="space-y-6">
-            {/* Department Selector */}
             <DepartmentSelector 
               value={selectedDepartment} 
               onChange={setSelectedDepartment}
               departments={data}
             />
-
-            {/* Department Info */}
             <DepartmentInfo department={selectedDeptData} allData={data} />
-
-            {/* Charts */}
             <DepartmentCharts 
               department={selectedDeptData} 
               allData={data}
               selectedMetric={selectedMetric}
             />
-
-
           </TabsContent>
 
-          {/* Onglet Comparaison */}
           <TabsContent value="compare" className="space-y-6">
             <DepartmentComparison 
               allData={data}
