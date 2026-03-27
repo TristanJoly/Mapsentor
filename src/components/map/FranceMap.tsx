@@ -378,6 +378,30 @@ export const FranceMap = ({ data, selectedMetric, selectedDepartment, onDepartme
         </ComposableMap>
       </div>
 
+      {/* Category filter below Île-de-France */}
+      <div className="absolute top-[145px] right-3 md:top-[185px] w-[130px] md:w-[170px] z-10">
+        <div className="rounded-lg bg-card/95 border border-border/50 shadow-soft p-2 space-y-1.5">
+          <p className="text-[9px] md:text-[10px] font-semibold text-foreground">Filtrer alertes</p>
+          {([
+            { key: "sanitaire", label: "Sanitaire", icon: <Heart className="w-2.5 h-2.5" />, color: "text-rose-600" },
+            { key: "economique", label: "Économique", icon: <Euro className="w-2.5 h-2.5" />, color: "text-amber-600" },
+            { key: "social", label: "Social", icon: <Users className="w-2.5 h-2.5" />, color: "text-orange-600" },
+          ] as const).map(cat => (
+            <label key={cat.key} className="flex items-center gap-1.5 cursor-pointer select-none">
+              <Checkbox
+                checked={enabledCategories.has(cat.key)}
+                onCheckedChange={() => onToggleCategory(cat.key)}
+                className="h-3 w-3"
+              />
+              <span className={`flex items-center gap-1 text-[10px] md:text-[11px] font-medium ${enabledCategories.has(cat.key) ? cat.color : 'text-muted-foreground/50'}`}>
+                {cat.icon}
+                {cat.label}
+              </span>
+            </label>
+          ))}
+        </div>
+      </div>
+
       {/* Legend */}
       <div className="absolute bottom-4 right-4 glass p-3 rounded-xl shadow-soft">
         <p className="text-xs font-medium text-foreground mb-2 max-w-[120px] leading-tight">
