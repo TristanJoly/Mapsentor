@@ -81,6 +81,15 @@ const AlertCard = ({ alert, allData, department }: { alert: AlertDefinition; all
 
       {expanded && (
         <div className="px-3 pb-3 space-y-2 border-t border-border/30 pt-2">
+          <div className="mb-2">
+            <div className="flex items-center gap-1.5 mb-1">
+              <span className={`text-xs font-medium px-1.5 py-0.5 rounded ${meta.bgClass} ${meta.colorClass} border ${meta.borderClass}`}>
+                {meta.label}
+              </span>
+              <span className="text-sm font-semibold text-foreground">{alert.label}</span>
+            </div>
+            <p className="text-xs text-muted-foreground leading-relaxed">{alert.explanation}</p>
+          </div>
           {alert.levers.map((lever, i) => (
             <div key={i} className="flex items-start gap-2 p-2 rounded-lg bg-card/60">
               <Wrench className="w-3.5 h-3.5 mt-0.5 text-primary shrink-0" />
