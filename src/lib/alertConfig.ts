@@ -102,11 +102,11 @@ export const ALERT_DEFINITIONS: AlertDefinition[] = [
     levers: [
       {
         title: "Déploiement de cabines de téléconsultation assistée en officine",
-        detail: "Installation de bornes équipées (stéthoscope, otoscope connectés) dans les pharmacies ou mairies. Le pharmacien accompagne le patient, ce qui rassure le senior et valide le diagnostic à distance.",
+        detail: "Installation des bornes équipées (stéthoscope, otoscope connectés) dans les pharmacies ou mairies. Le pharmacien accompagne le patient, rassure le senior et valide le diagnostic à distance.",
       },
       {
         title: "Recours aux Infirmiers en Pratique Avancée (IPA)",
-        detail: "Financer l'installation ou la formation d'IPA libéraux. Ces infirmiers ont le droit de suivre des patients chroniques stables, de renouveler des ordonnances et de prescrire des examens, libérant du temps médical pour les médecins généralistes surchargés.",
+        detail: "Financer l'installation ou la formation d'IPA libéraux. Ces infirmiers peuvent suivre des patients chroniques stables, renouveler des ordonnances et prescrire des examens, libérant du temps médical pour les médecins généralistes surchargés.",
         isNew: true,
       },
     ],
@@ -125,11 +125,11 @@ export const ALERT_DEFINITIONS: AlertDefinition[] = [
     levers: [
       {
         title: "Plateforme Territoriale des Métiers de l'Autonomie",
-        detail: "Création d'un guichet unique départemental pour mutualiser les recrutements, proposer des formations locales immédiates et améliorer l'attractivité (prêt de véhicule, flotte électrique) pour les aides à domicile, afin de combler les postes vacants rapidement.",
+        detail: "Agir sur le nombre d'aides à domicile : Création d'un guichet unique départemental pour mutualiser les recrutements, proposer des formations locales immédiates et améliorer l'attractivité (prêt de véhicule, flotte électrique) pour les aides à domicile, afin de combler les postes vacants rapidement.",
       },
       {
         title: "« Baluchonnage » (Relayage à domicile)",
-        detail: "Déployer ce dispositif qui permet à un professionnel unique de venir vivre au domicile de la personne âgée pendant plusieurs jours (24h/24) pour permettre aux aidants familiaux de souffler sans envoyer le senior en EHPAD. Cela évite l'épuisement et les hospitalisations d'urgence.",
+        detail: "Déploiement de ce dispositif qui permet à un professionnel unique de venir vivre au domicile de la personne âgée pendant plusieurs jours (24h/24) et permettre aux aidants familiaux de souffler sans envoyer le senior en EHPAD. Cela évite l'épuisement et les hospitalisations d'urgence.",
         url: "https://baluchonfrance.com/baluchonnage/",
         isNew: true,
       },
@@ -149,12 +149,12 @@ export const ALERT_DEFINITIONS: AlertDefinition[] = [
     levers: [
       {
         title: "Campagnes mobiles « Aller-vers »",
-        detail: "Mise en place d'équipes mobiles (partenariat Croix-Rouge / ARS) qui se déplacent directement au domicile des +75 ans isolés pour effectuer la vaccination (Grippe/Covid/Zona), sans attendre qu'ils prennent rendez-vous.",
+        detail: "Mise en place d'équipes mobiles (partenariat Croix-Rouge / ARS) qui se déplacent directement au domicile des +75 ans isolés pour effectuer la vaccination (Grippe/Covid/Zona), sans attendre une prise de rendez-vous.",
         url: "https://www.iledefrance.ars.sante.fr/equipes-mobiles-dispositifs-territorialises-daller-vers-aupres-des-personnes-en-grande-precarite",
       },
       {
         title: "Programme ICOPE (OMS)",
-        detail: "Former les professionnels locaux (pharmaciens, kinés) à l'utilisation de l'outil ICOPE de l'OMS : dépistage rapide (vision, audition, nutrition, psychologie) pour repérer les fragilités avant qu'elles ne deviennent des pathologies lourdes. C'est le standard mondial de la prévention seniors.",
+        detail: "Former les professionnels locaux (pharmaciens, kinés) à l'utilisation de l'outil ICOPE de l'OMS : dépistage rapide (vision, audition, nutrition, psychologie) pour repérer les fragilités avant qu'elles ne deviennent des pathologies lourdes (standard mondial de la prévention seniors).",
         url: "https://www.ameli.fr/yvelines/pharmacien/actualites/icope-un-programme-pour-reperer-la-perte-de-l-autonomie-chez-le-patient-des-60-ans",
         isNew: true,
       },
@@ -174,7 +174,7 @@ export const ALERT_DEFINITIONS: AlertDefinition[] = [
     levers: [
       {
         title: "Déploiement d'espaces refuges « Air pur et Climatisation »",
-        detail: "Les pics de pollution étant souvent liés aux fortes chaleurs, la collectivité peut cartographier et ouvrir des bâtiments publics (médiathèques, salles des fêtes) équipés de purificateurs d'air haute performance et de climatisation pour accueillir les seniors pendant la journée.",
+        detail: "Mise en place d'une cartographie et de l'ouverture par la collectivité de bâtiments publics (médiathèques, salles des fêtes) équipés de purificateurs d'air haute performance et de climatisation pour accueillir les seniors pendant la journée, étant donné que les pics de pollution sont souvent liés aux fortes chaleurs.",
         url: "https://www.adaptaville.fr/espaces-refuges",
       },
     ],
@@ -192,7 +192,7 @@ export const ALERT_DEFINITIONS: AlertDefinition[] = [
       { column: "aspa_effectif_2024", direction: "high", label: "Bénéficiaires ASPA" },
       { column: "proprietaires_75_plus", direction: "low", label: "Part de propriétaires" },
     ],
-    explanation: "Si pauvre + loyer : le reste à vivre pour manger ou se soigner est minime/insuffisant. Ces seniors cumulent faibles revenus et charges locatives.",
+    explanation: "Si pauvre + loyer : le reste à vivre pour manger ou se soigner est minime/insuffisant.",
     source: "ASPA : Caisse des Dépôts / DREES 2024 · Propriétaires : INSEE RP 2020",
     levers: [
       {
@@ -217,7 +217,7 @@ export const ALERT_DEFINITIONS: AlertDefinition[] = [
       { column: "access_med_generalistes", direction: "low", label: "APL Médecins Généralistes" },
       { column: "taux_pauvrete_60", direction: "high", label: "Taux de pauvreté 65+" },
     ],
-    explanation: "C'est le cumul des barrières : il faut aller loin (donc payer de l'essence) avec des revenus faibles. Beaucoup renoncent purement et simplement à se soigner.",
+    explanation: "C'est le cumul des barrières : Il faut aller loin, donc payer de l'essence + revenus faibles.",
     source: "APL médecins : DREES – Panorama statistique 2024 · Pauvreté : FILOSOFI (INSEE) 2020",
     levers: [
       {
@@ -227,7 +227,7 @@ export const ALERT_DEFINITIONS: AlertDefinition[] = [
       },
       {
         title: "Campagne « Data-mining » contre le non-recours à la C2S",
-        detail: "Croiser les données de la CAF/CARSAT pour identifier les retraités éligibles à la Complémentaire Santé Solidaire (ex-CMU-C) qui ne l'ont pas demandée. Les contacter proactivement pour ouvrir leurs droits, garantissant la gratuité des soins. L'Assurance Maladie utilise désormais le croisement de fichiers de données (via le DRM) pour identifier proactivement les foyers éligibles.",
+        detail: "Croiser les données de la CAF/CARSAT pour identifier les retraités éligibles à la Complémentaire Santé Solidaire (ex-CMU-C) qui ne l'ont pas demandée. Les contacter proactivement pour ouvrir leurs droits, garantissant la gratuité des soins.",
         url: "https://www.complementaire-sante-solidaire.gouv.fr/actualites/etudes/lutter-contre-le-non-recours-la-complementaire-sante-solidaire-des-demandeurs",
         isNew: true,
       },
@@ -242,7 +242,7 @@ export const ALERT_DEFINITIONS: AlertDefinition[] = [
       { column: "aspa_effectif_2024", direction: "high", label: "Bénéficiaires ASPA" },
       { column: "part_75_plus", direction: "high", label: "Indice de vieillissement" },
     ],
-    explanation: "Le département vieillit et s'appauvrit simultanément. Les ressources fiscales du département vont diminuer alors que les besoins d'aides sociales vont augmenter.",
+    explanation: "Le département vieillit et s'appauvrit simultanément — ressources fiscales du département vont diminuer alors que les besoins d'aides sociales vont augmenter.",
     source: "ASPA : Caisse des Dépôts / DREES 2024 · Vieillissement : INSEE RP 2020",
     levers: [
       {
@@ -267,7 +267,7 @@ export const ALERT_DEFINITIONS: AlertDefinition[] = [
       { column: "eau_conformite_bacterio", direction: "low", label: "Qualité de l'eau (conformité bactério)" },
       { column: "aspa_effectif_2024", direction: "high", label: "Bénéficiaires ASPA" },
     ],
-    explanation: "Eau de mauvaise qualité dans un territoire où les seniors les plus précaires (bénéficiaires de l'ASPA) n'ont pas les moyens de financer des travaux de plomberie ou des systèmes de filtration. Ils boivent une eau potentiellement non conforme.",
+    explanation: "Eau de mauvaise qualité dans un territoire où les seniors les plus précaires (bénéficiaires de l'ASPA) n'ont pas les moyens de financer des travaux de plomberie ou des systèmes de filtration.",
     source: "Qualité de l'eau : ARS / SISE-Eaux 2023 · ASPA : Caisse des Dépôts / DREES 2024",
     levers: [
       {
@@ -290,12 +290,12 @@ export const ALERT_DEFINITIONS: AlertDefinition[] = [
       { column: "isolement_social", direction: "high", label: "Isolement social" },
       { column: "sans_voiture_75_plus", direction: "high", label: "Sans voiture (75+)" },
     ],
-    explanation: "Ces personnes sont seules chez elles et ne peuvent pas en sortir physiquement : pas de médecin, pas de courses, pas de lien social. C'est la mort sociale.",
+    explanation: "Ces personnes sont seules chez elles et ne peuvent pas en sortir physiquement : pas de médecins.",
     source: "Isolement : INSEE RP 2020 · Sans voiture : INSEE RP 2020, indicateurs 75+",
     levers: [
       {
         title: "Réseau MONALISA (Équipes Citoyennes)",
-        detail: "Soutenir la création d'équipes de bénévoles formés (Charte Monalisa) qui effectuent des visites de convivialité régulières. Ce n'est pas du soin, c'est du lien social pur pour briser la mort sociale.",
+        detail: "Soutenir la création d'équipes de bénévoles formés (Charte Monalisa) qui effectuent des visites de convivialité régulières. Il ne s'agit pas de soin mais de lien social pour briser l'isolement social.",
         url: "https://www.monalisa-asso.fr/",
       },
       {
@@ -315,7 +315,7 @@ export const ALERT_DEFINITIONS: AlertDefinition[] = [
       { column: "isolement_social", direction: "high", label: "Isolement social" },
       { column: "score_fragilite_numerique", direction: "high", label: "Fragilité numérique" },
     ],
-    explanation: "Personne seule + ne sait pas utiliser Internet. Cette personne ne demandera jamais les aides auxquelles elle a droit et ne prendra pas RDV sur Doctolib. Elle est invisible administrativement.",
+    explanation: "Personne seule + ne sait pas utiliser Internet. Cette personne ne demandera jamais les aides auxquelles elle a droit et ne prendra pas RDV sur Doctolib — invisible administrativement.",
     source: "Isolement : INSEE RP 2020 · Fragilité numérique : score composite Arcep / INSEE",
     levers: [
       {
@@ -324,7 +324,7 @@ export const ALERT_DEFINITIONS: AlertDefinition[] = [
       },
       {
         title: "Habilitation « Aidants Connect »",
-        detail: "Former et habiliter les travailleurs sociaux locaux (assistantes sociales, secrétaires de mairie) au dispositif « Aidants Connect ». Cela leur permet de réaliser des démarches en ligne à la place de la personne âgée de manière légale et sécurisée, sans avoir à demander ses mots de passe.",
+        detail: "Former et habiliter les travailleurs sociaux locaux (assistantes sociales, secrétaires de mairie) au dispositif « Aidants Connect ». Cela leur permet de réaliser des démarches en ligne à la place de la personne âgée de manière légale et sécurisée, sans devoir demander ses mots de passe.",
         url: "https://beta.gouv.fr/startups/aidantsconnect.html",
         isNew: true,
       },
@@ -339,7 +339,7 @@ export const ALERT_DEFINITIONS: AlertDefinition[] = [
       { column: "access_med_generalistes", direction: "low", label: "APL Médecins Généralistes" },
       { column: "sans_voiture_75_plus", direction: "high", label: "Sans voiture (75+)" },
     ],
-    explanation: "L'APL est basse (médecins loin) et les gens n'ont pas de voiture. Si pas de transports en commun ou d'ambulances, l'accès au soin est physiquement impossible.",
+    explanation: "L'APL est basse (médecins loin) et les gens n'ont pas de voiture — Si pas de transports en commun ou d'ambulances, l'accès au soin est physiquement impossible.",
     source: "APL médecins : DREES – Panorama statistique 2024 · Sans voiture : INSEE RP 2020",
     levers: [
       {
@@ -348,7 +348,7 @@ export const ALERT_DEFINITIONS: AlertDefinition[] = [
       },
       {
         title: "Équipes Mobiles de Gériatrie (EMG) extra-hospitalières",
-        detail: "Si le patient ne peut aller à l'hôpital, l'hôpital vient à lui. Conventionner avec le Centre Hospitalier le plus proche pour que l'EMG intervienne au domicile pour des évaluations gériatriques complexes, évitant le déplacement traumatisant du senior.",
+        detail: "Si le patient ne peut pas aller à l'hôpital, l'hôpital vient à lui. Conventionner avec le Centre Hospitalier le plus proche pour que l'EMG intervienne au domicile pour des évaluations gériatriques complexes, évitant le déplacement traumatisant du senior.",
         url: "https://www.ghsif.fr/Equipe-Mobile-Geriatrie/5/104/48",
         isNew: true,
       },
