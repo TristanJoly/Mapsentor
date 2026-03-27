@@ -405,7 +405,7 @@ export const FranceMap = ({ data, selectedMetric, selectedDepartment, onDepartme
       {/* Legend */}
       <div className="absolute bottom-4 right-4 glass p-3 rounded-xl shadow-soft">
         <p className="text-xs font-medium text-foreground mb-2 max-w-[120px] leading-tight">
-          {selectedMetric === 'isoles_60_74' ? 'Seniors isolés (60-74 ans)' : selectedMetric === 'taux_pauvrete_75' ? 'Taux de pauvreté (+75 ans)' : 'Nb maladies moy. / personne (+65 ans)'}
+          {selectedMetric === 'isoles_60_74' ? 'Seniors isolés (+65 ans)' : selectedMetric === 'taux_pauvrete_75' ? 'Taux de pauvreté (+65 ans)' : 'Nb maladies moy. / personne (+65 ans)'}
         </p>
         <div className="flex items-center gap-0.5">
           <div className="h-3 w-6 rounded-l-sm" style={{ background: "#EFF6FF" }}></div>
