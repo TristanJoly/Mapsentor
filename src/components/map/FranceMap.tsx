@@ -379,21 +379,21 @@ export const FranceMap = ({ data, selectedMetric, selectedDepartment, onDepartme
       </div>
 
       {/* Category filter below Île-de-France */}
-      <div className="absolute top-[145px] right-3 md:top-[185px] w-[150px] md:w-[190px] z-10">
-        <div className="rounded-xl bg-card/95 border border-border/50 shadow-soft p-2.5 space-y-2">
-          <p className="text-[10px] md:text-xs font-semibold text-foreground">Filtrer alertes</p>
+      <div className="absolute top-[145px] right-3 md:top-[185px] w-[170px] md:w-[210px] z-10">
+        <div className="rounded-xl bg-card/95 border border-border/50 shadow-soft p-3 md:p-3.5 space-y-2.5">
+          <p className="text-xs md:text-sm font-semibold text-foreground">Filtrer alertes</p>
           {([
-            { key: "sanitaire", label: "Sanitaire", icon: <Heart className="w-3 h-3" />, color: "text-rose-600" },
-            { key: "economique", label: "Économique", icon: <Euro className="w-3 h-3" />, color: "text-amber-600" },
-            { key: "social", label: "Social", icon: <Users className="w-3 h-3" />, color: "text-orange-600" },
+            { key: "sanitaire", label: "Sanitaire", icon: <Heart className="w-3.5 h-3.5" />, color: "text-rose-600" },
+            { key: "economique", label: "Économique", icon: <Euro className="w-3.5 h-3.5" />, color: "text-amber-600" },
+            { key: "social", label: "Social", icon: <Users className="w-3.5 h-3.5" />, color: "text-orange-600" },
           ] as const).map(cat => (
-            <label key={cat.key} className="flex items-center gap-2 cursor-pointer select-none">
+            <label key={cat.key} className="flex items-center gap-2.5 cursor-pointer select-none">
               <Checkbox
                 checked={enabledCategories.has(cat.key)}
                 onCheckedChange={() => onToggleCategory(cat.key)}
-                className="h-3.5 w-3.5"
+                className="h-4 w-4"
               />
-              <span className={`flex items-center gap-1 text-[11px] md:text-xs font-medium ${enabledCategories.has(cat.key) ? cat.color : 'text-muted-foreground/50'}`}>
+              <span className={`flex items-center gap-1.5 text-xs md:text-sm font-medium ${enabledCategories.has(cat.key) ? cat.color : 'text-muted-foreground/50'}`}>
                 {cat.icon}
                 {cat.label}
               </span>
