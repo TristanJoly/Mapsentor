@@ -1,8 +1,9 @@
-import { AlertTriangle, Wrench, Info, ExternalLink, Sparkles, Heart, Euro, Users, ChevronDown, ChevronUp } from "lucide-react";
+import { AlertTriangle, Wrench, Info, ExternalLink, Sparkles, Heart, Euro, Users, ChevronDown, ChevronUp, Zap } from "lucide-react";
 import { useState } from "react";
 import { DepartmentData } from "@/lib/data";
 import { getAllDepartmentAlerts, AlertDefinition, getQuintile, getDeptValue } from "@/lib/alertConfig";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { Checkbox } from "@/components/ui/checkbox";
 
 interface DepartmentAlertsProps {
   department: DepartmentData | undefined;
@@ -46,6 +47,11 @@ const AlertCard = ({ alert, allData, department }: { alert: AlertDefinition; all
                 {meta.label}
               </span>
               <span className="text-sm font-semibold text-foreground">{alert.label}</span>
+            </div>
+            {/* Action line */}
+            <div className="flex items-center gap-1.5 mt-1.5">
+              <Zap className="w-3 h-3 text-primary shrink-0" />
+              <span className="text-xs font-medium text-primary">Action : {alert.action}</span>
             </div>
             <p className="text-xs text-muted-foreground mt-1 line-clamp-2">{alert.explanation}</p>
           </div>
@@ -121,9 +127,23 @@ const AlertCard = ({ alert, allData, department }: { alert: AlertDefinition; all
 };
 
 export const DepartmentAlerts = ({ department, allData }: DepartmentAlertsProps) => {
+  const [enabledCategories, setEnabledCategories] = useState<Set<string>>(new Set(["sanitaire", "economique", "social"]));
+
   if (!department) return null;
 
-  const alerts = getAllDepartmentAlerts(department, allData);
+  const toggleCategory = (cat: string) => {
+    setEnabledCategories(prev => {
+      const next = new Set(prev);
+      if (next.has(cat)) {
+        next.delete(cat);
+      } else {
+        next.add(cat);
+      }
+      return next;
+    });
+  };
+
+  const alerts = getAllDepartmentAlerts(department, allData, enabledCategories);
   const alertCount = alerts.length;
 
   return (
@@ -133,6 +153,23 @@ export const DepartmentAlerts = ({ department, allData }: DepartmentAlertsProps)
         {alertCount} alerte{alertCount !== 1 ? 's' : ''} détectée{alertCount !== 1 ? 's' : ''}
         <span className="text-[10px] font-normal text-muted-foreground">(seuil : quintiles Q1/Q5)</span>
       </h3>
+
+      {/* Category filter */}
+      <div className="flex items-center gap-4 p-2 rounded-lg bg-muted/30 border border-border/50">
+        {Object.entries(CATEGORY_META).map(([key, meta]) => (
+          <label key={key} className="flex items-center gap-1.5 cursor-pointer select-none">
+            <Checkbox
+              checked={enabledCategories.has(key)}
+              onCheckedChange={() => toggleCategory(key)}
+              className="h-3.5 w-3.5"
+            />
+            <span className={`flex items-center gap-1 text-xs font-medium ${enabledCategories.has(key) ? meta.colorClass : 'text-muted-foreground/50'}`}>
+              {meta.icon}
+              {meta.label}
+            </span>
+          </label>
+        ))}
+      </div>
       
       {alerts.length === 0 ? (
         <div className="p-4 rounded-xl bg-green-50 dark:bg-green-950/20 border border-green-500/50">
@@ -140,7 +177,9 @@ export const DepartmentAlerts = ({ department, allData }: DepartmentAlertsProps)
             ✓ Aucune alerte critique pour ce département
           </p>
           <p className="text-xs text-green-600/70 dark:text-green-500/70 mt-1">
-            Le département ne se situe dans aucun premier ou dernier décile pour les combinaisons d'indicateurs surveillées.
+            {enabledCategories.size < 3
+              ? "Essayez d'activer toutes les catégories pour voir l'ensemble des alertes."
+              : "Le département ne se situe dans aucun premier ou dernier quintile pour les combinaisons d'indicateurs surveillées."}
           </p>
         </div>
       ) : (

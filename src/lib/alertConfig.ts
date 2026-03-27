@@ -10,7 +10,7 @@ export interface AlertLever {
 export interface AlertCondition {
   column: keyof DepartmentData | string;
   direction: "low" | "high";
-  label: string; // Human-readable label for the condition
+  label: string;
 }
 
 export interface AlertDefinition {
@@ -20,6 +20,7 @@ export interface AlertDefinition {
   conditions: AlertCondition[];
   explanation: string;
   levers: AlertLever[];
+  action: string;
   headerNote?: string;
   source?: string;
 }
@@ -45,7 +46,6 @@ export const getQuintile = (data: DepartmentData[], column: string, percentile: 
   return values[index];
 };
 
-// Helper: get top 5 pathologies prevalence sum
 const getTop5Prevalence = (d: DepartmentData): number => {
   const maladies = d.maladies_65_plus;
   if (!maladies || Object.keys(maladies).length === 0) return 0;
@@ -53,7 +53,6 @@ const getTop5Prevalence = (d: DepartmentData): number => {
   return top5.reduce((sum, v) => sum + v, 0);
 };
 
-// Get department value for a condition column
 export const getDeptValue = (department: DepartmentData, column: string): number => {
   if (column === "top5_prevalence") return getTop5Prevalence(department);
   if (column === "vaccination_avg") return (department.grippe_65_plus + department.covid_65_plus) / 2;
@@ -62,21 +61,18 @@ export const getDeptValue = (department: DepartmentData, column: string): number
   return parseFloat(String(department[column as keyof DepartmentData])) || 0;
 };
 
-// Q1 = premier quintile (bas) — le département est dans les 20% les plus bas
 export const isInQ1 = (value: number, data: DepartmentData[], column: string): boolean => {
   if (isNaN(value) || value === 0) return false;
   const q1 = getQuintile(data, column, 0.20);
   return value <= q1;
 };
 
-// Q5 = dernier quintile (haut) — le département est dans les 20% les plus hauts
 export const isInQ5 = (value: number, data: DepartmentData[], column: string): boolean => {
   if (isNaN(value) || value === 0) return false;
   const q5 = getQuintile(data, column, 0.80);
   return value >= q5;
 };
 
-// Legacy exports for compatibility
 export const getQuartile = getQuintile;
 export const getDecile = getQuintile;
 export const getQuantile = getQuintile;
@@ -96,6 +92,7 @@ export const ALERT_DEFINITIONS: AlertDefinition[] = [
     label: "Désertification Médicale Critique",
     category: "sanitaire",
     headerNote: "Médicobus : une démarche « d'aller vers » les patients éloignés des soins dans les territoires ruraux",
+    action: "Déploiement de cabines de téléconsultation",
     conditions: [
       { column: "access_med_generalistes", direction: "low", label: "APL Médecins Généralistes" },
       { column: "top5_prevalence", direction: "high", label: "Prévalence Top 5 Pathologies" },
@@ -104,11 +101,11 @@ export const ALERT_DEFINITIONS: AlertDefinition[] = [
     source: "APL médecins : DREES – Panorama statistique 2024 · Prévalence pathologies : Ameli (CNAM) 2023",
     levers: [
       {
-        title: "Cabines de téléconsultation assistée en officine",
+        title: "Déploiement de cabines de téléconsultation assistée en officine",
         detail: "Installation de bornes équipées (stéthoscope, otoscope connectés) dans les pharmacies ou mairies. Le pharmacien accompagne le patient, ce qui rassure le senior et valide le diagnostic à distance.",
       },
       {
-        title: "Infirmiers en Pratique Avancée (IPA)",
+        title: "Recours aux Infirmiers en Pratique Avancée (IPA)",
         detail: "Financer l'installation ou la formation d'IPA libéraux. Ces infirmiers ont le droit de suivre des patients chroniques stables, de renouveler des ordonnances et de prescrire des examens, libérant du temps médical pour les médecins généralistes surchargés.",
         isNew: true,
       },
@@ -118,6 +115,7 @@ export const ALERT_DEFINITIONS: AlertDefinition[] = [
     id: "sanitaire_B",
     label: "Risque de Rupture de Maintien à Domicile",
     category: "sanitaire",
+    action: "Augmentation du nombre d'aides à domicile",
     conditions: [
       { column: "apl_sapa", direction: "low", label: "Aides à domicile (APL SAPA)" },
       { column: "total_75_plus", direction: "high", label: "Population 75+" },
@@ -141,6 +139,7 @@ export const ALERT_DEFINITIONS: AlertDefinition[] = [
     id: "sanitaire_C",
     label: "Fragilité Préventive",
     category: "sanitaire",
+    action: "Déploiement d'équipes « Aller-vers »",
     conditions: [
       { column: "vaccination_avg", direction: "low", label: "Taux de vaccination" },
       { column: "part_75_plus", direction: "high", label: "Indice de vieillissement" },
@@ -161,6 +160,25 @@ export const ALERT_DEFINITIONS: AlertDefinition[] = [
       },
     ],
   },
+  {
+    id: "sanitaire_D",
+    label: "Vulnérabilité Cardio-Respiratoire Environnementale",
+    category: "sanitaire",
+    action: "Déploiement d'espaces « Air pur et Climatisation »",
+    conditions: [
+      { column: "atmo_indice_moyen", direction: "high", label: "Indice ATMO moyen (qualité de l'air)" },
+      { column: "top5_prevalence", direction: "high", label: "Prévalence Top 5 Pathologies" },
+    ],
+    explanation: "Air très pollué dans un département où la charge de maladies chroniques (cardio-vasculaires, respiratoires) est élevée. Les pics de pollution aggravent les pathologies existantes et multiplient les hospitalisations d'urgence chez les seniors.",
+    source: "Qualité de l'air : ATMO France / Géod'Air 2023 · Prévalence pathologies : Ameli (CNAM) 2023",
+    levers: [
+      {
+        title: "Déploiement d'espaces refuges « Air pur et Climatisation »",
+        detail: "Les pics de pollution étant souvent liés aux fortes chaleurs, la collectivité peut cartographier et ouvrir des bâtiments publics (médiathèques, salles des fêtes) équipés de purificateurs d'air haute performance et de climatisation pour accueillir les seniors pendant la journée.",
+        url: "https://www.adaptaville.fr/espaces-refuges",
+      },
+    ],
+  },
 
   // ============================
   // 2. FOND DE CARTE ÉCONOMIQUE
@@ -169,6 +187,7 @@ export const ALERT_DEFINITIONS: AlertDefinition[] = [
     id: "economique_A",
     label: "Précarité Locative",
     category: "economique",
+    action: "Renforcement ciblé du FSL",
     conditions: [
       { column: "aspa_effectif_2024", direction: "high", label: "Bénéficiaires ASPA" },
       { column: "proprietaires_75_plus", direction: "low", label: "Part de propriétaires" },
@@ -183,7 +202,7 @@ export const ALERT_DEFINITIONS: AlertDefinition[] = [
       },
       {
         title: "Habitat Inclusif (Aide à la Vie Partagée - AVP)",
-        detail: "Encourager la création de petites unités de vie (colocations seniors) où les habitants partagent les frais (loyer, alimentation) et mutualisent une présence auxiliaire. Alternative économique à l'EHPAD et à la solitude du logement individuel.",
+        detail: "Encourager la création de petites unités de vie (colocations seniors) où les habitants partagent les frais (loyer, alimentation) et mutualisent une présence auxiliaire. Alternative économique à l'EHPAD et à la solitude du logement individuel. L'aide à la vie partagée est une prestation sociale individuelle pour les personnes de plus de 65 ans qui font le choix de vivre dans un habitat inclusif.",
         url: "https://www.cnsa.fr/budget-et-financement/financement-aux-departements/aide-la-vie-sociale-et-partagee-et-le-forfait",
         isNew: true,
       },
@@ -193,6 +212,7 @@ export const ALERT_DEFINITIONS: AlertDefinition[] = [
     id: "economique_B",
     label: "Risque de Renoncement aux Soins",
     category: "economique",
+    action: "Généralisation de l'accès aux chèques CESU préfinancés",
     conditions: [
       { column: "access_med_generalistes", direction: "low", label: "APL Médecins Généralistes" },
       { column: "taux_pauvrete_60", direction: "high", label: "Taux de pauvreté 65+" },
@@ -207,7 +227,7 @@ export const ALERT_DEFINITIONS: AlertDefinition[] = [
       },
       {
         title: "Campagne « Data-mining » contre le non-recours à la C2S",
-        detail: "Croiser les données de la CAF/CARSAT pour identifier les retraités éligibles à la Complémentaire Santé Solidaire (ex-CMU-C) qui ne l'ont pas demandée. Les contacter proactivement pour ouvrir leurs droits, garantissant la gratuité des soins.",
+        detail: "Croiser les données de la CAF/CARSAT pour identifier les retraités éligibles à la Complémentaire Santé Solidaire (ex-CMU-C) qui ne l'ont pas demandée. Les contacter proactivement pour ouvrir leurs droits, garantissant la gratuité des soins. L'Assurance Maladie utilise désormais le croisement de fichiers de données (via le DRM) pour identifier proactivement les foyers éligibles.",
         url: "https://www.complementaire-sante-solidaire.gouv.fr/actualites/etudes/lutter-contre-le-non-recours-la-complementaire-sante-solidaire-des-demandeurs",
         isNew: true,
       },
@@ -215,25 +235,45 @@ export const ALERT_DEFINITIONS: AlertDefinition[] = [
   },
   {
     id: "economique_C",
-    label: "Paupérisation Structurelle",
+    label: "Appauvrissement Profond",
     category: "economique",
+    action: "Négociation d'une dotation d'État ciblée",
     conditions: [
       { column: "aspa_effectif_2024", direction: "high", label: "Bénéficiaires ASPA" },
       { column: "part_75_plus", direction: "high", label: "Indice de vieillissement" },
     ],
-    explanation: "Le département vieillit et s'appauvrit simultanément. Les ressources fiscales vont diminuer alors que les besoins d'aides sociales vont augmenter.",
+    explanation: "Le département vieillit et s'appauvrit simultanément. Les ressources fiscales du département vont diminuer alors que les besoins d'aides sociales vont augmenter.",
     source: "ASPA : Caisse des Dépôts / DREES 2024 · Vieillissement : INSEE RP 2020",
     levers: [
       {
         title: "Contractualisation via le Pacte des Solidarités",
-        detail: "Utiliser ces données d'alerte pour négocier avec le Préfet une augmentation de la dotation de l'État dans le cadre des contrats locaux de solidarité, en prouvant la spécificité de la précarité du territoire. Transformer un constat alarmant en argument de négociation politique et financier.",
+        detail: "Utiliser ces données d'alerte pour négocier avec le Préfet une augmentation de la dotation de l'État dans le cadre des contrats locaux de solidarité, en prouvant la spécificité de la précarité du territoire. Le but est de transformer un constat alarmant en argument de négociation politique et financier face à l'État, via le Pacte des Solidarités (contrat signé entre le Département et la Préfecture).",
         url: "https://solidarites.gouv.fr/le-pacte-des-solidarites-lutter-contre-la-pauvrete-la-racine",
       },
       {
         title: "Activation stratégique de la Conférence des Financeurs",
-        detail: "Réunir la Conférence des Financeurs de la Prévention de la Perte d'Autonomie (instance obligatoire) pour rediriger les fonds non utilisés de la CNSA spécifiquement vers ces zones en alerte rouge, plutôt que de les saupoudrer sur tout le département.",
+        detail: "Réunir la Conférence des Financeurs de la Prévention de la Perte d'Autonomie (instance obligatoire dans chaque département) pour rediriger les fonds non utilisés de la CNSA spécifiquement vers ces zones en alerte rouge, plutôt que de les saupoudrer sur tout le département. Le but : la concentration des moyens là où c'est le plus critique.",
         url: "https://www.cnsa.fr/publications/conference-des-financeurs-de-la-prevention-de-la-perte-dautonomie-guide-technique",
         isNew: true,
+      },
+    ],
+  },
+  {
+    id: "economique_D",
+    label: "Précarité de l'Habitat (Exposition aux polluants)",
+    category: "economique",
+    action: "Déploiement de campagnes de diagnostics gratuits",
+    conditions: [
+      { column: "eau_conformite_bacterio", direction: "low", label: "Qualité de l'eau (conformité bactério)" },
+      { column: "aspa_effectif_2024", direction: "high", label: "Bénéficiaires ASPA" },
+    ],
+    explanation: "Eau de mauvaise qualité dans un territoire où les seniors les plus précaires (bénéficiaires de l'ASPA) n'ont pas les moyens de financer des travaux de plomberie ou des systèmes de filtration. Ils boivent une eau potentiellement non conforme.",
+    source: "Qualité de l'eau : ARS / SISE-Eaux 2023 · ASPA : Caisse des Dépôts / DREES 2024",
+    levers: [
+      {
+        title: "Campagne de diagnostics gratuits",
+        detail: "Le département mandate des techniciens pour tester gratuitement l'eau au robinet chez les bénéficiaires de l'ASPA, avec une aide financière (fonds d'amélioration de l'habitat) si des travaux de plomberie sont impératifs pour la santé.",
+        url: "https://cmei-france.fr/",
       },
     ],
   },
@@ -245,6 +285,7 @@ export const ALERT_DEFINITIONS: AlertDefinition[] = [
     id: "social_A",
     label: "Enfermement Rural",
     category: "social",
+    action: "Déploiement des visites à domicile",
     conditions: [
       { column: "isolement_social", direction: "high", label: "Isolement social" },
       { column: "sans_voiture_75_plus", direction: "high", label: "Sans voiture (75+)" },
@@ -269,12 +310,13 @@ export const ALERT_DEFINITIONS: AlertDefinition[] = [
     id: "social_B",
     label: "Exclusion Numérique",
     category: "social",
+    action: "Déploiement de conseillers numériques équipés",
     conditions: [
       { column: "isolement_social", direction: "high", label: "Isolement social" },
       { column: "score_fragilite_numerique", direction: "high", label: "Fragilité numérique" },
     ],
     explanation: "Personne seule + ne sait pas utiliser Internet. Cette personne ne demandera jamais les aides auxquelles elle a droit et ne prendra pas RDV sur Doctolib. Elle est invisible administrativement.",
-    source: "Isolement : INSEE RP 2020 · Fragilité numérique : score composite INSEE (diplôme, accès Internet)",
+    source: "Isolement : INSEE RP 2020 · Fragilité numérique : score composite Arcep / INSEE",
     levers: [
       {
         title: "Conseillers Numériques France Services Itinérants",
@@ -292,6 +334,7 @@ export const ALERT_DEFINITIONS: AlertDefinition[] = [
     id: "social_C",
     label: "Enclavement Sanitaire",
     category: "social",
+    action: "Déploiement de navettes sanitaires",
     conditions: [
       { column: "access_med_generalistes", direction: "low", label: "APL Médecins Généralistes" },
       { column: "sans_voiture_75_plus", direction: "high", label: "Sans voiture (75+)" },
@@ -307,48 +350,6 @@ export const ALERT_DEFINITIONS: AlertDefinition[] = [
         title: "Équipes Mobiles de Gériatrie (EMG) extra-hospitalières",
         detail: "Si le patient ne peut aller à l'hôpital, l'hôpital vient à lui. Conventionner avec le Centre Hospitalier le plus proche pour que l'EMG intervienne au domicile pour des évaluations gériatriques complexes, évitant le déplacement traumatisant du senior.",
         url: "https://www.ghsif.fr/Equipe-Mobile-Geriatrie/5/104/48",
-        isNew: true,
-      },
-    ],
-  },
-
-  // ============================
-  // 4. ALERTES ENVIRONNEMENTALES
-  // ============================
-  {
-    id: "economique_D",
-    label: "Précarité de l'Habitat (Exposition aux polluants)",
-    category: "economique",
-    conditions: [
-      { column: "eau_conformite_bacterio", direction: "low", label: "Qualité de l'eau (conformité bactério)" },
-      { column: "aspa_effectif_2024", direction: "high", label: "Bénéficiaires ASPA" },
-    ],
-    explanation: "Eau de mauvaise qualité dans un territoire où les seniors les plus précaires (bénéficiaires de l'ASPA) n'ont pas les moyens de financer des travaux de plomberie ou des systèmes de filtration. Ils boivent une eau potentiellement non conforme.",
-    source: "Qualité de l'eau : ARS / SISE-Eaux 2023 · ASPA : Caisse des Dépôts / DREES 2024",
-    levers: [
-      {
-        title: "Campagne de diagnostics gratuits",
-        detail: "Le département mandate des techniciens pour tester gratuitement l'eau au robinet chez les bénéficiaires de l'ASPA, avec une aide financière (fonds d'amélioration de l'habitat) si des travaux de plomberie sont impératifs pour la santé.",
-        url: "https://cmei-france.fr/",
-        isNew: true,
-      },
-    ],
-  },
-  {
-    id: "sanitaire_D",
-    label: "Vulnérabilité Cardio-Respiratoire Environnementale",
-    category: "sanitaire",
-    conditions: [
-      { column: "atmo_indice_moyen", direction: "high", label: "Indice ATMO moyen (qualité de l'air)" },
-      { column: "top5_prevalence", direction: "high", label: "Prévalence Top 5 Pathologies" },
-    ],
-    explanation: "Air très pollué dans un département où la charge de maladies chroniques (cardio-vasculaires, respiratoires) est élevée. Les pics de pollution aggravent les pathologies existantes et multiplient les hospitalisations d'urgence chez les seniors.",
-    source: "Qualité de l'air : ATMO France / Géod'Air 2023 · Prévalence pathologies : Ameli (CNAM) 2023",
-    levers: [
-      {
-        title: "Déploiement d'espaces refuges « Air pur et Climatisation »",
-        detail: "Les pics de pollution étant souvent liés aux fortes chaleurs, la collectivité peut cartographier et ouvrir des bâtiments publics (médiathèques, salles des fêtes) équipés de purificateurs d'air haute performance et de climatisation pour accueillir les seniors pendant la journée.",
-        url: "https://www.adaptaville.fr/espaces-refuges",
         isNew: true,
       },
     ],
@@ -386,9 +387,11 @@ export const getDepartmentAlerts = (
 // Get all alerts for a department across all categories
 export const getAllDepartmentAlerts = (
   department: DepartmentData,
-  allData: DepartmentData[]
+  allData: DepartmentData[],
+  categoryFilter?: Set<string>
 ): AlertDefinition[] => {
   return ALERT_DEFINITIONS.filter(alert => {
+    if (categoryFilter && !categoryFilter.has(alert.category)) return false;
     return alert.conditions.every(condition => {
       const value = getDeptValue(department, String(condition.column));
       if (condition.direction === "low") return isInQ1(value, allData, String(condition.column));
@@ -401,7 +404,7 @@ export const getAllDepartmentAlerts = (
 // Get warning color based on number of alerts
 export const getWarningColor = (alertCount: number): string => {
   if (alertCount === 0) return "#22c55e";
-  if (alertCount === 1) return "#eab308"; // jaune
-  if (alertCount === 2) return "#f97316"; // orange
-  return "#ef4444"; // rouge 3+
+  if (alertCount === 1) return "#eab308";
+  if (alertCount === 2) return "#f97316";
+  return "#ef4444";
 };
