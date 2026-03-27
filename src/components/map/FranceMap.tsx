@@ -4,7 +4,8 @@ import { scaleLinear } from "d3-scale";
 import { DepartmentData, getMetricRange } from "@/lib/data";
 import { getAllDepartmentAlerts, getWarningColor } from "@/lib/alertConfig";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
-import { AlertTriangle } from "lucide-react";
+import { AlertTriangle, Heart, Euro, Users } from "lucide-react";
+import { Checkbox } from "@/components/ui/checkbox";
 
 const GEO_URL = "https://raw.githubusercontent.com/gregoiredavid/france-geojson/master/departements-version-simplifiee.geojson";
 
@@ -48,6 +49,8 @@ interface FranceMapProps {
   selectedMetric: string;
   selectedDepartment: string;
   onDepartmentClick: (code: string) => void;
+  enabledCategories: Set<string>;
+  onToggleCategory: (cat: string) => void;
 }
 
 // Folium-style location pin marker component
@@ -111,7 +114,7 @@ const FoliumMarker = ({
   );
 };
 
-export const FranceMap = ({ data, selectedMetric, selectedDepartment, onDepartmentClick }: FranceMapProps) => {
+export const FranceMap = ({ data, selectedMetric, selectedDepartment, onDepartmentClick, enabledCategories, onToggleCategory }: FranceMapProps) => {
   
   const [position, setPosition] = useState({ coordinates: [2.5, 46.5] as [number, number], zoom: 1 });
 
@@ -147,15 +150,15 @@ export const FranceMap = ({ data, selectedMetric, selectedDepartment, onDepartme
       .range(["#EFF6FF", "#93C5FD", "#3B82F6", "#1E40AF"]);
   }, [data, selectedMetric]);
 
-  // Calculate alerts for all departments
+  // Calculate alerts for all departments (filtered by enabled categories)
   const departmentAlerts = useMemo(() => {
     const alerts: { [key: string]: number } = {};
     data.forEach(dept => {
-      const deptAlerts = getAllDepartmentAlerts(dept, data);
+      const deptAlerts = getAllDepartmentAlerts(dept, data, enabledCategories);
       alerts[dept.code_departement] = deptAlerts.length;
     });
     return alerts;
-  }, [data]);
+  }, [data, enabledCategories]);
 
   const getDataForCode = (code: string): DepartmentData | undefined => {
     const normalizedCode = code.padStart(2, '0');
@@ -373,6 +376,30 @@ export const FranceMap = ({ data, selectedMetric, selectedDepartment, onDepartme
             );
           })}
         </ComposableMap>
+      </div>
+
+      {/* Category filter below Île-de-France */}
+      <div className="absolute top-[145px] right-3 md:top-[185px] w-[130px] md:w-[170px] z-10">
+        <div className="rounded-lg bg-card/95 border border-border/50 shadow-soft p-2 space-y-1.5">
+          <p className="text-[9px] md:text-[10px] font-semibold text-foreground">Filtrer alertes</p>
+          {([
+            { key: "sanitaire", label: "Sanitaire", icon: <Heart className="w-2.5 h-2.5" />, color: "text-rose-600" },
+            { key: "economique", label: "Économique", icon: <Euro className="w-2.5 h-2.5" />, color: "text-amber-600" },
+            { key: "social", label: "Social", icon: <Users className="w-2.5 h-2.5" />, color: "text-orange-600" },
+          ] as const).map(cat => (
+            <label key={cat.key} className="flex items-center gap-1.5 cursor-pointer select-none">
+              <Checkbox
+                checked={enabledCategories.has(cat.key)}
+                onCheckedChange={() => onToggleCategory(cat.key)}
+                className="h-3 w-3"
+              />
+              <span className={`flex items-center gap-1 text-[10px] md:text-[11px] font-medium ${enabledCategories.has(cat.key) ? cat.color : 'text-muted-foreground/50'}`}>
+                {cat.icon}
+                {cat.label}
+              </span>
+            </label>
+          ))}
+        </div>
       </div>
 
       {/* Legend */}

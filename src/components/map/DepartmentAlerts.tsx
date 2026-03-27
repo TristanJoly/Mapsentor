@@ -3,12 +3,12 @@ import { useState } from "react";
 import { DepartmentData } from "@/lib/data";
 import { getAllDepartmentAlerts, AlertDefinition, getQuintile, getDeptValue } from "@/lib/alertConfig";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import { Checkbox } from "@/components/ui/checkbox";
 
 interface DepartmentAlertsProps {
   department: DepartmentData | undefined;
   allData: DepartmentData[];
   selectedMetric?: string;
+  enabledCategories: Set<string>;
 }
 
 const CATEGORY_META: Record<string, { label: string; icon: React.ReactNode; colorClass: string; bgClass: string; borderClass: string }> = {
@@ -34,7 +34,6 @@ const AlertCard = ({ alert, allData, department }: { alert: AlertDefinition; all
 
   return (
     <div className={`rounded-xl border ${meta.borderClass} ${meta.bgClass} overflow-hidden`}>
-      {/* Header */}
       <div className="flex items-start">
         <button
           onClick={() => setExpanded(!expanded)}
@@ -48,7 +47,6 @@ const AlertCard = ({ alert, allData, department }: { alert: AlertDefinition; all
               </span>
               <span className="text-sm font-semibold text-foreground">{alert.label}</span>
             </div>
-            {/* Action line */}
             <div className="flex items-center gap-1.5 mt-1.5">
               <Zap className="w-3 h-3 text-primary shrink-0" />
               <span className="text-xs font-medium text-primary">Action : {alert.action}</span>
@@ -57,7 +55,6 @@ const AlertCard = ({ alert, allData, department }: { alert: AlertDefinition; all
           </div>
           {expanded ? <ChevronUp className="w-4 h-4 text-muted-foreground shrink-0 mt-0.5" /> : <ChevronDown className="w-4 h-4 text-muted-foreground shrink-0 mt-0.5" />}
         </button>
-        {/* Info Popover */}
         <Popover>
           <PopoverTrigger asChild>
             <button className="shrink-0 p-2 mt-1 mr-1 rounded-full hover:bg-muted/50 transition-colors focus:outline-none focus:ring-2 focus:ring-primary/30">
@@ -89,7 +86,6 @@ const AlertCard = ({ alert, allData, department }: { alert: AlertDefinition; all
         </Popover>
       </div>
 
-      {/* Expanded: Levers */}
       {expanded && (
         <div className="px-3 pb-3 space-y-2 border-t border-border/30 pt-2">
           {alert.levers.map((lever, i) => (
@@ -126,22 +122,8 @@ const AlertCard = ({ alert, allData, department }: { alert: AlertDefinition; all
   );
 };
 
-export const DepartmentAlerts = ({ department, allData }: DepartmentAlertsProps) => {
-  const [enabledCategories, setEnabledCategories] = useState<Set<string>>(new Set(["sanitaire", "economique", "social"]));
-
+export const DepartmentAlerts = ({ department, allData, enabledCategories }: DepartmentAlertsProps) => {
   if (!department) return null;
-
-  const toggleCategory = (cat: string) => {
-    setEnabledCategories(prev => {
-      const next = new Set(prev);
-      if (next.has(cat)) {
-        next.delete(cat);
-      } else {
-        next.add(cat);
-      }
-      return next;
-    });
-  };
 
   const alerts = getAllDepartmentAlerts(department, allData, enabledCategories);
   const alertCount = alerts.length;
@@ -153,23 +135,6 @@ export const DepartmentAlerts = ({ department, allData }: DepartmentAlertsProps)
         {alertCount} alerte{alertCount !== 1 ? 's' : ''} détectée{alertCount !== 1 ? 's' : ''}
         <span className="text-[10px] font-normal text-muted-foreground">(seuil : quintiles Q1/Q5)</span>
       </h3>
-
-      {/* Category filter */}
-      <div className="flex items-center gap-4 p-2 rounded-lg bg-muted/30 border border-border/50">
-        {Object.entries(CATEGORY_META).map(([key, meta]) => (
-          <label key={key} className="flex items-center gap-1.5 cursor-pointer select-none">
-            <Checkbox
-              checked={enabledCategories.has(key)}
-              onCheckedChange={() => toggleCategory(key)}
-              className="h-3.5 w-3.5"
-            />
-            <span className={`flex items-center gap-1 text-xs font-medium ${enabledCategories.has(key) ? meta.colorClass : 'text-muted-foreground/50'}`}>
-              {meta.icon}
-              {meta.label}
-            </span>
-          </label>
-        ))}
-      </div>
       
       {alerts.length === 0 ? (
         <div className="p-4 rounded-xl bg-green-50 dark:bg-green-950/20 border border-green-500/50">
