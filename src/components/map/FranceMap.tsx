@@ -4,7 +4,8 @@ import { scaleLinear } from "d3-scale";
 import { DepartmentData, getMetricRange } from "@/lib/data";
 import { getAllDepartmentAlerts, getWarningColor } from "@/lib/alertConfig";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
-import { AlertTriangle } from "lucide-react";
+import { AlertTriangle, Heart, Euro, Users } from "lucide-react";
+import { Checkbox } from "@/components/ui/checkbox";
 
 const GEO_URL = "https://raw.githubusercontent.com/gregoiredavid/france-geojson/master/departements-version-simplifiee.geojson";
 
@@ -48,6 +49,8 @@ interface FranceMapProps {
   selectedMetric: string;
   selectedDepartment: string;
   onDepartmentClick: (code: string) => void;
+  enabledCategories: Set<string>;
+  onToggleCategory: (cat: string) => void;
 }
 
 // Folium-style location pin marker component
