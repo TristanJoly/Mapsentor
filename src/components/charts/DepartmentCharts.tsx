@@ -1147,9 +1147,9 @@ const PesticidesChart = ({ department, allData }: { department: DepartmentData; 
           <XAxis dataKey="name" tick={{ fontSize: 10 }} />
           <YAxis tick={{ fontSize: 10 }} />
           <Tooltip formatter={(value: number) => `${value} t`} contentStyle={{ background: 'hsl(var(--card))', border: '1px solid hsl(var(--border))', borderRadius: '8px', fontSize: '12px' }} />
-          <Bar dataKey="departement" fill="#EF4444" name="Département" />
-          <Bar dataKey="region" fill="#F59E0B" name="Région" />
-          <Bar dataKey="france" fill={COLORS.muted} name="France" />
+          <Bar dataKey="departement" fill="#1E40AF" name="Département" />
+          <Bar dataKey="region" fill="#60A5FA" name="Région" />
+          <Bar dataKey="france" fill="#DBEAFE" name="France" />
           <Legend wrapperStyle={{ fontSize: '11px' }} />
         </BarChart>
       </ResponsiveContainer>
