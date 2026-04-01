@@ -1061,9 +1061,9 @@ const EauPotableChart = ({ department, allData }: { department: DepartmentData; 
           <XAxis type="number" domain={[40, 100]} tick={{ fontSize: 10 }} />
           <YAxis dataKey="name" type="category" tick={{ fontSize: 10 }} width={90} />
           <Tooltip formatter={(value: number) => `${value}%`} contentStyle={{ background: 'hsl(var(--card))', border: '1px solid hsl(var(--border))', borderRadius: '8px', fontSize: '12px' }} />
-          <Bar dataKey="departement" fill="#4CAF50" name="Département" />
-          <Bar dataKey="region" fill={COLORS.secondary} name="Région" />
-          <Bar dataKey="france" fill={COLORS.muted} name="France" />
+          <Bar dataKey="departement" fill="#1E40AF" name="Département" />
+          <Bar dataKey="region" fill="#60A5FA" name="Région" />
+          <Bar dataKey="france" fill="#DBEAFE" name="France" />
           <Legend wrapperStyle={{ fontSize: '11px' }} />
         </BarChart>
       </ResponsiveContainer>
