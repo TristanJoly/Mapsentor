@@ -987,11 +987,11 @@ const QualiteAirAtmoChart = ({ department, allData }: { department: DepartmentDa
   const avgFrance = allData.reduce((s, d) => s + d.atmo_indice_moyen, 0) / allData.length;
 
   const dataJours = [
-    { name: "Bon", departement: department.atmo_jours_bon, fill: "#4CAF50" },
-    { name: "Moyen", departement: department.atmo_jours_moyen, fill: "#DBEAFE" },
-    { name: "Dégradé", departement: department.atmo_jours_degrade, fill: COLORS.secondary },
-    { name: "Mauvais", departement: department.atmo_jours_mauvais, fill: COLORS.primary },
-    { name: "Très mauvais", departement: department.atmo_jours_tres_mauvais, fill: "#8B0000" },
+    { name: "Bon", departement: department.atmo_jours_bon, fill: "#DBEAFE" },
+    { name: "Moyen", departement: department.atmo_jours_moyen, fill: "#93C5FD" },
+    { name: "Dégradé", departement: department.atmo_jours_degrade, fill: "#3B82F6" },
+    { name: "Mauvais", departement: department.atmo_jours_mauvais, fill: "#1E40AF" },
+    { name: "Très mauvais", departement: department.atmo_jours_tres_mauvais, fill: "#1E3A5F" },
   ];
 
   const getQualiteLabel = (indice: number) => {
