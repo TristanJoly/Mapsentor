@@ -987,11 +987,11 @@ const QualiteAirAtmoChart = ({ department, allData }: { department: DepartmentDa
   const avgFrance = allData.reduce((s, d) => s + d.atmo_indice_moyen, 0) / allData.length;
 
   const dataJours = [
-    { name: "Bon", departement: department.atmo_jours_bon, fill: "#4CAF50" },
-    { name: "Moyen", departement: department.atmo_jours_moyen, fill: "#DBEAFE" },
-    { name: "Dégradé", departement: department.atmo_jours_degrade, fill: COLORS.secondary },
-    { name: "Mauvais", departement: department.atmo_jours_mauvais, fill: COLORS.primary },
-    { name: "Très mauvais", departement: department.atmo_jours_tres_mauvais, fill: "#8B0000" },
+    { name: "Bon", departement: department.atmo_jours_bon, fill: "#DBEAFE" },
+    { name: "Moyen", departement: department.atmo_jours_moyen, fill: "#93C5FD" },
+    { name: "Dégradé", departement: department.atmo_jours_degrade, fill: "#3B82F6" },
+    { name: "Mauvais", departement: department.atmo_jours_mauvais, fill: "#1E40AF" },
+    { name: "Très mauvais", departement: department.atmo_jours_tres_mauvais, fill: "#1E3A5F" },
   ];
 
   const getQualiteLabel = (indice: number) => {
@@ -1061,9 +1061,9 @@ const EauPotableChart = ({ department, allData }: { department: DepartmentData; 
           <XAxis type="number" domain={[40, 100]} tick={{ fontSize: 10 }} />
           <YAxis dataKey="name" type="category" tick={{ fontSize: 10 }} width={90} />
           <Tooltip formatter={(value: number) => `${value}%`} contentStyle={{ background: 'hsl(var(--card))', border: '1px solid hsl(var(--border))', borderRadius: '8px', fontSize: '12px' }} />
-          <Bar dataKey="departement" fill="#4CAF50" name="Département" />
-          <Bar dataKey="region" fill={COLORS.secondary} name="Région" />
-          <Bar dataKey="france" fill={COLORS.muted} name="France" />
+          <Bar dataKey="departement" fill="#1E40AF" name="Département" />
+          <Bar dataKey="region" fill="#60A5FA" name="Région" />
+          <Bar dataKey="france" fill="#DBEAFE" name="France" />
           <Legend wrapperStyle={{ fontSize: '11px' }} />
         </BarChart>
       </ResponsiveContainer>
@@ -1079,9 +1079,9 @@ const EauCoursEauChart = ({ department, allData }: { department: DepartmentData;
   const avg = (arr: DepartmentData[], field: keyof DepartmentData) => arr.reduce((s, d) => s + (d[field] as number), 0) / arr.length;
 
   const dataEcoEtat = [
-    { name: "Bon", value: department.eau_etat_eco_bon, fill: "#4CAF50" },
-    { name: "Moyen", value: department.eau_etat_eco_moyen, fill: "#DBEAFE" },
-    { name: "Médiocre", value: department.eau_etat_eco_mediocre, fill: COLORS.primary },
+    { name: "Bon", value: department.eau_etat_eco_bon, fill: "#DBEAFE" },
+    { name: "Moyen", value: department.eau_etat_eco_moyen, fill: "#3B82F6" },
+    { name: "Médiocre", value: department.eau_etat_eco_mediocre, fill: "#1E3A5F" },
   ];
 
   return (
@@ -1147,9 +1147,9 @@ const PesticidesChart = ({ department, allData }: { department: DepartmentData; 
           <XAxis dataKey="name" tick={{ fontSize: 10 }} />
           <YAxis tick={{ fontSize: 10 }} />
           <Tooltip formatter={(value: number) => `${value} t`} contentStyle={{ background: 'hsl(var(--card))', border: '1px solid hsl(var(--border))', borderRadius: '8px', fontSize: '12px' }} />
-          <Bar dataKey="departement" fill="#EF4444" name="Département" />
-          <Bar dataKey="region" fill="#F59E0B" name="Région" />
-          <Bar dataKey="france" fill={COLORS.muted} name="France" />
+          <Bar dataKey="departement" fill="#1E40AF" name="Département" />
+          <Bar dataKey="region" fill="#60A5FA" name="Région" />
+          <Bar dataKey="france" fill="#DBEAFE" name="France" />
           <Legend wrapperStyle={{ fontSize: '11px' }} />
         </BarChart>
       </ResponsiveContainer>
