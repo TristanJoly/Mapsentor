@@ -1079,9 +1079,9 @@ const EauCoursEauChart = ({ department, allData }: { department: DepartmentData;
   const avg = (arr: DepartmentData[], field: keyof DepartmentData) => arr.reduce((s, d) => s + (d[field] as number), 0) / arr.length;
 
   const dataEcoEtat = [
-    { name: "Bon", value: department.eau_etat_eco_bon, fill: "#4CAF50" },
-    { name: "Moyen", value: department.eau_etat_eco_moyen, fill: "#DBEAFE" },
-    { name: "Médiocre", value: department.eau_etat_eco_mediocre, fill: COLORS.primary },
+    { name: "Bon", value: department.eau_etat_eco_bon, fill: "#DBEAFE" },
+    { name: "Moyen", value: department.eau_etat_eco_moyen, fill: "#3B82F6" },
+    { name: "Médiocre", value: department.eau_etat_eco_mediocre, fill: "#1E3A5F" },
   ];
 
   return (
