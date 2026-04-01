@@ -1,19 +1,10 @@
 import { useState, useMemo } from "react";
-import { DepartmentData, getAverage, formatValue, metrics } from "@/lib/data";
+import { DepartmentData, getAverage, metrics } from "@/lib/data";
 import { 
-  Select, 
-  SelectContent, 
-  SelectItem, 
-  SelectTrigger, 
-  SelectValue 
+  Select, SelectContent, SelectItem, SelectTrigger, SelectValue 
 } from "@/components/ui/select";
 import { 
-  Table, 
-  TableBody, 
-  TableCell, 
-  TableHead, 
-  TableHeader, 
-  TableRow 
+  Table, TableBody, TableCell, TableHead, TableHeader, TableRow 
 } from "@/components/ui/table";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
@@ -26,66 +17,40 @@ interface DepartmentComparisonProps {
   selectedMetric: string;
 }
 
-// Colonnes du tableau selon la métrique sélectionnée
-const getColumnsForMetric = (metricId: string) => {
-  const baseColumns = [
-    { key: "departement", label: "Département" },
-    { key: "population", label: "Population", format: (v: number) => v.toLocaleString('fr-FR') },
-    { key: "part_60_plus", label: "Part 60+", format: (v: number) => `${v.toFixed(1)}%` },
-    { key: "part_75_plus", label: "Part 75+", format: (v: number) => `${v.toFixed(1)}%` },
-  ];
-
-  const metricColumns: { [key: string]: any[] } = {
-    "taux_pauvrete_75": [
-      { key: "taux_pauvrete_75", label: "Taux pauvreté 75+", format: (v: number) => `${v.toFixed(1)}%` },
-      { key: "niveau_vie_median", label: "Niveau vie médian", format: (v: number) => `${v.toLocaleString('fr-FR')} €` },
-      { key: "revenu_median_75_plus", label: "Revenu 75+", format: (v: number) => `${v.toLocaleString('fr-FR')} €` },
-      { key: "aspa_effectif_2024", label: "ASPA 2024", format: (v: number) => v.toLocaleString('fr-FR') },
-    ],
-    "isoles_75_plus": [
-      { key: "isoles_75_plus", label: "Isolés 75+", format: (v: number) => v.toLocaleString('fr-FR') },
-      { key: "isoles_60_74", label: "Isolés 60-74", format: (v: number) => v.toLocaleString('fr-FR') },
-      { key: "femmes_75_plus_isolees", label: "Femmes 75+ isolées", format: (v: number) => v.toLocaleString('fr-FR') },
-      { key: "sans_voiture_75_plus", label: "Sans voiture 75+", format: (v: number) => v.toLocaleString('fr-FR') },
-    ],
-    "taux_ehpad_75_plus": [
-      { key: "taux_ehpad_75_plus", label: "Taux EHPAD", format: (v: number) => `${v.toFixed(2)}%` },
-      { key: "ehpad_nb_etab", label: "Nb EHPAD", format: (v: number) => v.toLocaleString('fr-FR') },
-      { key: "ehpad_nb_lits", label: "Nb lits EHPAD", format: (v: number) => v.toLocaleString('fr-FR') },
-      { key: "aide_menagere_personnes_agees", label: "Aides ménagères", format: (v: number) => v.toLocaleString('fr-FR') },
-    ],
-    "access_med_generalistes": [
-      { key: "access_med_generalistes", label: "Accès médecins", format: (v: number) => v.toFixed(1) },
-      { key: "esperance_vie", label: "Espérance vie", format: (v: number) => `${v.toFixed(1)} ans` },
-      { key: "grippe_65_plus", label: "Vacc. Grippe 65+", format: (v: number) => `${v.toFixed(1)}%` },
-      { key: "covid_65_plus", label: "Vacc. Covid 65+", format: (v: number) => `${v.toFixed(1)}%` },
-    ],
-    "esperance_vie": [
-      { key: "esperance_vie", label: "Espérance vie", format: (v: number) => `${v.toFixed(1)} ans` },
-      { key: "mal_chro_oui", label: "Maladies chroniques", format: (v: number) => `${v.toFixed(1)}%` },
-      { key: "handicap_oui", label: "Handicap", format: (v: number) => `${v.toFixed(1)}%` },
-      { key: "etat_sante_mauvais", label: "Mauvais état santé", format: (v: number) => `${v.toFixed(1)}%` },
-    ],
-  };
-
-  return [...baseColumns, ...(metricColumns[metricId] || metricColumns["taux_pauvrete_75"])];
-};
+// Colonnes fixes du tableau comparatif
+const comparisonColumns = [
+  { key: "departement", label: "Département" },
+  { key: "part_60_plus", label: "Part de 60 ans et plus", format: (v: number) => `${v.toFixed(1)}%` },
+  { key: "taux_pauvrete_75", label: "Taux de pauvreté 75+", format: (v: number) => `${v.toFixed(1)}%` },
+  { key: "taux_pauvrete_60", label: "Taux pauvreté 60+", format: (v: number) => `${v.toFixed(1)}%` },
+  { key: "isoles_75_plus", label: "75+ isolés", format: (v: number) => v.toLocaleString('fr-FR') },
+  { key: "isoles_60_74", label: "60-75 isolés", format: (v: number) => v.toLocaleString('fr-FR') },
+  { key: "esperance_vie", label: "Espérance de vie à la naissance", format: (v: number) => `${v.toFixed(1)} ans` },
+  { key: "taux_neurologiques_65_plus", label: "Taux de maladies neurologiques (65+)", format: (v: number) => `${v.toFixed(1)}%` },
+  { key: "taux_cardiovasculaires_65_plus", label: "Taux de maladies cardiovasculaires (65+)", format: (v: number) => `${v.toFixed(1)}%` },
+  { key: "access_med_generalistes", label: "APL aux médecins généralistes", format: (v: number) => `${v.toFixed(1)} km` },
+  { key: "apa_75_plus", label: "Bénéficiaires APA 75+", format: (v: number) => v.toLocaleString('fr-FR') },
+  { key: "apa_60_plus", label: "Bénéficiaires APA 60+", format: (v: number) => v.toLocaleString('fr-FR') },
+  { key: "taux_ssiad_75_plus", label: "Services de Soins Infirmiers à Domicile (75+)", format: (v: number) => `${v.toFixed(2)}%` },
+  { key: "atmo_indice_moyen", label: "Pollution atmosphérique", format: (v: number) => v.toFixed(1) },
+  { key: "score_fragilite_numerique", label: "Score de fragilité numérique senior", format: (v: number) => v.toFixed(1) },
+];
 
 // Graphiques disponibles pour la comparaison
 const availableCharts = [
-  { id: "radar_social", label: "Profil social 60-74 ans" },
-  { id: "radar_sante", label: "Radar santé" },
-  { id: "vaccination", label: "Taux de vaccination" },
-  { id: "revenus", label: "Revenus médians" },
-  { id: "isolement", label: "Isolement social" },
-  { id: "livia", label: "Projections LIVIA" },
-  { id: "aspa", label: "Évolution ASPA" },
-  { id: "services", label: "Offre médico-sociale" },
+  { id: "top5_pathologies", label: "Top 5 pathologies chez 65+" },
+  { id: "radar_sante", label: "Zoom sur l'état de santé des 65+" },
+  { id: "deficit_ehpad", label: "Déficit de l'offre en lits d'EHPAD pour les 75+" },
+  { id: "isolement", label: "Isolement social (65+)" },
+  { id: "fragilite_numerique", label: "Fragilité numérique" },
+  { id: "revenus", label: "Revenu médian (€/mois)" },
+  { id: "aspa", label: "Évolution bénéficiaires ASPA" },
+  { id: "apl_sapa", label: "APL service d'aide (SAPA)" },
 ];
 
 export const DepartmentComparison = ({ allData, selectedMetric }: DepartmentComparisonProps) => {
   const [selectedDepts, setSelectedDepts] = useState<(string | null)[]>([null, null, null, null]);
-  const [selectedCharts, setSelectedCharts] = useState<string[]>(["radar_social", "vaccination"]);
+  const [selectedCharts, setSelectedCharts] = useState<string[]>(["top5_pathologies", "radar_sante"]);
 
   const handleDeptChange = (index: number, value: string) => {
     const newDepts = [...selectedDepts];
@@ -101,7 +66,6 @@ export const DepartmentComparison = ({ allData, selectedMetric }: DepartmentComp
     );
   };
 
-  // Départements effectivement sélectionnés (non null)
   const activeSelection = useMemo(() => 
     selectedDepts.filter(d => d !== null) as string[]
   , [selectedDepts]);
@@ -109,8 +73,6 @@ export const DepartmentComparison = ({ allData, selectedMetric }: DepartmentComp
   const selectedDepartments = useMemo(() => 
     activeSelection.map(code => allData.find(d => d.code_departement === code)).filter(Boolean) as DepartmentData[]
   , [activeSelection, allData]);
-
-  const columns = useMemo(() => getColumnsForMetric(selectedMetric), [selectedMetric]);
 
   // Calcul des tendances (comparaison à la moyenne)
   const getTrend = (value: number, key: string) => {
@@ -121,8 +83,6 @@ export const DepartmentComparison = ({ allData, selectedMetric }: DepartmentComp
     if (diff > 0) return { icon: TrendingUp, color: "text-orange-600", label: `+${diff.toFixed(0)}%` };
     return { icon: TrendingDown, color: "text-primary", label: `${diff.toFixed(0)}%` };
   };
-
-  const currentMetric = metrics.find(m => m.id === selectedMetric);
 
   return (
     <div className="space-y-6">
@@ -188,13 +148,13 @@ export const DepartmentComparison = ({ allData, selectedMetric }: DepartmentComp
         <div className="p-4 rounded-xl bg-card border border-border shadow-card overflow-x-auto">
           <h3 className="text-sm font-semibold text-foreground mb-4 flex items-center gap-2">
             <ArrowUpDown className="w-4 h-4" />
-            Tableau comparatif – {currentMetric?.label || selectedMetric}
+            Tableau comparatif
           </h3>
           <Table>
             <TableHeader>
               <TableRow>
-                {columns.map(col => (
-                  <TableHead key={col.key} className="text-xs font-medium">
+                {comparisonColumns.map(col => (
+                  <TableHead key={col.key} className="text-xs font-medium whitespace-nowrap">
                     {col.label}
                   </TableHead>
                 ))}
@@ -203,17 +163,17 @@ export const DepartmentComparison = ({ allData, selectedMetric }: DepartmentComp
             <TableBody>
               {selectedDepartments.map((dept) => (
                 <TableRow key={dept.code_departement}>
-                  {columns.map(col => {
+                  {comparisonColumns.map(col => {
                     const value = dept[col.key as keyof DepartmentData];
                     const displayValue = col.format && typeof value === 'number' 
                       ? col.format(value) 
                       : String(value);
-                    const trend = typeof value === 'number' && col.key !== 'departement' && col.key !== 'population'
+                    const trend = typeof value === 'number' && col.key !== 'departement'
                       ? getTrend(value, col.key)
                       : null;
 
                     return (
-                      <TableCell key={col.key} className="text-sm">
+                      <TableCell key={col.key} className="text-sm whitespace-nowrap">
                         <div className="flex items-center gap-2">
                           <span>{displayValue}</span>
                           {trend && (
@@ -232,11 +192,11 @@ export const DepartmentComparison = ({ allData, selectedMetric }: DepartmentComp
                 <TableCell className="text-sm font-medium text-muted-foreground">
                   Moyenne nationale
                 </TableCell>
-                {columns.slice(1).map(col => {
+                {comparisonColumns.slice(1).map(col => {
                   const avg = getAverage(allData, col.key as keyof DepartmentData);
                   const displayValue = col.format ? col.format(avg) : avg.toFixed(1);
                   return (
-                    <TableCell key={col.key} className="text-sm text-muted-foreground">
+                    <TableCell key={col.key} className="text-sm text-muted-foreground whitespace-nowrap">
                       {displayValue}
                     </TableCell>
                   );

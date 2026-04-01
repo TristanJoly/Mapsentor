@@ -145,6 +145,13 @@ export interface DepartmentData {
   pest_taux_depassement_eau: number;
   pest_nb_substances_detectees: number;
   pest_part_bio_sau: number;
+  // APA & SSIAD
+  apa_60_plus: number;
+  apa_75_plus: number;
+  taux_ssiad_75_plus: number;
+  // Taux maladies calculés
+  taux_neurologiques_65_plus: number;
+  taux_cardiovasculaires_65_plus: number;
   [key: string]: string | number | { [key: string]: number };
 }
 
@@ -255,6 +262,12 @@ export const loadDepartmentData = async (): Promise<DepartmentData[]> => {
       const maladies_65_plus = normalizeMaladies(extractMaladiesRaw('≥ 65 ans - ', total65Plus));
       const maladies_femmes = normalizeMaladies(extractMaladiesRaw('Femmes - ', totalFemmes));
       const maladies_hommes = normalizeMaladies(extractMaladiesRaw('Hommes - ', totalHommes));
+
+      // Compute neurological & cardiovascular rates from 65+ pathology data
+      const neuroKeys = ['Démences (dont Alzheimer)', 'Maladie de Parkinson', 'Épilepsie', 'Sclérose en plaques'];
+      const cardioKeys = ['Insuffisance cardiaque chronique', 'Insuffisance cardiaque aiguë', 'Maladie coronaire chronique', 'Syndrome coronaire aigu', 'Maladie valvulaire', 'Troubles du rythme cardiaque', 'AVC aigu', "Séquelle d'AVC", 'Artériopathie périphérique', 'Embolie pulmonaire'];
+      const taux_neurologiques_65_plus = neuroKeys.reduce((sum, k) => sum + (maladies_65_plus[k] || 0), 0);
+      const taux_cardiovasculaires_65_plus = cardioKeys.reduce((sum, k) => sum + (maladies_65_plus[k] || 0), 0);
 
       return {
         total_65_plus: total65Plus,
@@ -396,6 +409,12 @@ export const loadDepartmentData = async (): Promise<DepartmentData[]> => {
         maladies_65_plus,
         maladies_femmes,
         maladies_hommes,
+        // APA, SSIAD & computed disease rates
+        apa_60_plus: parseFloat(row['APA_60_plus']) || 0,
+        apa_75_plus: parseFloat(row['APA_75_plus']) || 0,
+        taux_ssiad_75_plus: parseFloat(row['Taux_SSIAD_75_plus']) || 0,
+        taux_neurologiques_65_plus,
+        taux_cardiovasculaires_65_plus,
         // Pollution IREP
         ...(() => {
           const code = String(row['code_departement'] || row['Code département'] || '').trim();
