@@ -145,6 +145,13 @@ export interface DepartmentData {
   pest_taux_depassement_eau: number;
   pest_nb_substances_detectees: number;
   pest_part_bio_sau: number;
+  // APA & SSIAD
+  apa_60_plus: number;
+  apa_75_plus: number;
+  taux_ssiad_75_plus: number;
+  // Taux maladies calculés
+  taux_neurologiques_65_plus: number;
+  taux_cardiovasculaires_65_plus: number;
   [key: string]: string | number | { [key: string]: number };
 }
 
