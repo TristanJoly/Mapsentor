@@ -409,6 +409,12 @@ export const loadDepartmentData = async (): Promise<DepartmentData[]> => {
         maladies_65_plus,
         maladies_femmes,
         maladies_hommes,
+        // APA, SSIAD & computed disease rates
+        apa_60_plus: parseFloat(row['APA_60_plus']) || 0,
+        apa_75_plus: parseFloat(row['APA_75_plus']) || 0,
+        taux_ssiad_75_plus: parseFloat(row['Taux_SSIAD_75_plus']) || 0,
+        taux_neurologiques_65_plus,
+        taux_cardiovasculaires_65_plus,
         // Pollution IREP
         ...(() => {
           const code = String(row['code_departement'] || row['Code département'] || '').trim();
