@@ -415,11 +415,11 @@ const OffreVsBesoinChart = ({ department, allData }: { department: DepartmentDat
         </div>
         <div className="p-2.5 rounded-lg bg-blue-50/60 border border-blue-100">
           <p className="text-muted-foreground">Accès aide à domicile</p>
-          <p className="font-bold text-foreground">{aplSapa.toFixed(1)} C./an/hab.</p>
+          <p className="font-bold text-foreground">{aplSapa.toFixed(1)} ETP/100k 60+</p>
         </div>
         <div className="p-2.5 rounded-lg bg-blue-50/60 border border-blue-100">
           <p className="text-muted-foreground">Accès EHPA</p>
-          <p className="font-bold text-foreground">{aplEhpa.toFixed(1)} C./an/hab.</p>
+          <p className="font-bold text-foreground">{aplEhpa.toFixed(1)} places/100k 60+</p>
         </div>
         <div className="p-2.5 rounded-lg bg-blue-50/60 border border-blue-100 col-span-2">
           <p className="text-muted-foreground">Accès médecin généraliste</p>
