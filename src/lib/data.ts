@@ -346,8 +346,8 @@ export const loadDepartmentData = async (): Promise<DepartmentData[]> => {
         })(),
         // Services
         aide_menagere_personnes_agees: parseFloat(row['aide_menagere_personnes_agees']) || 0,
-        apl_sapa: (parseFloat(row['APL_SAPA']) || 0) / 1000,
-        apl_ehpa: (parseFloat(row['APL_EHPA']) || 0) / 1000,
+        apl_sapa: parseFloat(row['APL_SAPA']) || 0,
+        apl_ehpa: parseFloat(row['APL_EHPA']) || 0,
         // Vaccination
         grippe_65_plus: parseFloat(row['Grippe 65 ans et plus']) || 0,
         covid_65_plus: parseFloat(row['Covid-19 65 ans et plus']) || 0,
