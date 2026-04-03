@@ -769,13 +769,13 @@ const AplSapaChart = ({ department, allData }: { department: DepartmentData; all
   ];
   return (
     <div className="p-4 rounded-xl bg-card border border-border shadow-card">
-      <h4 className="text-sm font-semibold text-foreground mb-4 flex items-center gap-1">{"APL Services d'aide (SAPA)"}<ChartInfoButton title="APL SAPA" text="Nombre de consultations accessibles par an par habitant standardisé pour les services d'aide à domicile." howToRead="Plus la valeur est élevée, meilleur est l'accès." source="DREES – Panorama statistique 2024" /></h4>
+      <h4 className="text-sm font-semibold text-foreground mb-4 flex items-center gap-1">{"APL Services d'aide (SAPA)"}<ChartInfoButton title="APL SAPA" text="Nombre d'employés (en Équivalents Temps Plein) pour 100 000 personnes de 60 ans et plus." howToRead="Plus la valeur est élevée, meilleur est l'accès aux services d'aide." source="DREES – Panorama statistique 2024" /></h4>
       <ResponsiveContainer width="100%" height={200}>
         <BarChart data={data}>
           <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
           <XAxis dataKey="name" tick={{ fontSize: 10 }} />
-          <YAxis tick={{ fontSize: 10 }} unit=" C./an/hab." />
-          <Tooltip formatter={(value: number) => `${value.toFixed(1)} C./an/hab.`} contentStyle={{ background: 'hsl(var(--card))', border: '1px solid hsl(var(--border))', borderRadius: '8px', fontSize: '12px' }} />
+          <YAxis tick={{ fontSize: 10 }} unit=" ETP/100k" />
+          <Tooltip formatter={(value: number) => `${value.toFixed(1)} ETP / 100k 60+`} contentStyle={{ background: 'hsl(var(--card))', border: '1px solid hsl(var(--border))', borderRadius: '8px', fontSize: '12px' }} />
           <Bar dataKey="departement" fill={COLORS.primary} name="Département" />
           <Bar dataKey="region" fill={COLORS.secondary} name="Région" />
           <Bar dataKey="france" fill={COLORS.tertiary} name="France" />
