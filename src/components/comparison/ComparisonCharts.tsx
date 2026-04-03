@@ -226,8 +226,8 @@ const RevenusComparison = ({ departments, allData }: { departments: DepartmentDa
     { name: "75+ ans", key: "revenu_median_75_plus" },
   ];
   const data = rows.map(r => {
-    const row: any = { name: r.name, France: getAverage(allData, r.key as keyof DepartmentData) };
-    departments.forEach(d => { row[d.departement] = (d[r.key as keyof DepartmentData] as number) || 0; });
+    const row: any = { name: r.name, France: Math.round(getAverage(allData, r.key as keyof DepartmentData) / 100 / 12) };
+    departments.forEach(d => { row[d.departement] = Math.round(((d[r.key as keyof DepartmentData] as number) || 0) / 100 / 12); });
     return row;
   });
 
