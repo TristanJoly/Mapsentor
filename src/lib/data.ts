@@ -292,7 +292,7 @@ export const loadDepartmentData = async (): Promise<DepartmentData[]> => {
         ehpad_nb_etab: parseFloat(row['EHPAD_nb_etab']) || 0,
         ehpad_nb_lits: parseFloat(row['EHPAD_nb_lits']) || 0,
         esperance_vie: parseFloat(row['esp']) || 0,
-        access_med_generalistes: (parseFloat(row['access_med_generalistes']) || 0) / 1000,
+        access_med_generalistes: parseFloat(row['access_med_generalistes']) || 0,
         region: row[Object.keys(row).pop() || ''] || '',
         // Demographics
         femmes_60_74_ans: parseFloat(row['Femmes_60_74_ans']) || 0,
