@@ -300,14 +300,14 @@ const AplSapaComparison = ({ departments, allData }: { departments: DepartmentDa
     <div className="p-4 rounded-xl bg-card border border-border shadow-card">
       <h4 className="text-sm font-semibold text-foreground mb-4 flex items-center gap-1">
         APL service d'aide (SAPA)
-        <ChartInfoButton title="APL SAPA comparé" text="Distance moyenne (en km) pour accéder à un service d'aide à domicile." howToRead="Plus la valeur est basse, plus l'accès est facile." source="DREES – Panorama statistique 2024" />
+        <ChartInfoButton title="APL SAPA comparé" text="Nombre de consultations accessibles par an par habitant standardisé pour les services d'aide à domicile." howToRead="Plus la valeur est élevée, meilleur est l'accès." source="DREES – Panorama statistique 2024" />
       </h4>
       <ResponsiveContainer width="100%" height={250}>
         <BarChart data={data}>
           <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
           <XAxis dataKey="name" tick={{ fontSize: 9 }} />
-          <YAxis tick={{ fontSize: 10 }} tickFormatter={(v) => `${v.toFixed(1)} km`} />
-          <Tooltip formatter={(value: number) => `${value.toFixed(1)} km`} contentStyle={tooltipStyle} />
+          <YAxis tick={{ fontSize: 10 }} tickFormatter={(v) => `${v.toFixed(1)} C./an/hab.`} />
+          <Tooltip formatter={(value: number) => `${value.toFixed(1)} C./an/hab.`} contentStyle={tooltipStyle} />
           <Bar dataKey="apl" fill={DEPT_COLORS[0]}>
             {data.map((_, i) => (
               <Cell key={i} fill={DEPT_COLORS[i % DEPT_COLORS.length]} />
@@ -316,7 +316,7 @@ const AplSapaComparison = ({ departments, allData }: { departments: DepartmentDa
           <Legend wrapperStyle={{ fontSize: '10px' }} />
         </BarChart>
       </ResponsiveContainer>
-      <div className="text-xs text-center text-muted-foreground mt-1">Moyenne nationale : {avgFrance.toFixed(1)} km</div>
+      <div className="text-xs text-center text-muted-foreground mt-1">Moyenne nationale : {avgFrance.toFixed(1)} C./an/hab.</div>
     </div>
   );
 };

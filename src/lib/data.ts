@@ -292,7 +292,7 @@ export const loadDepartmentData = async (): Promise<DepartmentData[]> => {
         ehpad_nb_etab: parseFloat(row['EHPAD_nb_etab']) || 0,
         ehpad_nb_lits: parseFloat(row['EHPAD_nb_lits']) || 0,
         esperance_vie: parseFloat(row['esp']) || 0,
-        access_med_generalistes: (parseFloat(row['access_med_generalistes']) || 0) / 1000,
+        access_med_generalistes: parseFloat(row['access_med_generalistes']) || 0,
         region: row[Object.keys(row).pop() || ''] || '',
         // Demographics
         femmes_60_74_ans: parseFloat(row['Femmes_60_74_ans']) || 0,
@@ -346,8 +346,8 @@ export const loadDepartmentData = async (): Promise<DepartmentData[]> => {
         })(),
         // Services
         aide_menagere_personnes_agees: parseFloat(row['aide_menagere_personnes_agees']) || 0,
-        apl_sapa: (parseFloat(row['APL_SAPA']) || 0) / 1000,
-        apl_ehpa: (parseFloat(row['APL_EHPA']) || 0) / 1000,
+        apl_sapa: parseFloat(row['APL_SAPA']) || 0,
+        apl_ehpa: parseFloat(row['APL_EHPA']) || 0,
         // Vaccination
         grippe_65_plus: parseFloat(row['Grippe 65 ans et plus']) || 0,
         covid_65_plus: parseFloat(row['Covid-19 65 ans et plus']) || 0,
