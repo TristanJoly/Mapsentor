@@ -1,6 +1,7 @@
 import { useState } from "react";
-import { MapPin, Database, Users, Github, Mail, ExternalLink, ChevronLeft, ChevronRight, Info, BookOpen } from "lucide-react";
+import { Database, Users, Github, Mail, ExternalLink, ChevronLeft, ChevronRight, Info, BookOpen } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import logoLight from "@/assets/logo-light.png";
 
 const sources = [
   { name: "Caisse des Dépôts - 75 ans+", url: "https://opendata.caissedesdepots.fr/explore/dataset/75-ans-et-plus-indicateurs-de-vieillissement-par-departement/information/" },
