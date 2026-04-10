@@ -27,7 +27,7 @@ export const Sidebar = ({ collapsed = false, onToggle }: SidebarProps) => {
     return (
       <aside className="w-14 min-h-screen bg-card border-r border-border p-2 flex flex-col items-center pt-4">
         <div className="w-10 h-10 rounded-xl overflow-hidden shadow-soft">
-          <img src={logoLight} alt="Mapsentor" className="w-full h-full object-cover" />
+          <img src={logoDark} alt="Mapsentor" className="w-full h-full object-cover" />
         </div>
       </aside>
     );
@@ -39,7 +39,7 @@ export const Sidebar = ({ collapsed = false, onToggle }: SidebarProps) => {
       <div className="flex items-center justify-between mb-4">
         <div className="flex items-center gap-3">
           <div className="w-10 h-10 rounded-xl overflow-hidden shadow-soft">
-            <img src={logoLight} alt="Mapsentor" className="w-full h-full object-cover" />
+            <img src={logoDark} alt="Mapsentor" className="w-full h-full object-cover" />
           </div>
           <h1 className="text-xl font-bold gradient-text">Mapsentor</h1>
         </div>
