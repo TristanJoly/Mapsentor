@@ -40,7 +40,7 @@ const comparisonColumns = [
 const availableCharts = [
   { id: "top5_pathologies", label: "Top 5 pathologies chez 65+" },
   { id: "radar_sante", label: "Zoom sur l'état de santé des 65+" },
-  { id: "deficit_ehpad", label: "Déficit de l'offre en lits d'EHPAD pour les 75+" },
+  { id: "deficit_ehpad", label: "Déficit de l'offre en lits d'EHPAD pour les 65+" },
   { id: "isolement", label: "Isolement social (65+)" },
   { id: "fragilite_numerique", label: "Fragilité numérique" },
   { id: "revenus", label: "Revenu médian (€/mois)" },
