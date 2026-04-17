@@ -117,7 +117,7 @@ const DeficitEhpadComparison = ({ departments, allData }: { departments: Departm
   return (
     <div className="p-4 rounded-xl bg-card border border-border shadow-card">
       <h4 className="text-sm font-semibold text-foreground mb-4 flex items-center gap-1">
-        Déficit de l'offre en lits d'EHPAD pour les 75+
+        Déficit de l'offre en lits d'EHPAD pour les 65+
         <ChartInfoButton title="Couverture EHPAD" text="Taux de couverture : nombre de lits EHPAD pour 100 personnes de 75+ ans." howToRead="Plus le taux est bas, plus le déficit est important. La ligne pointillée = moyenne nationale." source="DREES – Panorama statistique 2024" />
       </h4>
       <ResponsiveContainer width="100%" height={250}>
