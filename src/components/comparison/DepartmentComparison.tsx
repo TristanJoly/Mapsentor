@@ -22,7 +22,7 @@ const comparisonColumns = [
   { key: "departement", label: "Département" },
   { key: "part_60_plus", label: "Part de 60 ans et plus", format: (v: number) => `${v.toFixed(1)}%` },
   { key: "taux_pauvrete_75", label: "Taux de pauvreté 65+", format: (v: number) => `${v.toFixed(1)}%` },
-  { key: "taux_pauvrete_60", label: "Taux pauvreté 65+", format: (v: number) => `${v.toFixed(1)}%` },
+  
   { key: "isoles_75_plus", label: "75+ isolés", format: (v: number) => v.toLocaleString('fr-FR') },
   { key: "isoles_60_74", label: "60-75 isolés", format: (v: number) => v.toLocaleString('fr-FR') },
   { key: "esperance_vie", label: "Espérance de vie à la naissance", format: (v: number) => `${v.toFixed(1)} ans` },
